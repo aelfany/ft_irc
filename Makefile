@@ -6,7 +6,7 @@
 #    By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/13 21:22:05 by abelfany          #+#    #+#              #
-#    Updated: 2024/03/13 23:49:29 by abelfany         ###   ########.fr        #
+#    Updated: 2024/03/14 22:04:57 by abelfany         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,9 @@ all: $(NAME)
 
 $(NAME):$(S_OBJ)
 	c++ $(FLAG) $(S_OBJ) -o $(NAME)
+
+clean:
+	$(RM) $(S_OBJ)
 
 fclean : clean
 	$(RM) $(NAME)
