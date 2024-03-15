@@ -1,14 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 21:21:59 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/13 23:50:23 by abelfany         ###   ########.fr       */
+/*   Created: 2024/03/13 21:21:56 by abelfany          #+#    #+#             */
+/*   Updated: 2024/03/15 00:56:54 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/header.hpp"
-#include "../include/irc.hpp"
+#include "../../include/header.hpp"
+#include "../../include/irc.hpp"
