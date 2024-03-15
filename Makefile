@@ -1,39 +1,36 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/03/13 21:22:05 by abelfany          #+#    #+#              #
-#    Updated: 2024/03/14 22:04:57 by abelfany         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+COLOUR_GREEN=\033[0;32m
+COLOUR_RED=\033[0;31m
+COLOUR_BLUE=\033[0;34m
+COLOUR_END=\033[0m
 
-NAME = ircserv
-HEADER = ./include/header.hpp ./include/irc.hpp
-RM = @rm -rf
+NAME			=	server
+CFLAGS			=	-Wall -Wextra -Werror -std=c++98
 
-SRCS = ./srcs/main.cpp ./srcs/server.cpp ./srcs/utils.cpp
+PREFIX			=	srcs/
+HPEFIX			=	include/
 
-FLAG = -Wall -Wextra -Werror -std=c++98
+SOURCES_FILES	=	serv/Server.cpp serv/main.cpp commands/main.cpp commands/server.cpp commands/utils.cpp
+HEADERS_FILES	=	Server.hpp header.hpp irc.hpp
 
-S_OBJ = $(SRCS:.cpp=.o)
+SOURCES			=	$(addprefix $(PREFIX), $(SOURCES_FILES))
+HEADERS			=	$(addprefix $(HPEFIX), $(HEADERS_FILES))
+OBJECTS			= 	$(SOURCES:.cpp=.o)
 
-all: $(NAME)
 
-%.o : %.cpp $(HEADER)
-	c++ $(FLAG) -c $< -o $@
+all: $(NAME) $(HEADERS)
 
-$(NAME):$(S_OBJ)
-	c++ $(FLAG) $(S_OBJ) -o $(NAME)
+$(NAME): $(OBJECTS) $(HEADERS)
+	@echo "$(COLOUR_GREEN)==>Linking...$(COLOUR_RED)$(COLOUR_END)"
+	c++ $(CFLAGS) $(OBJECTS) -o $(NAME)
+	@echo "$(COLOUR_GREEN)==>Compilation Complete: run $(COLOUR_RED)./$(NAME)$(COLOUR_END)"
+
+%.o:%.cpp $(HEADERS)
+	@echo "$(COLOUR_GREEN)==>Compiling... $(COLOUR_END)"
+	c++ $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(S_OBJ)
+	rm -f $(OBJECTS)
+fclean: clean
+	rm -f $(NAME)
 
-fclean : clean
-	$(RM) $(NAME)
-
-re : fclean all
-
-.PHONY : all fclean clean re
+re: fclean all

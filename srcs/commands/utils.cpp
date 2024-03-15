@@ -1,20 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 21:21:56 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/14 00:24:52 by abelfany         ###   ########.fr       */
+/*   Created: 2024/03/13 22:23:41 by abelfany          #+#    #+#             */
+/*   Updated: 2024/03/15 00:57:15 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/header.hpp"
-#include "../include/irc.hpp"
-
-int main(int ac, char **av) {
-    if(ac == 2) {
-        
-    }
-}
+#include "../../include/header.hpp"
+#include "../../include/irc.hpp"
