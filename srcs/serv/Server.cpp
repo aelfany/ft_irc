@@ -28,3 +28,13 @@ void    Servrr::setSockAddr(sockaddr_in	addr)
 {
     _addr = addr;
 }
+
+void    Servrr::setSockFd(int sock_fd)
+{
+    _sock_fd = sock_fd;
+}
+
+void	Servrr::setClientito(clientito& obj)
+{
+    this->_clients.push_back(obj);
+}

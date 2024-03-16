@@ -4,14 +4,18 @@
 #include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "client.hpp"
+#include <vector>
 
 class Servrr
 {
     private:
-        int _portNumber;
+        int				_portNumber;
         sockaddr_in		_addr;
         int				_sock_fd;
         std::string		_password;
+        // clientito		_client[5];
+		std::vector<clientito> _clients;
         Servrr();
     public:
         Servrr(int portNumber, std::string passw);
@@ -20,5 +24,8 @@ class Servrr
 		std::string&	getPassword();
 		unsigned int	getPort();
 		int				getSockFd();
-		void			setSockAddr(sockaddr_in	addr);
+
+		void	setSockAddr(sockaddr_in	addr);
+		void	setSockFd(int sock_fd);
+		void	setClientito(clientito& obj);
 };
