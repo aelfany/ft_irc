@@ -39,15 +39,51 @@ int main(int ac, char **av)
     simpleRules(ac, av[1]);
     struct sockaddr_in addr;
     SocketAddrInfo(addr, av[1]);
+    //class Servvr takes a port number & a password
     Servrr server1(ntohs(addr.sin_port), av[2]);
+    //setSockAddr() is a setter that gonna set the struct named addr
     server1.setSockAddr(addr);
     
+    //print some basic info
+    std::cout << server1.getPort() << std::endl;
+    std::cout << server1.getPassword() << std::endl;
+    std::cout << server1.getSockFd() << std::endl;
+
+    //create a socket
+    server1.setSockFd(socket(PF_INET, SOCK_STREAM, 0));
+    if(server1.getSockFd() == -1)
+    {
+        std::cerr <<"Error:  failed to create a socket\n";
+            exit(1);
+    }
+    int valueOfOpt = 1;
+     //setsockopt() is used to specify some options for the socket to control the behavior of the socket.
+    if (setsockopt(server1.getSockFd(), SOL_SOCKET, SO_REUSEADDR, &valueOfOpt, sizeof(valueOfOpt)) == -1)
+    {
+        std::cerr <<"Error: setsockopt() failed\n";
+        exit(1);
+    }
+    if (bind(server1.getSockFd(), (struct sockaddr *)&addr, sizeof(addr)) == -1)
+    {
+        std::cerr <<"Error: bind() failed\n";
+        exit(1);
+    }
+    if (listen(server1.getSockFd(), 10) == -1)
+    {
+        std::cerr <<"Error: listen() failed\n";
+        exit(1);
+    }
+    //loop over, and listening on incomming connections or data.
+    socklen_t client_addr_l = sizeof(addr);
     while(true)
     {
-        std::cout << server1.getPort() << std::endl;
-        std::cout << server1.getPassword() << std::endl;
-        std::cout << server1.getSockFd() << std::endl;
-        exit(1);
+        int client_sock_fd = accept(server1.getSockFd(), (struct sockaddr *)&addr, &client_addr_l);
+        if (client_sock_fd != -1)
+        {
+            clientito client_obj(client_sock_fd);
+            server1.setClientito(client_obj);
+        }
+        std::cout << "server is lestining on the above port\n" << std::endl;
     }
 
 }
