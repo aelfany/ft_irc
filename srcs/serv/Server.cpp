@@ -38,3 +38,8 @@ void	Servrr::setClientito(clientito& obj)
 {
     this->_clients.push_back(obj);
 }
+
+std::vector<clientito>	Servrr::getClientito()
+{
+    return _clients;
+}
