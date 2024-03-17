@@ -1,0 +1,3 @@
+------------>READ THIS<---------------
+- The problem I'm trying to solve now is that the server stuck in a blocking operation after receiving the first message from client, preventing it from processing further messages.
+---> In getData(client_sock_fd); function, I used recv() which is a blocking call to receive data from the client, it will wait until it receives data or the connection is closed before continuing.
