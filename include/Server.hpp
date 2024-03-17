@@ -14,7 +14,6 @@ class Servrr
         sockaddr_in		_addr;
         int				_sock_fd;
         std::string		_password;
-        // clientito		_client[5];
 		std::vector<clientito> _clients;
         Servrr();
     public:
@@ -28,4 +27,5 @@ class Servrr
 		void	setSockAddr(sockaddr_in	addr);
 		void	setSockFd(int sock_fd);
 		void	setClientito(clientito& obj);
+       std::vector<clientito>	getClientito();
 };

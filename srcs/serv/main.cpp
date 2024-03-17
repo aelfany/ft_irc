@@ -1,5 +1,7 @@
 #include "../../include/Server.hpp"
 
+#include <fcntl.h>
+
 bool check_port(std::string port)
 {
     if (port[0] == '+' || port[0] == '-')
@@ -34,6 +36,22 @@ void SocketAddrInfo(sockaddr_in& addr, char *port_n)
     addr.sin_port = htons(port_number);// Port number (use htons to convert to network byte order)
 }
 
+
+void getData(int clientSocket)
+{
+    char buffer[1024];
+    ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
+    if (bytesRead > 0)
+        std::cout << "Received: " << std::string(buffer, bytesRead) << std::endl;
+    else if (bytesRead == 0)
+    {
+        // Connection closed by client
+        std::cout << "Connection closed by client." << std::endl;
+        return ;
+    }
+}
+
+
 int main(int ac, char **av)
 {
     simpleRules(ac, av[1]);
@@ -45,9 +63,9 @@ int main(int ac, char **av)
     server1.setSockAddr(addr);
     
     //print some basic info
-    std::cout << server1.getPort() << std::endl;
-    std::cout << server1.getPassword() << std::endl;
-    std::cout << server1.getSockFd() << std::endl;
+    std::cout << "Port    : "<<server1.getPort() << std::endl;
+    std::cout << "Password: "<<server1.getPassword() << std::endl;
+    std::cout << "Sockfd  : "<<server1.getSockFd() << std::endl;
 
     //create a socket
     server1.setSockFd(socket(PF_INET, SOCK_STREAM, 0));
@@ -75,6 +93,11 @@ int main(int ac, char **av)
     }
     //loop over, and listening on incomming connections or data.
     socklen_t client_addr_l = sizeof(addr);
+    std::cout << "--->server is listening on the above port\n" << std::endl;
+
+    // int flags = fcntl(server1.getSockFd(), F_GETFL, 0);
+    // fcntl(server1.getSockFd(), F_SETFL, 0 | O_NONBLOCK);
+
     while(true)
     {
         int client_sock_fd = accept(server1.getSockFd(), (struct sockaddr *)&addr, &client_addr_l);
@@ -82,8 +105,10 @@ int main(int ac, char **av)
         {
             clientito client_obj(client_sock_fd);
             server1.setClientito(client_obj);
+            std::cout << "connection from client with fd: " <<client_obj.getClinetFd()<<std::endl;
         }
-        std::cout << "server is lestining on the above port\n" << std::endl;
+        getData(client_sock_fd);
+        std::cout << "here the server is getting blocked\n";
     }
 
 }
