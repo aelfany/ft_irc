@@ -4,7 +4,7 @@ int main(int ac, char **av)
 {
     struct pollfd poll_fd;
     struct sockaddr_in addr;
-    std::vector<struct pollfd> fds;
+    std::vector<struct pollfd> fds;//declare vectore with type struct pollfd
 
     simpleRules(ac, av[1]);
     int portN = atoi(av[1]);
@@ -15,22 +15,22 @@ int main(int ac, char **av)
     server1.runServer(addr);
     interFace(server1);
 
-    poll_fd.fd = server1.getSockFd();
-    poll_fd.events = POLLIN;
+    poll_fd.fd = server1.getSockFd();//sock server fd
+    poll_fd.events = POLLIN;//1
 
-    // Set up pollfd array
+    // Set up pollfd vector
     fds.push_back(poll_fd);
+    socklen_t client_addr_l = sizeof(addr);
     while(true)
     {
         int ret = poll(fds.data(), fds.size(), -1);
         if (ret == -1)
         {
             perror("poll");
-            return 1;
+            exit(1);
         }
-        socklen_t client_addr_l = sizeof(addr);
-        // Check for events on each socket
-        for (size_t i = 0; i < fds.size(); ++i)
+        // Check for events on each client socket
+        for (size_t i = 0; i < fds.size(); i++)
         {
             if (fds[i].revents & POLLIN)
             {
@@ -59,11 +59,11 @@ int main(int ac, char **av)
                         perror("recv");
                     else if (bytesRead == 0)
                     {
-                        // Client disconnected
-                        std::cout << "Client disconnected" << std::endl;
+                        // If client disconnected print this==> && close its socket && erase its data in our vector
+                        std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
                         close(client_sock_fd);
                         fds.erase(fds.begin() + i);
-                        --i;
+                        i--;
                     }
                     else
                         std::cout << "Received: " << std::string(buffer, bytesRead) << std::endl;
