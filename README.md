@@ -12,6 +12,7 @@ do git pull, and revise the code
         perror("fcntl");
         exit(EXIT_FAILURE);
     }
+
 2 ==> I also declared a vectore with "struct pollfd" TYPE
     struct pollfd poll_fd; //here I declared a struct "poll_fd" to help us working with poll();
     std::vector<struct pollfd> fds;//Here I declared vectore with  "struct pollfd" TYPE
