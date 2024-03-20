@@ -16,15 +16,15 @@ void eventOnServerSock(int servSockfd, struct sockaddr_in addr, std::vector<stru
     }
 }
 
-void eventOnClientSock(std::vector<pollfd> fds, size_t& i)
+void eventOnClientSock(std::vector<pollfd>& fds, size_t& i)
 {
     // Event on client socket (data available)
     int client_sock_fd = fds[i].fd;
     char buffer[1024];
-    ssize_t bytesRead = recv(client_sock_fd, buffer, sizeof(buffer), 0);
-    if (bytesRead == -1)
+    ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
+    if (recvData == -1)
         perror("recv");
-    else if (bytesRead == 0)
+    else if (recvData == 0)
     {
         // If client disconnected print this==> && close its socket && erase its data in our vector
         std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
@@ -33,9 +33,8 @@ void eventOnClientSock(std::vector<pollfd> fds, size_t& i)
         i--;
     }
     else
-        std::cout << "Received: " << std::string(buffer, bytesRead) << std::endl;
+        std::cout << "Received: " << std::string(buffer, recvData) << std::endl;
 }
-
 
 int main(int ac, char **av)
 {
@@ -53,13 +52,18 @@ int main(int ac, char **av)
     interFace(server1);
 
     poll_fd.fd = server1.getSockFd();//sock server fd
-    poll_fd.events = POLLIN;//1
-
-    // Set up pollfd vector
+    poll_fd.events = POLLIN;
     fds.push_back(poll_fd);
-    // socklen_t client_addr_l = sizeof(addr);
     while(true)
     {
+        //Hna 3tyet l poll() struct(lli fiha: int fd, short event), o 3teytha size dyal vector, o time lli ghadi tsena (1000ms == 1second).
+        //db poll() ghadi t-checki server_socket_fd, kulla 1 second, wash jato shi event wla la. OK?
+        //ila jat shi event, poll() ghadi t-settey REVENTS b 1 ==> "poll_fd.revents = 1"
+        //mn ba3d, ghadi n't-checki wash REVENTS & POLLIN == TRUE ? 
+        //mn ba3d, ghadi n't-checki hadak REVENTS wash dyal ServerSocket wla ClientSocket, OK?
+        //So, ila kan dyal SERVER, rah new client bgha y't-connecta m3a server. O ila kan dyal CLIENT, rah new DATA has been sent to SERVER.
+        //ila kan new Client bgha y't-connecta, ghadi t-Acceptih o t7etto fl VECTOR (std::vector<struct pollfd> fds).
+        //ila bgha y-sered DATA l server, receiver DATA, using recv(). ila returnat value > 0 printey DATA, ila returnat 0 rah deconnecta(y3ni close socket && remove it from vector).
         int ret = poll(fds.data(), fds.size(), -1);
         if (ret == -1)
         {
@@ -69,13 +73,14 @@ int main(int ac, char **av)
         // Check for events on each client socket
         for (size_t i = 0; i < fds.size(); i++)
         {
+            //poll() ghadi t-checki ila kan kain shi event f "server socket wla client socket", but f awal merra ghadi ykun ghi server socket (vector fih ghi struct dyal server, ba9i makinsh clients)
+            //Poll() ghatb9a tsena ta ywslha shi event(POLLIN || POLLOUT), fsh ywslha event ghadi t-settey fds[i].revent = 1
+            //Next: ghadi n't-checki: fds[i].revent & POLLIN ==> (revent = 1 & POLLIN = 1 == TRUE). ila kanu bjuj positive y3ni condition TRUE
             if (fds[i].revents & POLLIN)
             {
-                // Event on server socket (new connection)
-                if (fds[i].fd == server1.getSockFd())
+                if (fds[i].fd == server1.getSockFd()) // Event on server socket (new connection)
                     eventOnServerSock(server1.getSockFd(), addr, fds);
-                    // Event on client socket (data available)
-                if (fds[i].fd != server1.getSockFd())
+                else // Event on client socket (data available)
                     eventOnClientSock(fds, i);
             }
         }
