@@ -33,19 +33,3 @@ Efficiency: poll() is efficient because it allows you to monitor multiple file d
 Scalability: Unlike some older alternatives like select(), poll() doesn't have a limit on the number of file descriptors you can monitor.
 
 Resource consumption: However, poll() can become inefficient when you're monitoring a large number of file descriptors, as it has to iterate over the entire array every time you call it.
-
-
-
-
-//Hna 3tyet l poll() struct(lli fiha: int fd, short event), o 3teytha size dyal vector, o time lli ghadi tsena (1000ms == 1second).
-        //db poll() ghadi t-checki server_socket_fd, kulla 1 second, wash jato shi event wla la. OK?
-        //ila jat shi event, poll() ghadi t-settey REVENTS b 1 ==> "poll_fd.revents = 1"
-        //mn ba3d, ghadi n't-checki wash REVENTS & POLLIN == TRUE ? 
-        //mn ba3d, ghadi n't-checki hadak REVENTS wash dyal ServerSocket wla ClientSocket, OK?
-        //So, ila kan dyal SERVER, rah new client bgha y't-connecta m3a server. O ila kan dyal CLIENT, rah new DATA has been sent to SERVER.
-        //ila kan new Client bgha y't-connecta, ghadi t-Acceptih o t7etto fl VECTOR (std::vector<struct pollfd> fds).
-        //ila bgha y-sered DATA l server, receiver DATA, using recv(). ila returnat value > 0 printey DATA, ila returnat 0 rah deconnecta(y3ni close socket && remove it from vector).
-
-//poll() ghadi t-checki ila kan kain shi event f "server socket wla client socket", but f awal merra ghadi ykun ghi server socket (vector fih ghi struct dyal server, ba9i makinsh clients)
-            //Poll() ghatb9a tsena ta ywslha shi event(POLLIN || POLLOUT), fsh ywslha event ghadi t-settey fds[i].revent = 1
-            //Next: ghadi n't-checki: fds[i].revent & POLLIN ==> (revent = 1 & POLLIN = 1 == TRUE). ila kanu bjuj positive y3ni condition TRUE

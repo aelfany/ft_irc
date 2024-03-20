@@ -64,7 +64,7 @@ int main(int ac, char **av)
         //So, ila kan dyal SERVER, rah new client bgha y't-connecta m3a server. O ila kan dyal CLIENT, rah new DATA has been sent to SERVER.
         //ila kan new Client bgha y't-connecta, ghadi t-Acceptih o t7etto fl VECTOR (std::vector<struct pollfd> fds).
         //ila bgha y-sered DATA l server, receiver DATA, using recv(). ila returnat value > 0 printey DATA, ila returnat 0 rah deconnecta(y3ni close socket && remove it from vector).
-        int ret = poll(fds.data(), fds.size(), -1);
+        int ret = poll(fds.data(), fds.size(), 1000);
         if (ret == -1)
         {
             perror("poll");
