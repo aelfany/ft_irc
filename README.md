@@ -1,6 +1,9 @@
 ------------>READ THIS<---------------
 
 do git pull, and revise the code
+-----------HERE IS EXPLANATION------------------------
+* you gonna find explanation in the code ==> main.cpp 😂😂😂😂
+
 
 ------------>SOLVED<---------------
 - The problem I'm trying to solve now is that the server stuck in a blocking operation after receiving the first message from client, preventing it from processing further messages.
