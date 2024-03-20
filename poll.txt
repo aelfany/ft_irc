@@ -1,0 +1,51 @@
+What is poll()?
+poll() is a system call in Unix-like operating systems that allows a program to monitor multiple file descriptors (such as sockets, pipes, or other I/O resources) to see if there's any activity on them.
+It's part of a family of functions used for asynchronous I/O multiplexing.
+
+Why is it used?
+Imagine you have several input sources, like multiple network connections or file descriptors.
+You don't want your program to block (i.e., wait) on each one individually because that's inefficient. Instead, you want to wait for any of these sources to have something to read or write and then react accordingly.
+That's where poll() comes in.
+
+How does it work?
+Setup: First, you prepare an array of structures (struct pollfd), each representing a file descriptor you want to monitor and specifying what events you're interested in (like data available for reading, writing, etc.).
+
+Call poll(): You pass this array to the poll() function along with the number of elements in the array and a timeout value.
+
+Wait for events: poll() will put your program to sleep until one of the specified events occur on one of the file descriptors or until the specified timeout expires.
+If an event occurs, poll() returns, indicating which file descriptors have events pending.
+
+Check the results: After poll() returns, you check the returned values to see which file descriptors have events pending, then you can react accordingly (like reading data from a socket or writing to a file).
+
+Key components:
+struct pollfd: This structure holds information about a file descriptor and the events you're interested in monitoring on it.
+It includes fields like fd (the file descriptor), events (the events you want to monitor), and revents (the events that actually occurred).
+
+Timeout: You can specify how long poll() should wait for events. If set to -1, it waits indefinitely until an event occurs.
+Otherwise, you can specify a timeout value in milliseconds.
+
+Return value: poll() returns the number of file descriptors that have events pending or zero if the timeout expired.
+If an error occurs, it returns -1.
+
+Advantages and limitations:
+Efficiency: poll() is efficient because it allows you to monitor multiple file descriptors in a single call, reducing the need for multiple blocking calls.
+
+Scalability: Unlike some older alternatives like select(), poll() doesn't have a limit on the number of file descriptors you can monitor.
+
+Resource consumption: However, poll() can become inefficient when you're monitoring a large number of file descriptors, as it has to iterate over the entire array every time you call it.
+
+
+
+
+//Hna 3tyet l poll() struct(lli fiha: int fd, short event), o 3teytha size dyal vector, o time lli ghadi tsena (1000ms == 1second).
+        //db poll() ghadi t-checki server_socket_fd, kulla 1 second, wash jato shi event wla la. OK?
+        //ila jat shi event, poll() ghadi t-settey REVENTS b 1 ==> "poll_fd.revents = 1"
+        //mn ba3d, ghadi n't-checki wash REVENTS & POLLIN == TRUE ? 
+        //mn ba3d, ghadi n't-checki hadak REVENTS wash dyal ServerSocket wla ClientSocket, OK?
+        //So, ila kan dyal SERVER, rah new client bgha y't-connecta m3a server. O ila kan dyal CLIENT, rah new DATA has been sent to SERVER.
+        //ila kan new Client bgha y't-connecta, ghadi t-Acceptih o t7etto fl VECTOR (std::vector<struct pollfd> fds).
+        //ila bgha y-sered DATA l server, receiver DATA, using recv(). ila returnat value > 0 printey DATA, ila returnat 0 rah deconnecta(y3ni close socket && remove it from vector).
+
+//poll() ghadi t-checki ila kan kain shi event f "server socket wla client socket", but f awal merra ghadi ykun ghi server socket (vector fih ghi struct dyal server, ba9i makinsh clients)
+            //Poll() ghatb9a tsena ta ywslha shi event(POLLIN || POLLOUT), fsh ywslha event ghadi t-settey fds[i].revent = 1
+            //Next: ghadi n't-checki: fds[i].revent & POLLIN ==> (revent = 1 & POLLIN = 1 == TRUE). ila kanu bjuj positive y3ni condition TRUE
