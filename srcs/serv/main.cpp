@@ -1,5 +1,42 @@
 #include "../../include/Server.hpp"
 
+void eventOnServerSock(int servSockfd, struct sockaddr_in addr, std::vector<struct pollfd>& fds)
+{
+    socklen_t client_addr_l = sizeof(addr);
+    int client_sock_fd = accept(servSockfd, (struct sockaddr *)&addr, &client_addr_l);
+    if (client_sock_fd == -1)
+        perror("accepttt");
+    else
+    {
+        struct pollfd poll_fd;
+        poll_fd.fd = client_sock_fd;
+        poll_fd.events = POLLIN;
+        fds.push_back(poll_fd);
+        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
+    }
+}
+
+void eventOnClientSock(std::vector<pollfd> fds, size_t& i)
+{
+    // Event on client socket (data available)
+    int client_sock_fd = fds[i].fd;
+    char buffer[1024];
+    ssize_t bytesRead = recv(client_sock_fd, buffer, sizeof(buffer), 0);
+    if (bytesRead == -1)
+        perror("recv");
+    else if (bytesRead == 0)
+    {
+        // If client disconnected print this==> && close its socket && erase its data in our vector
+        std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
+        close(client_sock_fd);
+        fds.erase(fds.begin() + i);
+        i--;
+    }
+    else
+        std::cout << "Received: " << std::string(buffer, bytesRead) << std::endl;
+}
+
+
 int main(int ac, char **av)
 {
     struct pollfd poll_fd;
@@ -20,7 +57,7 @@ int main(int ac, char **av)
 
     // Set up pollfd vector
     fds.push_back(poll_fd);
-    socklen_t client_addr_l = sizeof(addr);
+    // socklen_t client_addr_l = sizeof(addr);
     while(true)
     {
         int ret = poll(fds.data(), fds.size(), -1);
@@ -36,38 +73,10 @@ int main(int ac, char **av)
             {
                 // Event on server socket (new connection)
                 if (fds[i].fd == server1.getSockFd())
-                {
-                    int client_sock_fd = accept(server1.getSockFd(), (struct sockaddr *)&addr, &client_addr_l);
-                    if (client_sock_fd == -1)
-                        perror("accept");
-                    else
-                    {
-                        struct pollfd poll_fd;
-                        poll_fd.fd = client_sock_fd;
-                        poll_fd.events = POLLIN;
-                        fds.push_back(poll_fd);
-                        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
-                    }
-                }
-                else
-                {
+                    eventOnServerSock(server1.getSockFd(), addr, fds);
                     // Event on client socket (data available)
-                    int client_sock_fd = fds[i].fd;
-                    char buffer[1024];
-                    ssize_t bytesRead = recv(client_sock_fd, buffer, sizeof(buffer), 0);
-                    if (bytesRead == -1)
-                        perror("recv");
-                    else if (bytesRead == 0)
-                    {
-                        // If client disconnected print this==> && close its socket && erase its data in our vector
-                        std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
-                        close(client_sock_fd);
-                        fds.erase(fds.begin() + i);
-                        i--;
-                    }
-                    else
-                        std::cout << "Received: " << std::string(buffer, bytesRead) << std::endl;
-                }
+                if (fds[i].fd != server1.getSockFd())
+                    eventOnClientSock(fds, i);
             }
         }
     }
