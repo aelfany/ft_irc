@@ -1,26 +1,27 @@
 #include "../../include/Server.hpp"
 
-void eventOnServerSock(int servSockfd, struct sockaddr_in addr, std::vector<struct pollfd>& fds)
+void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<struct pollfd>& fds)
 {
     socklen_t client_addr_l = sizeof(addr);
-    int client_sock_fd = accept(servSockfd, (struct sockaddr *)&addr, &client_addr_l);
+    int client_sock_fd = accept(servrr.getSockFd(), (struct sockaddr *)&addr, &client_addr_l);
     if (client_sock_fd == -1)
         perror("accepttt");
     else
     {
         struct pollfd poll_fd;
         poll_fd.fd = client_sock_fd;
-        poll_fd.events = POLLIN;
+        poll_fd.events = POLLIN | POLLOUT;
         fds.push_back(poll_fd);
         std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
     }
 }
 
-void eventOnClientSock(std::vector<pollfd>& fds, size_t& i)
+void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
 {
     // Event on client socket (data available)
     int client_sock_fd = fds[i].fd;
     char buffer[1024];
+    memset(buffer, 0, 1024);
     ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
     if (recvData == -1)
         perror("recv");
@@ -33,11 +34,28 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i)
         i--;
     }
     else
-        std::cout << "Received: " << std::string(buffer, recvData) << std::endl;
+    {
+        std::cout << "Received: " << buffer << std::endl;
+        // exit(1);
+        if(!servrr.user_flag)
+            servrr.auth(buffer);
+    }
+}
+
+
+void senMsgToClient(int clientfd)
+{
+    char buffer[1024] = "hello client";
+    ssize_t bytes = send(clientfd, buffer, sizeof(buffer), 0);
+    if (bytes == -1)
+    {
+        perror("send: ");
+    }
 }
 
 int main(int ac, char **av)
 {
+
     struct pollfd poll_fd;
     struct sockaddr_in addr;
     std::vector<struct pollfd> fds;//declare vectore with type struct pollfd
@@ -79,10 +97,18 @@ int main(int ac, char **av)
             if (fds[i].revents & POLLIN)
             {
                 if (fds[i].fd == server1.getSockFd()) // Event on server socket (new connection)
-                    eventOnServerSock(server1.getSockFd(), addr, fds);
+                    eventOnServerSock(server1, addr, fds);
                 else // Event on client socket (data available)
-                    eventOnClientSock(fds, i);
+                    eventOnClientSock(fds, i, server1);
             }
+            // if (fds[i].revents & POLLOUT) 
+            // {
+            //     if (fds[i-1].fd == server1.getSockFd())
+            //     {
+            //         std::cout << "here\n";
+            //         senMsgToClient(fds[i].fd);
+            //     } // Event on server socket (new connection)
+            // }
         }
     }
 }

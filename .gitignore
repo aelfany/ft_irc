@@ -1,4 +1,4 @@
 *.o
-.gitignore
-.vscode
-.txt
+*.gitignore
+*.vscode
+*.txt

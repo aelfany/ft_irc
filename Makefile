@@ -9,8 +9,8 @@ CFLAGS			=	-Wall -Wextra -Werror -std=c++98
 PREFIX			=	srcs/
 HPEFIX			=	include/
 
-SOURCES_FILES	=	clientito/client.cpp serv/Server.cpp serv/main.cpp commands/main.cpp commands/server.cpp commands/utils.cpp
-HEADERS_FILES	=	Server.hpp header.hpp irc.hpp client.hpp
+SOURCES_FILES	=	clientito/client.cpp serv/Server.cpp serv/main.cpp commands/main.cpp commands/server.cpp commands/utils.cpp serv/Utils_Server.cpp 
+HEADERS_FILES	=	Server.hpp header.hpp irc.hpp client.hpp 
 
 SOURCES			=	$(addprefix $(PREFIX), $(SOURCES_FILES))
 HEADERS			=	$(addprefix $(HPEFIX), $(HEADERS_FILES))
