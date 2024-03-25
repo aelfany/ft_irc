@@ -123,3 +123,14 @@ void interFace(Servrr obj)
     std::cout << "#  Password: "<< obj.getPassword()<< std::endl;
     std::cout << "#---------------------------#" << std::endl;
 }
+
+void sendMsgToClient(int clientfd, const char* msg)
+{
+    if (msg != NULL)
+    {
+    std::cout << "msg: " << msg << std::endl;
+        ssize_t bytes = send(clientfd, msg, sizeof(msg), 0);
+        if (bytes == -1)
+            perror("send: ");
+    }
+}

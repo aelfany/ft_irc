@@ -1,5 +1,7 @@
 #include "../../include/Server.hpp"
 
+#define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\n";
+
 void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<struct pollfd>& fds)
 {
     socklen_t client_addr_l = sizeof(addr);
@@ -13,6 +15,10 @@ void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<stru
         poll_fd.events = POLLIN | POLLOUT;
         fds.push_back(poll_fd);
         std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
+        const char msg[1024] = WELCOMING;
+        ssize_t bytes = send(client_sock_fd, msg, sizeof(msg), 0);
+        if (bytes == -1)
+            perror("send: ");
     }
 }
 
@@ -25,7 +31,7 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
     if (recvData == -1)
         perror("recv");
-    else if (recvData == 0)
+    else if (recvData == 0 )
     {
         // If client disconnected print this==> && close its socket && erase its data in our vector
         std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
@@ -36,26 +42,14 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     else
     {
         std::cout << "Received: " << buffer << std::endl;
-        // exit(1);
         if(!servrr.user_flag)
-            servrr.auth(buffer);
+            servrr.auth(buffer, client_sock_fd);
     }
 }
 
-
-void senMsgToClient(int clientfd)
-{
-    char buffer[1024] = "hello client";
-    ssize_t bytes = send(clientfd, buffer, sizeof(buffer), 0);
-    if (bytes == -1)
-    {
-        perror("send: ");
-    }
-}
 
 int main(int ac, char **av)
 {
-
     struct pollfd poll_fd;
     struct sockaddr_in addr;
     std::vector<struct pollfd> fds;//declare vectore with type struct pollfd
@@ -101,12 +95,12 @@ int main(int ac, char **av)
                 else // Event on client socket (data available)
                     eventOnClientSock(fds, i, server1);
             }
-            // if (fds[i].revents & POLLOUT) 
+            // if (fds[i].revents & POLLOUT && (fds.size()) 
             // {
-            //     if (fds[i-1].fd == server1.getSockFd())
+            //     if (fds[i].fd != server1.getSockFd())
             //     {
-            //         std::cout << "here\n";
-            //         senMsgToClient(fds[i].fd);
+            //         const char * msg = "hello user\n";
+            //         senMsgToClient(fds[i].fd, msg);
             //     } // Event on server socket (new connection)
             // }
         }

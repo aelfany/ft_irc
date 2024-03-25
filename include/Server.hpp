@@ -24,7 +24,7 @@ class Servrr
     public:
         bool pass_flag, nick_flag, user_flag;
         Servrr() : pass_flag(false), nick_flag(false), user_flag(false) {};
-        char auth(char *str);
+        void  auth(char *str, int client_sock_fd);
         void trimSpaces(const std::string& str);
         Servrr(int portNumber, std::string passw);
         ~Servrr();
@@ -45,6 +45,7 @@ class Servrr
 //     public:
 // };
 
+void sendMsgToClient(int clientfd, const char* msg);
 bool check_port(std::string port);
 void simpleRules(int ac, char *port);
 void SocketAddrInfo(struct sockaddr_in& addr, int port_n);
