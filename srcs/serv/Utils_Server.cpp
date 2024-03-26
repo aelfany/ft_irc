@@ -6,15 +6,11 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/26 05:07:05 by idryab           ###   ########.fr       */
+/*   Updated: 2024/03/26 09:45:57 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
-#include <fcntl.h>
-#include <poll.h>
-#include <iostream>
-#include <sstream>
 
 void Servrr::trimSpaces(const std::string& str) {
     std::stringstream splt(str);
@@ -24,48 +20,45 @@ void Servrr::trimSpaces(const std::string& str) {
     splt >> args[1];
 }
 
-void  Servrr::auth(char *str, int client_sock_fd)
+void	Servrr::auth2(char *str, clientito& client)
 {
     trimSpaces(str);
-    if(args[0] == "PASS"  && args[1] == _password && pass_flag == false)
+    if(args[0] == "PASS"  && args[1] == _password && client.getpflag() == false)
     {
-        pass_flag = true;
+        client.setpflag();
         args[0].erase();
         args[1].erase();
         return ;
     }
-    else if (pass_flag == false)
+    else if (client.getpflag() == false)
     {
-        sendMsgToClient(client_sock_fd, "password ain't correct, try again ... (in a the form above)\n");
+        sendMsgToClient(client.getClinetFd(), "Password ain't correct, try again ... (in a the form above)\n");
         return ;
     }
-    if(args[0] == "NICK" && !args[1].empty() && pass_flag == true && !nick_flag)
+    if(args[0] == "NICK" && !args[1].empty() && client.getpflag() && !client.getnflag())
     {
-        nick_flag = true;   
+        client.setnflag();   
         args[0].erase();
         args[1].erase();
         return ;
     }
-    else if (nick_flag == false && pass_flag)
+    else if (client.getpflag() && !client.getnflag())
     {
-        sendMsgToClient(client_sock_fd, "nickname ain't correct, try again ... (in a the form above)\n");
+        sendMsgToClient(client.getClinetFd(), "Nickname ain't correct, try again ... (in a the form above)\n");
         return ;
     }
-    if(args[0] == "USER" && !args[1].empty() && nick_flag == true && pass_flag == true && !user_flag)
+    if(args[0] == "USER" && !args[1].empty() && client.getpflag() && client.getnflag() && !client.getuflag())
     {
-        user_flag = true;
+        client.setuflag();
         args[0].erase();
         args[1].erase();
     }
-    else if (user_flag == false)
-       sendMsgToClient(client_sock_fd, "username ain't correct, try again ... (in a the form above)\n");
-    if (user_flag == true)
+    else if (!client.getuflag())
+       sendMsgToClient(client.getClinetFd(), "Username ain't correct, try again ... (in a the form above)\n");
+    if (client.getuflag())
     {
         const char msg[49] = "Authentication success, Welcome again, BIG DOG!\n";
-        sendMsgToClient(client_sock_fd, msg);
-        pass_flag = false;
-        nick_flag = false;
-        user_flag = false;
+        sendMsgToClient(client.getClinetFd(), msg);
     }
     return ;
 }

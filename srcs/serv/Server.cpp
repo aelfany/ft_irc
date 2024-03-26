@@ -87,6 +87,7 @@ void Servrr::runServer(struct sockaddr_in& addr)
         std::cerr <<"Error: listen() failed\n";
         exit(1);
     }
+    interFace(*this);
 
 }
 
@@ -102,7 +103,7 @@ bool check_port(std::string port)
     return true;
 }
 
-void simpleRules(int ac, char *port)
+void programRequirement(int ac, char *port)
 {
     if(ac != 3)
     {

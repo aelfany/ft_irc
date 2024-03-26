@@ -10,12 +10,13 @@ void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<stru
         perror("accepttt");
     else
     {
+        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
+        clientito cleintObj(client_sock_fd);
+        servrr.setClientito(cleintObj);
         struct pollfd poll_fd;
         poll_fd.fd = client_sock_fd;
         poll_fd.events = POLLIN | POLLOUT;
         fds.push_back(poll_fd);
-        clientito cleintObj(client_sock_fd);
-        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
         const char msg[1024] = WELCOMING;
         sendMsgToClient(cleintObj.getClinetFd(), msg);
     }
@@ -29,8 +30,8 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     memset(buffer, 0, 1024);
     ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
     if (recvData == -1)
-        perror("recv");
-    else if (recvData == 0 )
+        perror("recvvv");
+    else if (recvData == 0)
     {
         // If client disconnected print this==> && close its socket && erase its data in our vector
         std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
@@ -40,27 +41,28 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     }
     else
     {
-        std::cout << "Received: " << buffer << std::endl;
-        if(!servrr.user_flag)
-            servrr.auth(buffer, client_sock_fd);
+        if(servrr.getClientito(i-1).isAuthed() == false)
+            servrr.auth2(buffer, servrr.getClientito(i-1));
+        else
+            std::cout << "Received: " << buffer << std::endl;
+            // servrr.auth(buffer, client_sock_fd);
     }
 }
 
 
 int main(int ac, char **av)
 {
-    struct pollfd poll_fd;
     struct sockaddr_in addr;
+    struct pollfd poll_fd;
     std::vector<struct pollfd> fds;//declare vectore with type struct pollfd
 
-    simpleRules(ac, av[1]);
+    programRequirement(ac, av[1]);
     int portN = atoi(av[1]);
 
     //class Servvr takes a port number & a password
     Servrr server1(portN, av[2]);
     SocketAddrInfo(addr, portN);
     server1.runServer(addr);
-    interFace(server1);
 
     poll_fd.fd = server1.getSockFd();//sock server fd
     poll_fd.events = POLLIN;
