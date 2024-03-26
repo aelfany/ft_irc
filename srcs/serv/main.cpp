@@ -1,7 +1,5 @@
 #include "../../include/Server.hpp"
 
-#define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\t\tFollow this form: CMD example\n\n";
-
 void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<struct pollfd>& fds)
 {
     socklen_t client_addr_l = sizeof(addr);
@@ -42,12 +40,10 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     }
     else
     {
-        // std::cout << servrr.getClientito(i-1).isAuthed() << std::endl;
         if(servrr.getClientito(i-1).isAuthed() == false)
             servrr.auth2(buffer, servrr.getClientito(i-1));
         else
             std::cout << "Received: " << buffer << std::endl;
-            // servrr.auth(buffer, client_sock_fd);
     }
 }
 
