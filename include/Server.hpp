@@ -14,6 +14,8 @@
 
 #define AUTHED "\n---------------------------------------------------------------\n\tAuthentication success, Welcome again, BIG DOG!\n---------------------------------------------------------------\n";
 
+typedef std::vector<clientito> clientVect;
+
 class Servrr
 {
     private:
@@ -22,13 +24,12 @@ class Servrr
         int							_sock_fd;
         std::string					_password;
         std::string					args[2];
-        std::vector<clientito>		_clients;
+        clientVect	                _clients;
         Servrr();
     public:
         Servrr(int portNumber, std::string passw);
         ~Servrr();
 
-        // void	auth(char *str, int client_sock_fd);
 		void	auth2(char *str, clientito& client);
         void	trimSpaces(const std::string& str);
 
@@ -41,7 +42,9 @@ class Servrr
 		void	setSockAddr(sockaddr_in	addr);
 		void	setSockFd(int sock_fd);
 		void	setClientito(clientito obj);
+
         void	runServer(struct sockaddr_in& addr);
+        void	removeClient(int id);
 };
 
 void	sendMsgToClient(int clientfd, const char msg[]);

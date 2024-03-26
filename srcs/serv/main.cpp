@@ -37,10 +37,12 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
         std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
         close(client_sock_fd);
         fds.erase(fds.begin() + i);
+        servrr.removeClient(i-1);
         i--;
     }
     else
     {
+        // std::cout << servrr.getClientito(i-1).isAuthed() << std::endl;
         if(servrr.getClientito(i-1).isAuthed() == false)
             servrr.auth2(buffer, servrr.getClientito(i-1));
         else

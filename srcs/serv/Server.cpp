@@ -36,6 +36,12 @@ clientito&	Servrr::getClientito(int id)
     return _clients[id];
 }
 
+void    Servrr::removeClient(int id)
+{
+    _clients.erase(_clients.begin() +id);
+}
+
+
 void    Servrr::setSockAddr(sockaddr_in	addr)
 {
     _addr = addr;
