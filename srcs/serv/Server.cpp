@@ -7,9 +7,6 @@ Servrr::Servrr(int portNumber, std::string passw)
     _portNumber = portNumber;
     _password = passw;
     _sock_fd = 0;
-    // _ptrs[0] = &Servrr::checkPass;
-    // _ptrs[1] = &Servrr::checkNick;
-    // _ptrs[2] = &Servrr::checkUser;
 }
 
 Servrr::~Servrr()
@@ -143,16 +140,3 @@ void sendMsgToClient(int clientfd, const char msg[])
             perror("send: ");
     }
 }
-
-// void Servrr::checkPass(bool t)
-// {
-    
-// }
-// void Servrr::checkNick(bool t)
-// {
-
-// }
-// void Servrr::checkUser(bool t)
-// {
-
-// }
