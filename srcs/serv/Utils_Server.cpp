@@ -6,13 +6,14 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/26 09:45:57 by idryab           ###   ########.fr       */
+/*   Updated: 2024/03/26 10:23:41 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 
-void Servrr::trimSpaces(const std::string& str) {
+void Servrr::trimSpaces(const std::string& str)
+{
     std::stringstream splt(str);
     std::string sv;
     std::string s;
@@ -57,46 +58,9 @@ void	Servrr::auth2(char *str, clientito& client)
        sendMsgToClient(client.getClinetFd(), "Username ain't correct, try again ... (in a the form above)\n");
     if (client.getuflag())
     {
-        const char msg[49] = "Authentication success, Welcome again, BIG DOG!\n";
+        const char msg[179] = AUTHED;
         sendMsgToClient(client.getClinetFd(), msg);
     }
     return ;
 }
 
-// char Servrr::auth(char *str) {
-
-//     try {
-//     trimSpaces(str);
-//     if(args[0] == "PASS"  && args[1] == _password && pass_flag == false) {
-//         pass_flag = true;
-//         args[0].erase();
-//         args[1].erase();
-//     }
-//     if (pass_flag == false) {
-//         throw "YOU NEED PASSWORD";
-//     }
-//     if(args[0] == "NICK" && !args[1].empty() && pass_flag == true && !nick_flag) {
-//         if(!args[1].empty())
-//             nick_flag = true;   
-//         args[0].erase();
-//         args[1].erase();
-//     }
-//     std::cout << nick_flag << std::endl;
-//     if (nick_flag == false) {
-//         throw "YOU NEED NICK";
-//     }
-//     if(args[0] == "USER" && !args[1].empty() && nick_flag == true && pass_flag == true && !user_flag) {   
-//         user_flag = true;
-//         args[0].erase();
-//         args[1].erase();
-//     }
-//     if (user_flag == false) {
-//         throw "YOU NEED USER";
-//     }
-//     }
-//     catch(const char *str)
-//     {
-//         std::cout << str << std::endl;
-//     }
-//     return 0;
-// }
