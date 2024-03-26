@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/25 02:33:14 by idryab           ###   ########.fr       */
+/*   Updated: 2024/03/25 10:18:37 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void Servrr::trimSpaces(const std::string& str) {
     std::string s;
     splt >> args[0];
     splt >> args[1];
-    std::cout << str << std::endl;
 }
 
 void  Servrr::auth(char *str, int client_sock_fd)
@@ -33,39 +32,43 @@ void  Servrr::auth(char *str, int client_sock_fd)
         pass_flag = true;
         args[0].erase();
         args[1].erase();
+        return ;
     }
-    else if(args[0] == "NICK" && !args[1].empty() && pass_flag == true && !nick_flag)
+    else if (pass_flag == false)
+    {
+        sendMsgToClient(client_sock_fd, "password ain't correct, try again ... (in a the form above)\n");
+        return ;
+    }
+    if(args[0] == "NICK" && !args[1].empty() && pass_flag == true && !nick_flag)
     {
         nick_flag = true;   
         args[0].erase();
         args[1].erase();
+        return ;
     }
-    else if(args[0] == "USER" && !args[1].empty() && nick_flag == true && pass_flag == true && !user_flag)
+    else if (nick_flag == false && pass_flag)
+    {
+        sendMsgToClient(client_sock_fd, "nickname ain't correct, try again ... (in a the form above)\n");
+        return ;
+    }
+    if(args[0] == "USER" && !args[1].empty() && nick_flag == true && pass_flag == true && !user_flag)
     {
         user_flag = true;
         args[0].erase();
         args[1].erase();
     }
-    if (pass_flag == false)
-        std::cout << "YOU NEED PASSWORD\n";
-    else if (nick_flag == false)
-        std::cout << "YOU NEED NICK\n";
     else if (user_flag == false)
-        std::cout << "YOU NEED USER\n";
+       sendMsgToClient(client_sock_fd, "username ain't correct, try again ... (in a the form above)\n");
     if (user_flag == true)
     {
         const char msg[25] = "Welcome again, BIG DOG!\n";
-        ssize_t bytes = send(client_sock_fd, msg, sizeof(msg), 0);
-        if (bytes == -1)
-            perror("send: ");
+        sendMsgToClient(client_sock_fd, msg);
         pass_flag = false;
         nick_flag = false;
         user_flag = false;
     }
     return ;
 }
-
-
 
 // char Servrr::auth(char *str) {
 

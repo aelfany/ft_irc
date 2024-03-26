@@ -14,13 +14,14 @@
 class Servrr
 {
     private:
+    typedef  void (Servrr::*ptmf)(bool);//define a pointer to member function type.
         int				_portNumber;
         sockaddr_in		_addr;
         int				_sock_fd;
         std::string		_password;
-		std::vector<clientito> _clients;
         std::string args[2];
-        std::string pass;
+        std::vector<clientito> _clients;
+        ptmf _ptrs[3];//declare three ptrs here.(shoof constructur)
     public:
         bool pass_flag, nick_flag, user_flag;
         Servrr() : pass_flag(false), nick_flag(false), user_flag(false) {};
@@ -38,14 +39,15 @@ class Servrr
 		void	setClientito(clientito obj);
         std::vector<clientito>	getClientito();
         void runServer(struct sockaddr_in& addr);
+
+        //checkers
+        // void checkPass(bool t);
+        // void checkNick(bool t);
+        // void checkUser(bool t);
 };
 
-// class Server_Utils {
-//     private:
-//     public:
-// };
 
-void sendMsgToClient(int clientfd, const char* msg);
+void sendMsgToClient(int clientfd, const char msg[]);
 bool check_port(std::string port);
 void simpleRules(int ac, char *port);
 void SocketAddrInfo(struct sockaddr_in& addr, int port_n);

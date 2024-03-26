@@ -1,6 +1,6 @@
 #include "../../include/Server.hpp"
 
-#define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\n";
+#define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\t\tFollow this form: CMD example\n\n";
 
 void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<struct pollfd>& fds)
 {
@@ -95,12 +95,12 @@ int main(int ac, char **av)
                 else // Event on client socket (data available)
                     eventOnClientSock(fds, i, server1);
             }
-            // if (fds[i].revents & POLLOUT && (fds.size()) 
+            // else if (fds[i].revents & POLLOUT && fds.size() > 1)
             // {
             //     if (fds[i].fd != server1.getSockFd())
             //     {
             //         const char * msg = "hello user\n";
-            //         senMsgToClient(fds[i].fd, msg);
+            //         sendMsgToClient(fds[i].fd, msg);
             //     } // Event on server socket (new connection)
             // }
         }

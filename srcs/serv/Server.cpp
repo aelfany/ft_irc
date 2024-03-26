@@ -7,6 +7,9 @@ Servrr::Servrr(int portNumber, std::string passw)
     _portNumber = portNumber;
     _password = passw;
     _sock_fd = 0;
+    // _ptrs[0] = &Servrr::checkPass;
+    // _ptrs[1] = &Servrr::checkNick;
+    // _ptrs[2] = &Servrr::checkUser;
 }
 
 Servrr::~Servrr()
@@ -124,13 +127,25 @@ void interFace(Servrr obj)
     std::cout << "#---------------------------#" << std::endl;
 }
 
-void sendMsgToClient(int clientfd, const char* msg)
+void sendMsgToClient(int clientfd, const char msg[])
 {
     if (msg != NULL)
     {
-    std::cout << "msg: " << msg << std::endl;
-        ssize_t bytes = send(clientfd, msg, sizeof(msg), 0);
+        ssize_t bytes = send(clientfd, msg, strlen(msg), 0);
         if (bytes == -1)
             perror("send: ");
     }
 }
+
+// void Servrr::checkPass(bool t)
+// {
+    
+// }
+// void Servrr::checkNick(bool t)
+// {
+
+// }
+// void Servrr::checkUser(bool t)
+// {
+
+// }
