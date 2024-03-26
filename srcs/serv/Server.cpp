@@ -29,6 +29,16 @@ int	Servrr::getSockFd()
     return _sock_fd;
 }
 
+struct sockaddr_in& Servrr::getSockAddr()
+{
+    return _addr;
+}
+
+clientito&	Servrr::getClientito(int id)
+{
+    return _clients[id];
+}
+
 void    Servrr::setSockAddr(sockaddr_in	addr)
 {
     _addr = addr;
@@ -44,10 +54,6 @@ void	Servrr::setClientito(clientito obj)
     this->_clients.push_back(obj);
 }
 
-std::vector<clientito>	Servrr::getClientito()
-{
-    return _clients;
-}
 
 void Servrr::runServer(struct sockaddr_in& addr)
 {

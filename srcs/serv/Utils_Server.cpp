@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/25 10:18:37 by idryab           ###   ########.fr       */
+/*   Updated: 2024/03/26 05:07:05 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void  Servrr::auth(char *str, int client_sock_fd)
        sendMsgToClient(client_sock_fd, "username ain't correct, try again ... (in a the form above)\n");
     if (user_flag == true)
     {
-        const char msg[25] = "Welcome again, BIG DOG!\n";
+        const char msg[49] = "Authentication success, Welcome again, BIG DOG!\n";
         sendMsgToClient(client_sock_fd, msg);
         pass_flag = false;
         nick_flag = false;

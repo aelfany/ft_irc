@@ -8,11 +8,13 @@
 class clientito
 {
      private:
-        int	_sock_fd;
+        int		_sock_fd;
+        bool	_authenticated;
         clientito();
     public:
 		clientito(int sockefd);
 		~clientito();
 		
 		int getClinetFd();
+    	bool isAuthed();
 };

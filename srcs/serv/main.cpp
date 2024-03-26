@@ -14,11 +14,10 @@ void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<stru
         poll_fd.fd = client_sock_fd;
         poll_fd.events = POLLIN | POLLOUT;
         fds.push_back(poll_fd);
+        clientito cleintObj(client_sock_fd);
         std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
         const char msg[1024] = WELCOMING;
-        ssize_t bytes = send(client_sock_fd, msg, sizeof(msg), 0);
-        if (bytes == -1)
-            perror("send: ");
+        sendMsgToClient(cleintObj.getClinetFd(), msg);
     }
 }
 
