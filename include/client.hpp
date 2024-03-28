@@ -13,8 +13,8 @@ class clientito
 		bool	_nickFlag;
 		bool	_userFlag;
         bool	_authenticated;
-        clientito();
     public:
+        clientito();
 		clientito(int sockefd);
 		~clientito();
 		

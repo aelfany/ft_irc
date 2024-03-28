@@ -124,7 +124,7 @@ void SocketAddrInfo(struct sockaddr_in& addr, int port_n)
 {
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = PF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);// Accept connections on any interface
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);// Accept connections on any interface 
     addr.sin_port = htons(port_n);// Port number (use htons to convert to network byte order)
 }
 

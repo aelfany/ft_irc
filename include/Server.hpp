@@ -46,6 +46,9 @@ class Servrr
 
         void	runServer(struct sockaddr_in& addr);
         void	removeClient(int id);
+
+        //channel section
+        void	createChannel(char *command, int client_fd);
 };
 
 void	sendMsgToClient(int clientfd, const char msg[]);
