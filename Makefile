@@ -3,14 +3,15 @@ COLOUR_RED=\033[0;31m
 COLOUR_BLUE=\033[0;34m
 COLOUR_END=\033[0m
 
-NAME			=	server
+NAME			=	ircserv
 CFLAGS			=	-Wall -Wextra -Werror -std=c++98
 
 PREFIX			=	srcs/
 HPEFIX			=	include/
 
-SOURCES_FILES	=	clientito/client.cpp serv/Server.cpp serv/main.cpp commands/main.cpp commands/server.cpp commands/utils.cpp serv/Utils_Server.cpp 
-HEADERS_FILES	=	Server.hpp header.hpp irc.hpp client.hpp 
+SOURCES_FILES	=	clientito/client.cpp serv/Server.cpp serv/main.cpp commands/main.cpp commands/server.cpp commands/utils.cpp serv/Utils_Server.cpp \
+					channel/Channel.cpp channel/JoinChannel.cpp
+HEADERS_FILES	=	Server.hpp header.hpp irc.hpp client.hpp Channel.hpp
 
 SOURCES			=	$(addprefix $(PREFIX), $(SOURCES_FILES))
 HEADERS			=	$(addprefix $(HPEFIX), $(HEADERS_FILES))

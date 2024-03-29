@@ -43,7 +43,10 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
         if(servrr.getClientito(i-1).isAuthed() == false)
             servrr.auth2(buffer, servrr.getClientito(i-1));
         else
+        {
             std::cout << "Received: " << buffer << std::endl;
+            servrr.createChannel(buffer, client_sock_fd);
+        }
     }
 }
 
@@ -59,7 +62,7 @@ int main(int ac, char **av)
 
     //class Servvr takes a port number & a password
     Servrr server1(portN, av[2]);
-    SocketAddrInfo(addr, portN);
+    SocketAddrInfo(addr, portN);//
     server1.runServer(addr);
 
     poll_fd.fd = server1.getSockFd();//sock server fd

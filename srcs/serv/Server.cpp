@@ -137,11 +137,11 @@ void interFace(Servrr obj)
     std::cout << "#---------------------------#" << std::endl;
 }
 
-void sendMsgToClient(int clientfd, const char msg[])
+void sendMsgToClient(int clientfd, std::string msg)
 {
-    if (msg != NULL)
+    if (!msg.empty())
     {
-        ssize_t bytes = send(clientfd, msg, strlen(msg), 0);
+        ssize_t bytes = send(clientfd, msg.c_str(), msg.length(), 0);
         if (bytes == -1)
             perror("send: ");
     }

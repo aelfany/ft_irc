@@ -15,7 +15,7 @@
 #define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\t\tFollow this form: CMD example\n\n";
 #define AUTHED "\n---------------------------------------------------------------\n\tAuthentication success, Welcome again, BIG DOG!\n---------------------------------------------------------------\n";
 
-typedef std::vector<clientito> clientVect;
+typedef std::vector<clientito> clientVect;//clients
 
 class Servrr
 {
@@ -28,6 +28,7 @@ class Servrr
         clientVect	                _clients;
         Servrr();
     public:
+        void parsNick(clientito& client);
         Servrr(int portNumber, std::string passw);
         ~Servrr();
 
@@ -46,9 +47,12 @@ class Servrr
 
         void	runServer(struct sockaddr_in& addr);
         void	removeClient(int id);
+
+        //channel section
+        void	createChannel(char *command, int client_fd);
 };
 
-void	sendMsgToClient(int clientfd, const char msg[]);
+void	sendMsgToClient(int clientfd, std::string msg);
 bool	check_port(std::string port);
 void	programRequirement(int ac, char *port);
 void	SocketAddrInfo(struct sockaddr_in& addr, int port_n);
