@@ -17,6 +17,7 @@ class clientito
         clientito();
 		clientito(int sockefd);
 		~clientito();
+        clientito() {};
 		
 	int		getClinetFd();
     bool	isAuthed();
@@ -24,7 +25,7 @@ class clientito
 	bool	getnflag();
 	bool	getuflag();
 
-	void	setpflag();
-	void	setnflag();
-	void	setuflag();
+	void	setpflag(bool flag);
+	void	setnflag(bool flag);
+	void	setuflag(bool flag);
 };

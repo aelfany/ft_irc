@@ -42,16 +42,16 @@ bool	clientito::getuflag()
     return _userFlag;
 }
 
-void 	clientito::setpflag()
+void 	clientito::setpflag(bool flag)
 {
-    _passFlag = true;
+    _passFlag = flag;
 }
-void	clientito::setnflag()
+void	clientito::setnflag(bool flag)
 {
-    _nickFlag = true;
+    _nickFlag = flag;
 }
-void	clientito::setuflag()
+void	clientito::setuflag(bool flag)
 {
-    _userFlag = true;
+    _userFlag = flag;
     _authenticated = true;
 }
