@@ -50,7 +50,6 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     }
 }
 
-
 int main(int ac, char **av)
 {
     struct sockaddr_in addr;

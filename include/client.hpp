@@ -17,7 +17,6 @@ class clientito
         clientito();
 		clientito(int sockefd);
 		~clientito();
-        clientito() {};
 		
 	int		getClinetFd();
     bool	isAuthed();

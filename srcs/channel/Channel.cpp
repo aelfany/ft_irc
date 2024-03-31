@@ -12,9 +12,19 @@ std::string&	Channel::getChannelName()
     return _name;
 }
 
+std::string&	Channel::getPassword()
+{
+    return _password;
+}
+
 clientito&		Channel::getUser(std::string _nickname)
 {
     return _users[_nickname];
+}
+
+void	Channel::setPassword(std::string	password)
+{
+    _password = password;
 }
 
 void    Channel::pushtomap(std::string _nickname, clientito& obj)

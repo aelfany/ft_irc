@@ -5,17 +5,20 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "client.hpp"
+#include "Channel.hpp"
 #include <vector>
 #include <fcntl.h>
 #include <poll.h>
 #include <cstring>
 #include <netinet/in.h>
 #include <sstream>
+#include <map>
 
 #define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\t\tFollow this form: CMD example\n\n";
 #define AUTHED "\n---------------------------------------------------------------\n\tAuthentication success, Welcome again, BIG DOG!\n---------------------------------------------------------------\n";
 
-typedef std::vector<clientito> clientVect;//clients
+typedef std::vector<clientito> clientVect;//vector of clients
+typedef std::map<std::string, Channel> channelsMap;//map of channels
 
 class Servrr
 {
@@ -26,6 +29,7 @@ class Servrr
         std::string					_password;
         std::string					args[2];
         clientVect	                _clients;
+        channelsMap					_channels;
         Servrr();
     public:
         void parsNick(clientito& client);
@@ -50,6 +54,7 @@ class Servrr
 
         //channel section
         void	createChannel(char *command, int client_fd);
+        void	proccessChannels(std::string& ch, int clientfd);
 };
 
 void	sendMsgToClient(int clientfd, std::string msg);
