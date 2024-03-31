@@ -2,10 +2,10 @@
 #include "../../include/Channel.hpp"
 #include <iomanip>
 
-void	Servrr::proccessChannels(std::string &ch, int clientfd)
+void	Servrr::proccessChannels(int clientfd)
 {
-	std::istringstream chan(ch);
-	std::istringstream pass(*(&ch+1));
+	std::istringstream chan(_result[1]);
+	std::istringstream pass(_result[2]);
     std::string channel;
     std::string password;
     while (std::getline(chan, channel, ','))
@@ -19,15 +19,13 @@ void	Servrr::proccessChannels(std::string &ch, int clientfd)
 	}
 }
 
-std::vector<std::string> parseJoinCommand(const std::string& command)
+void    Servrr::parseJoinCommand(const std::string& command)
 {
-    std::vector<std::string> result;
     std::istringstream iss(command);
 	std::string part;
 	
 	while (iss >> part)
-		result.push_back(part);
-    return result;
+        _result.push_back(part);
 }
 
 void printRowChannels(const std::string& channel, const std::string& password)
@@ -40,20 +38,19 @@ void printRowChannels(const std::string& channel, const std::string& password)
 
 void    Servrr::createChannel(char *command, int clientfd)
 {
-    std::vector<std::string> parsedcmd;
-
-    parsedcmd = parseJoinCommand(command);
-    if (parsedcmd[0] == "JOIN")
+    parseJoinCommand(command);
+    if (_result[0] == "JOIN")
     {
-        if (parsedcmd[1].empty())
+        if (_result[1].empty())
             sendMsgToClient(clientfd, "Plz, Provide a channnel name\n");
         else
         {
-			proccessChannels(parsedcmd[1], clientfd);
-			std::map<std::string, Channel>::iterator it;
-			for (it = _channels.begin(); it != _channels.end(); ++it)
+			proccessChannels(clientfd);
+			std::map<std::string, Channel>::iterator it = _channels.begin();
+			for (; it != _channels.end(); ++it)
 				printRowChannels(it->first, it->second.getPassword());
 			std::cout << "+-------------------------------------------------+\n";
         }
     }
+    _result.clear();
 }
