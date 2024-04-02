@@ -11,8 +11,8 @@ void	Servrr::proccessChannels(int clientfd)
     while (std::getline(chan, channel, ','))
 	{
 		Channel newchannel(channel);
-		std::getline(pass, password, ',');
-		newchannel.setPassword(password);
+		if (std::getline(pass, password, ','))
+		    newchannel.setPassword(password);
 		_channels.insert(std::make_pair(channel, newchannel));
 		std::string msg = "Awosome, you just create " + channel + " channel, Enjoy!\n";
 		sendMsgToClient(clientfd, msg.c_str());
@@ -23,9 +23,12 @@ void    Servrr::parseJoinCommand(const std::string& command)
 {
     std::istringstream iss(command);
 	std::string part;
-	
+
 	while (iss >> part)
+    {
         _result.push_back(part);
+    }
+    _result.push_back("");
 }
 
 void printRowChannels(const std::string& channel, const std::string& password)
@@ -51,6 +54,6 @@ void    Servrr::createChannel(char *command, int clientfd)
 				printRowChannels(it->first, it->second.getPassword());
 			std::cout << "+-------------------------------------------------+\n";
         }
+        _result.clear();
     }
-    _result.clear();
 }
