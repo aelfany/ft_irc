@@ -40,13 +40,8 @@ void eventOnClientSock(std::vector<pollfd>& fds, size_t& i, Servrr& servrr)
     }
     else
     {
-        if(servrr.getClientito(i-1).isAuthed() == false)
-            servrr.auth2(buffer, servrr.getClientito(i-1));
-        else
-        {
-            std::cout << "Received: " << buffer << std::endl;
-            servrr.createChannel(buffer, client_sock_fd);
-        }
+        std::cout << "Received: " << buffer << std::endl;
+        servrr.command(buffer, i, servrr);
     }
 }
 

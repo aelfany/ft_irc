@@ -35,6 +35,13 @@ bool	clientito::getuflag()
     return _userFlag;
 }
 
+void 	clientito::setNickName(std::string nickname) {
+    NickName = nickname;
+}
+std::string 	clientito::getNickName() {
+    return NickName;
+}
+
 void 	clientito::setpflag(bool flag)
 {
     _passFlag = flag;
