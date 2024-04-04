@@ -30,8 +30,10 @@ $(NAME): $(OBJECTS) $(HEADERS)
 	c++ $(CFLAGS) -c $< -o $@
 
 clean:
+	@echo "$(COLOUR_RED)==>Remove Obect Files...$(COLOUR_RED)$(COLOUR_END)"
 	rm -f $(OBJECTS)
 fclean: clean
+	@echo "$(COLOUR_RED)==>Remove Executable...$(COLOUR_RED)$(COLOUR_END)"
 	rm -f $(NAME)
 
 re: fclean all

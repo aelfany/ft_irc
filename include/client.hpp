@@ -15,9 +15,9 @@ class clientito
 		bool	_userFlag;
         bool	_authenticated;
     public:
+        clientito();
 		clientito(int sockefd);
 		~clientito();
-        clientito() {};
 		
 	std::string 	getNickName();
 	int		getClinetFd();

@@ -20,6 +20,7 @@
 typedef std::vector<clientito> clientVect;//vector of clients
 typedef std::map<std::string, Channel> channelsMap;//map of channels
 typedef std::vector<std::string> JoinVect;//vector for Parse join
+
 class Servrr
 {
     private:
@@ -58,7 +59,7 @@ class Servrr
         void	removeClient(int id);
 
         //channel section
-        void	createChannel(std::string command, int client_fd);
+    void	createChannel(std::string command, int client_fd);
 		void	parseJoinCommand(const std::string& command);
 		void	proccessChannels(int clientfd);
 };
