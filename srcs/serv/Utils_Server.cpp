@@ -3,16 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_Server.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/04 02:58:15 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/04 05:39:29 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 #include "../../include/client.hpp"
 #include "../../include/header.hpp"
+
+
+#define RPL_AUTHENTICATED(nickname) (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
 
 void Servrr::trimSpaces(const std::string& str)
 {
@@ -80,10 +83,10 @@ void	Servrr::auth2(std::string str, clientito& client)
     }
     else if (!client.getuflag())
        sendMsgToClient(client.getClinetFd(), "Username ain't correct, try again ... (in a the form above)\n");
-    if (client.getuflag()) {
-        const char msg[179] = AUTHED;
-        sendMsgToClient(client.getClinetFd(), msg);
+    if(client.isAuthed())
+    {
+        std::string nickname = "сукаблять";
+        sendMsgToClient(client.getClinetFd(), RPL_AUTHENTICATED(nickname));
     }
     return ;
 }
-
