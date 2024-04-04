@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 21:22:03 by abelfany          #+#    #+#             */
-/*   Updated: 2024/03/29 20:45:12 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/04 03:32:50 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 // nimeric
 
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
-#define ERR_ALREADYREGISTERED(buffer)                   "462 " + buffer + " :You may not register"
+#define ERR_ALREADYREGISTERED(buffer, cmd)				(":" + cmd + " 462 " + buffer + " :You may not register\r\n")
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
+#define ERR_NICKNAMEINUSE(buffer)                       (": 433 " + buffer + ":Nickname is already in use\r\n")
 #define ERR_NONICKNAMEGIVEN(buffer)                     "431 " + buffer + " :Nickname not given"
-#define ERR_NICKNAMEINUSE(buffer)                       "433 " + buffer + " " + buffer  + " :Nickname is already in use"
 
 #define ERR_UNKNOWNcmd(buffer, cmd)             		"421 " + buffer + " " + cmd + " :Unknown cmd"
 #define ERR_NEEDMOREPARAMS(buffer, cmd)             	"461 " + buffer + " " + cmd + " :Not enough parameters"
@@ -41,7 +41,7 @@
 
 /* Numeric Responses */
 
-#define RPL_WELCOME(buffer)                             "001 " + buffer + " :Welcome " + buffer + " to the ft_irc network"
+#define RPL_WELCOME(buffer, nick)                       ":" + buffer + "001 " + " :Welcome " + nick + " to the ft_irc network" + nick + "\r\n"
 #define RPL_NAMREPLY(buffer, channel, users)            "353 " + buffer + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(buffer, channel)                 "366 " + buffer + " " + channel + " :End of /NAMES list."
 

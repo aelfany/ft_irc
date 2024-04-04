@@ -4,8 +4,8 @@
 
 void	Servrr::proccessChannels(int clientfd)
 {
-	std::istringstream chan(_result[1]);
-	std::istringstream pass(_result[2]);
+	  std::stringstream chan(_result[1]);
+	  std::stringstream pass(_result[2]);
     std::string channel;
     std::string password;
     while (std::getline(chan, channel, ','))
@@ -21,7 +21,7 @@ void	Servrr::proccessChannels(int clientfd)
 
 void    Servrr::parseJoinCommand(const std::string& command)
 {
-    std::istringstream iss(command);
+  std::stringstream iss(command);
 	std::string part;
 
 	while (iss >> part)
@@ -39,7 +39,7 @@ void printRowChannels(const std::string& channel, const std::string& password)
     std::cout << "| " << std::left << std::setw(width - 2) << "PASSWORD: " + password << "|\n";
 }
 
-void    Servrr::createChannel(char *command, int clientfd)
+void    Servrr::createChannel(std::string command, int clientfd)
 {
     parseJoinCommand(command);
     if (_result[0] == "JOIN")
