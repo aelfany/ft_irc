@@ -15,8 +15,9 @@ void eventOnServerSock(Servrr& servrr, struct sockaddr_in addr, std::vector<stru
         poll_fd.fd = client_sock_fd;
         poll_fd.events = POLLIN | POLLOUT;
         fds.push_back(poll_fd);
-        const char msg[1024] = WELCOMING;
-        sendMsgToClient(cleintObj.getClinetFd(), msg);
+        std::string s1 = "test";
+        std::string s2 = "test";
+        sendMsgToClient(client_sock_fd, RPL_WELCOME(s1, s2));
     }
 }
 

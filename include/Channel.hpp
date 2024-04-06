@@ -8,10 +8,14 @@ typedef std::map<std::string, clientito> map_users;
 class Channel
 {
     private:
-        // int			_id;
-        std::string	_name;
-        std::string	_password;
-        map_users	_users;
+        bool			_inv;
+        bool			_pass;
+        bool			_topc;
+        size_t          _limit;
+        std::string		_name;
+        std::string		_password;
+        std::string		_topic;
+        map_users		_users;
         Channel();
     public:
         Channel(std::string	_name);
@@ -23,7 +27,13 @@ class Channel
 		clientito&		getUser(std::string _nickname);
 
 		//setters
-		void	setPassword(std::string	password);
+		void	setPassword(std::string	password);//
+        void	setTopic(std::string	topic);
+
+        void	setInvOnly(bool inv);
+        void	setPass(bool pass);
+        void	setTopc(bool top);
+        void	setLimit(size_t limit);
 
 		void pushtomap(std::string _nickname, clientito& obj);
 };

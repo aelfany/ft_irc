@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/06 04:44:39 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/06 07:18:33 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,11 @@
 
 
 void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
-    static int f = 0;
     std::string s = inet_ntoa(_addr.sin_addr);
-    trimSpaces(buffer);
+    trimSpaces(buffer,false);
+    std::cout << "->>>" << args.size() << std::endl;
     if(servrr.getClientito(i-1).isAuthed() == false) {
-        std::string s1 = "test";
-        std::string s2 = "test";
-        if (f == 0)
-        {
-            sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), RPL_WELCOME(s1, s2));
-        }
         servrr.auth2(buffer, servrr.getClientito(i-1));
-        f++;
     }
     else {
         if(args[0] == "PASS") {
@@ -35,9 +28,10 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
             else
                 sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), ERR_ALREADYREGISTERED(s,"abelfany"));
         }
-        else if(args[0] == "JOIN" ) {
-            std::cout << args.size() << std::endl;
-            if(args.size() == 1 || (args.size() == 2 && args[1][0] == '#' && args[1][1] == '\0'))
+        else if(args[0] == "JOIN") {
+            trimSpaces(buffer,true);
+            std::cout << "->>>" << args.size() << std::endl;
+            if(args.size() < 2)
                 sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
             else
                 servrr.createChannel(buffer, servrr.getClientito(i-1).getClinetFd());

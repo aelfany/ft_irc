@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_Server.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/06 02:25:04 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/06 07:19:39 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,18 @@
 #include "../../include/client.hpp"
 #include "../../include/replies.hpp"
 
-void Servrr::trimSpaces(const std::string& str)
+void Servrr::trimSpaces(const std::string& str, bool x)
 {
     std::stringstream splt(str);
-    std::string sv;
-    while(splt >> sv)
-        args.push_back(sv);
+    std::string s;
+    if(x)
+        args.clear();
+    while(splt >> s) {
+        if(!(x && s == "#")) {
+            // std::cout << s << std::endl;
+            args.push_back(s);
+        }
+    }
 }
 // void Servrr::trimUser(const std::string& str)
 // {
@@ -45,7 +51,7 @@ void Servrr::parsNick(clientito& client) {
 // }
 void	Servrr::auth2(std::string str, clientito& client)
 {
-    trimSpaces(str);
+    trimSpaces(str,false);
     std::cout << "----------------------" << std::endl;
     std::cout << args[0] << " " << args[1] << std::endl;
     std::cout << "----------------------" << std::endl;

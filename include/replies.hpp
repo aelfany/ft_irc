@@ -50,13 +50,12 @@
 /* Numeric Responses */
 
 #define RPL_WELCOME(buffer, netw)                       (":" + buffer + " 001 " + netw + " :Welcome to the ft_irc network\r\n")
-#define RPL_NAMREPLY(buffer, channel, users)            "353 " + buffer + " = " + channel + " :" + users
+#define RPL_NAMREPLY(buffer, channel, users)            ":" + buffer + " 353 " + buffer + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(buffer, channel)                 "366 " + buffer + " " + channel + " :End of /NAMES list."
 
 
 /* command Responses */
-
-#define RPL_JOIN(buffer, channel)                       ":" + buffer + " JOIN :" + channel
+// #define RPL_JOIN(buffer, channel)                       ":" + buffer + " JOIN :" + channel
 #define RPL_PART(buffer, channel)                       ":" + buffer + " PART :" + channel
 #define RPL_PING(buffer, token)                         ":" + buffer + " PONG :" + token
 #define RPL_PRIVMSG(buffer, target, message)            ":" + buffer + " PRIVMSG " + target + " :" + message
