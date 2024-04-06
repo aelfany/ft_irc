@@ -25,9 +25,7 @@ void    Servrr::parseJoinCommand(const std::string& command)
 	std::string part;
 
 	while (iss >> part)
-    {
         _result.push_back(part);
-    }
     _result.push_back("");
 }
 

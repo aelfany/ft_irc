@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   header.hpp                                         :+:      :+:    :+:   */
+/*   replies.hpp.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 21:22:03 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/04 04:43:27 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/06 02:23:40 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HEADER_HPP
 #define HEADER_HPP
 
-#include "client.hpp"
-#include <map>
+//MODE 
+#define SET_I       args[2][0] == '+' && args[2][0] == 'i'
+#define REMOVE_I    args[2][0] == '-' && args[2][0] == 'i'
+#define SET_T       args[2][0] == '+' && args[2][0] == 't'
+#define REMOVE_T    args[2][0] == '-' && args[2][0] == 't'
+#define SET_K       args[2][0] == '+' && args[2][0] == 'k'
+#define REMOVE_K    args[2][0] == '-' && args[2][0] == 'k'
+#define SET_O       args[2][0] == '+' && args[2][0] == 'o'
+#define REMOVE_O    args[2][0] == '-' && args[2][0] == 'o'
+#define SET_L       args[2][0] == '+' && args[2][0] == 'l'
+#define REMOVE_L    args[2][0] == '-' && args[2][0] == 'l'
 
 // nimeric
-
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
-#define ERR_ALREADYREGISTERED(buffer)                   "462 " + buffer + " :You may not register"
+#define ERR_ALREADYREGISTERED(buffer, nick)             (":" + buffer + " 462 " + nick + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
+#define ERR_NEEDMOREPARAMS(buffer, cmd)             	":" + buffer + " 461 " + cmd + " :Not enough parameters\r\n"
 #define ERR_NONICKNAMEGIVEN(buffer)                     "431 " + buffer + " :Nickname not given"
 #define ERR_NICKNAMEINUSE(buffer)                       "433 " + buffer + " " + buffer  + " :Nickname is already in use"
 
 #define ERR_UNKNOWNcmd(buffer, cmd)             		"421 " + buffer + " " + cmd + " :Unknown cmd"
-#define ERR_NEEDMOREPARAMS(buffer, cmd)             	"461 " + buffer + " " + cmd + " :Not enough parameters"
 
 #define ERR_TOOMANYCHANNELS(buffer, channel)            "405 " + buffer + " " + channel + " :You have joined too many channels"
 #define ERR_NOTONCHANNEL(buffer, channel)               "442 " + buffer + " " + channel + " :You're not on that channel"
@@ -56,14 +64,7 @@
 #define RPL_QUIT(buffer, message)                       ":" + buffer + " QUIT :Quit: " + message
 #define RPL_KICK(buffer, channel, target, reason)       ":" + buffer + " KICK " + channel + " " + target + " :" + reason
 #define RPL_MODE(buffer, channel, modes, args)          ":" + buffer + " MODE " + channel + " " + modes + " " + args
+#define RPL_AUTHENTICATED(nickname)                     (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
 
-class channel {
 
-    private:
-        std::map<clientito, std::string> channel;//
-    public:
-        void setmap(clientito &obj, std::string nickname);
-      
-};
-
-#endif
+#endif//

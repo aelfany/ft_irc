@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "client.hpp"
+#include "replies.hpp"
 #include "Channel.hpp"
 #include <vector>
 #include <fcntl.h>

@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_Server.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/04 05:39:29 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/06 02:25:04 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 #include "../../include/client.hpp"
-#include "../../include/header.hpp"
-
-
-#define RPL_AUTHENTICATED(nickname) (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
+#include "../../include/replies.hpp"
 
 void Servrr::trimSpaces(const std::string& str)
 {
