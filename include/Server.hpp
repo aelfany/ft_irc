@@ -26,7 +26,7 @@ class Servrr
 {
     private:
     
-            int							_portNumber;
+        int							_portNumber;
         sockaddr_in					_addr;
         int							_sock_fd;
         std::string					_password;
@@ -37,10 +37,10 @@ class Servrr
         Servrr();
     public:
         void command(std::string buffer, size_t i, Servrr& servrr);
-        void parsNick(clientito& client);
-        // void parsUser(clientito& client);
         Servrr(int portNumber, std::string passw);
         ~Servrr();
+        void parsNick(clientito& client);
+        // void parsUser(clientito& client);
 
 		void	auth2(std::string str, clientito& client);
         void    trimUser(const std::string& str);
@@ -50,7 +50,8 @@ class Servrr
 		unsigned int		getPort();
 		int					getSockFd();
 		struct sockaddr_in&	getSockAddr();
-        clientito&			getClientito(int id);
+        clientito&			getClientitoByIndex(int index);
+        clientito&			getClientitoByfd(int clientfd);
 
 		void	setSockAddr(sockaddr_in	addr);
 		void	setSockFd(int sock_fd);
@@ -60,7 +61,7 @@ class Servrr
         void	removeClient(int id);
 
         //channel section
-    void	createChannel(std::string command, int client_fd);
+        void	createChannel(std::string command, int client_fd);
 		void	parseJoinCommand(const std::string& command);
 		void	proccessChannels(int clientfd);
 };

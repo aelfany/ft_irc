@@ -21,9 +21,14 @@ std::string&	Channel::getPassword()
     return _password;
 }
 
-clientito&		Channel::getUser(std::string _nickname)
+clientito&		Channel::getUserBynickname(std::string _nickname)
 {
     return _users[_nickname];
+}
+
+map_users&		Channel::getUsersMap()
+{
+	return _users;
 }
 
 void	Channel::setPassword(std::string	password)

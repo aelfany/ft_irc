@@ -24,7 +24,8 @@ class Channel
 		//getters
 		std::string&	getChannelName();
 		std::string&	getPassword();
-		clientito&		getUser(std::string _nickname);
+		clientito&		getUserBynickname(std::string _nickname);
+        map_users&		getUsersMap();
 
 		//setters
 		void	setPassword(std::string	password);//
@@ -37,3 +38,5 @@ class Channel
 
 		void pushtomap(std::string _nickname, clientito& obj);
 };
+
+void ShowChannels(std::map<std::string, Channel> ChannelsMap);

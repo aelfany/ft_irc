@@ -18,8 +18,8 @@ void	Servrr::proccessChannels(int clientfd)
 	std::stringstream pass(_result[2]);
     std::string channel;
     std::string password;
-    std::string nickname = _clients[clientfd-4].getNickName();//this can cuz a problem, just temporary soluction.
-        std::string serverHostname = "127.0.0.1";
+    std::string nickname = getClientitoByfd(clientfd).getNickName();
+    std::string serverHostname = "127.0.0.1";
     while (std::getline(chan, channel, ','))
 	{
         if(channel[0] == '#' && channel != "JOIN")
@@ -27,13 +27,14 @@ void	Servrr::proccessChannels(int clientfd)
         
         //this can be removed, cuz map container handle it(if we push the same key it will keep the old one).
         std::map<std::string, Channel>::iterator it = _channels.find(channel);
+		Channel newchannel(channel);
         if (it != _channels.end())
         {
             sendMsgToClient(clientfd, RPL_JOINN(nickname, channel));
+            it->second.pushtomap(nickname, getClientitoByfd(clientfd));
             return ;
         }
-		Channel newchannel(channel);
-        newchannel.pushtomap(nickname, getClientito(clientfd-4));//this can cuz a problem, just temporary soluction.
+        newchannel.pushtomap(nickname, getClientitoByfd(clientfd));
 		if (std::getline(pass, password, ','))
         {
 		    newchannel.setPassword(password);
@@ -53,21 +54,9 @@ void    Servrr::parseJoinCommand(const std::string& command)
   std::stringstream iss(command);
 	std::string part;
 
-	while (iss >> part) {
-        std::cout << "************" << std::endl;
-        std::cout << part << std::endl;
+	while (iss >> part)
         _result.push_back(part);
-    }
-        std::cout << "************" << std::endl;
     _result.push_back("");
-}
-
-void printRowChannels(const std::string& channel, const std::string& password)
-{
-    const int width = 50;
-    std::cout << "+-------------------------------------------------+\n";
-    std::cout << "| " << std::left << std::setw(width - 2) << "CHANNEL : " + channel << "|\n";
-    std::cout << "| " << std::left << std::setw(width - 2) << "PASSWORD: " + password << "|\n";
 }
 
 void    Servrr::createChannel(std::string command, int clientfd)
@@ -80,10 +69,7 @@ void    Servrr::createChannel(std::string command, int clientfd)
         else
         {
 			proccessChannels(clientfd);
-			std::map<std::string, Channel>::iterator it = _channels.begin();
-			for (; it != _channels.end(); ++it)
-				printRowChannels(it->first, it->second.getPassword());
-			std::cout << "+-------------------------------------------------+\n";
+            ShowChannels(_channels);//display channels' users and thier info.
         }
         _result.clear();
     }

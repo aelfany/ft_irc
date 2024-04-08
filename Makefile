@@ -10,7 +10,7 @@ PREFIX			=	srcs/
 HPEFIX			=	include/
 
 SOURCES_FILES	=	clientito/client.cpp serv/Server.cpp serv/main.cpp commands/command.cpp commands/mode.cpp commands/utils.cpp serv/Utils_Server.cpp \
-					channel/Channel.cpp channel/JoinChannel.cpp
+					channel/Channel.cpp channel/JoinChannel.cpp channel/ShowChannels.cpp
 HEADERS_FILES	=	Server.hpp replies.hpp irc.hpp client.hpp Channel.hpp
 
 SOURCES			=	$(addprefix $(PREFIX), $(SOURCES_FILES))

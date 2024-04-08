@@ -31,9 +31,19 @@ struct sockaddr_in& Servrr::getSockAddr()
     return _addr;
 }
 
-clientito&	Servrr::getClientito(int id)
+clientito&	Servrr::getClientitoByIndex(int id)
 {
     return _clients[id];
+}
+
+clientito&	Servrr::getClientitoByfd(int clientfd)
+{
+    for(size_t i = 0; i < _clients.size(); i++)
+    {
+		if (_clients[i].getClinetFd() == clientfd)
+			return _clients[i];
+    }
+    return _clients[0];//don't forget to remove this, and change it with a proper way.
 }
 
 void    Servrr::removeClient(int id)
