@@ -1,6 +1,6 @@
 #include "../../include/Channel.hpp"
 
-Channel::Channel(std::string    name)
+Channel::Channel(std::string name)
 {
     _name = name;
     _inv = false;
@@ -31,12 +31,12 @@ map_users&		Channel::getUsersMap()
 	return _users;
 }
 
-void	Channel::setPassword(std::string	password)
+void	Channel::setPassword(std::string password)
 {
     _password = password;
 }
 
-void	Channel::setTopic(std::string	topic)
+void	Channel::setTopic(std::string topic)
 {
     _topic = topic;
 }
@@ -59,7 +59,7 @@ void	Channel::setLimit(size_t limit)
 }
 
 
-void    Channel::pushtomap(std::string _nickname, clientito& obj)
+void Channel::pushtomap(std::string _nickname, clientito& obj)
 {
 	_users.insert(std::make_pair(_nickname, obj));
 }

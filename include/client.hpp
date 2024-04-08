@@ -18,14 +18,14 @@ class clientito
         clientito();
 		clientito(int sockefd);
 		~clientito();
-		
-	std::string 	getNickName();
-	int		getClinetFd();
-    bool	isAuthed();
-	bool	getpflag();
-	bool	getnflag();
-	bool	getuflag();
-
+	//getters
+	std::string	getNickName();
+	int			getClinetFd();
+    bool		isAuthed();
+	bool		getpflag();
+	bool		getnflag();
+	bool		getuflag();
+	//setters
 	void 	setNickName(std::string nickname);
 	void	setpflag(bool flag);
 	void	setnflag(bool flag);
