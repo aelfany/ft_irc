@@ -8,12 +8,12 @@
 class clientito
 {
      private:
-	 	std::string NickName;
-        int		_sock_fd;
-		bool	_passFlag;
-		bool	_nickFlag;
-		bool	_userFlag;
-        bool	_authenticated;
+        int			_sock_fd;
+		bool		_passFlag;
+		bool		_nickFlag;
+		bool		_userFlag;
+        bool		_authenticated;
+	 	std::string _nickName;
     public:
         clientito();
 		clientito(int sockefd);
