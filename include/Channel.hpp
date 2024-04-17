@@ -11,6 +11,7 @@ class Channel
         bool			_inv;
         bool			_pass;
         bool			_topc;
+        bool            _userlimit;
         size_t          _limit;
         std::string		_name;
         std::string		_password;
@@ -25,11 +26,12 @@ class Channel
 		std::string&	getChannelName();
 		std::string&	getPassword();
 		clientito&		getUser(std::string _nickname);
+        bool            getPass();
 
 		//setters
 		void	setPassword(std::string	password);//
         void	setTopic(std::string	topic);
-
+        void	setUserLimit(bool limit);
         void	setInvOnly(bool inv);
         void	setPass(bool pass);
         void	setTopc(bool top);

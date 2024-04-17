@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/16 15:49:55 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/17 18:30:31 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ Channel & Servrr::getChannel(std::string channel) {
     std::map<std::string, Channel>::iterator it = _channels.find(channel);
     if (it == _channels.end())
         throw "No channel found";
-    // puts("******************************");
-    // std::cout << it->second.getChannelName() << it->second.getPassword() << std::endl; 
-    // puts("******************************");
     return it->second;
 }
 void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
@@ -52,6 +49,7 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
         else if(args[0] == "MODE")
         {
             try {
+                //****** no parsing ******//
                 Channel &mode = getChannel(args[1]); 
                 std::cout << "channel found secssusfly '*`" << std::endl;
                 if(SET_I) {
@@ -66,6 +64,8 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
                 else if(REMOVE_T) {
                     mode.setTopc(false);
                 }
+                //**************************//
+                //-------need parsing-------//
                 if(SET_K) {
                     if(mode.getPass() == true)
                         sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), RPL_ALREADYSET(s));
@@ -79,8 +79,12 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
                     if(mode.getPass() == false)
                         sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), RPL_NOPASSSET(s));
                     else
+                    {
                         mode.getPassword().erase();
+                        mode.setPass(false);
+                    }
                 }
+                //---------------------//
                 if(SET_O) {
                     /***/
                 }
