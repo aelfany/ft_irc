@@ -7,6 +7,7 @@ Servrr::Servrr(int portNumber, std::string passw)
     _portNumber = portNumber;
     _password = passw;
     _sock_fd = 0;
+    _index = 0;
 }
 
 Servrr::~Servrr()
@@ -31,9 +32,19 @@ struct sockaddr_in& Servrr::getSockAddr()
     return _addr;
 }
 
-clientito&	Servrr::getClientito(int id)
+clientito&	Servrr::getClientitoByIndex(int id)
 {
     return _clients[id];
+}
+
+clientito&	Servrr::getClientitoByfd(int clientfd)
+{
+    for(size_t i = 0; i < _clients.size(); i++)
+    {
+		if (_clients[i].getClinetFd() == clientfd)
+			return _clients[i];
+    }
+    return _clients[0];//don't forget to remove this, and change it with a proper way.
 }
 
 void    Servrr::removeClient(int id)
@@ -42,14 +53,22 @@ void    Servrr::removeClient(int id)
 }
 
 
-void    Servrr::setSockAddr(sockaddr_in	addr)
+void    Servrr::setSockAddr()
 {
-    _addr = addr;
+    memset(&_addr, 0, sizeof(_addr));
+    _addr.sin_family = PF_INET;
+    _addr.sin_addr.s_addr = htonl(INADDR_ANY);// Accept connections on any interface 
+    _addr.sin_port = htons(_portNumber);// Port number (use htons to convert to network byte order)
 }
 
 void    Servrr::setSockFd(int sock_fd)
 {
     _sock_fd = sock_fd;
+}
+
+PollfdVect&	Servrr::getPollfdVect()
+{
+	return _fds;
 }
 
 void	Servrr::setClientito(clientito obj)
@@ -58,7 +77,7 @@ void	Servrr::setClientito(clientito obj)
 }
 
 
-void Servrr::runServer(struct sockaddr_in& addr)
+void Servrr::runServer()
 {
     //create a socket
     _sock_fd = socket(PF_INET, SOCK_STREAM, 0);
@@ -80,7 +99,7 @@ void Servrr::runServer(struct sockaddr_in& addr)
         std::cerr <<"Error: setsockopt() failed\n";
         exit(1);
     }
-    if (bind(_sock_fd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+    if (bind(_sock_fd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1)
     {
         std::cerr <<"Error: bind() failed\n";
         exit(1);

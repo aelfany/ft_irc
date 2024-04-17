@@ -43,10 +43,10 @@ bool	clientito::getuflag()
 }
 
 void 	clientito::setNickName(std::string nickname) {
-    NickName = nickname;
+    _nickName = nickname;
 }
 std::string 	clientito::getNickName() {
-    return NickName;
+    return _nickName;
 }
 
 void 	clientito::setpflag(bool flag)

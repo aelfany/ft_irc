@@ -14,6 +14,7 @@
 #include "../../include/client.hpp"
 
 
+
 Channel & Servrr::getChannel(std::string channel) {
 
     if(args[1][0] == '#')
@@ -27,24 +28,22 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
     std::string s = inet_ntoa(_addr.sin_addr);
     std::string nick = servrr.getClientito(i-1).getNickName();
     trimSpaces(buffer,false);
-    std::cout << "->>>" << args.size() << std::endl;
-    if(servrr.getClientito(i-1).isAuthed() == false) {
-        servrr.auth2(buffer, servrr.getClientito(i-1));
+    if(getClientitoByIndex(i-1).isAuthed() == false) {
+        auth2(buffer, getClientitoByIndex(i-1));
     }
     else {
         if(args[0] == "PASS") {
             if(args.size() < 2)
-                sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
             else
-                sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), ERR_ALREADYREGISTERED(s,"abelfany"));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_ALREADYREGISTERED(s,"abelfany"));
         }
         else if(args[0] == "JOIN") {
             trimSpaces(buffer,true);
-            std::cout << "->>>" << args.size() << std::endl;
             if(args.size() < 2)
-                sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
             else
-                servrr.createChannel(buffer, servrr.getClientito(i-1).getClinetFd());
+                createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
         }
         else if(args[0] == "MODE")
         {
