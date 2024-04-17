@@ -14,16 +14,16 @@
 #define HEADER_HPP
 
 //MODE 
-#define SET_I       args[2][0] == '+' && args[2][0] == 'i'
-#define REMOVE_I    args[2][0] == '-' && args[2][0] == 'i'
-#define SET_T       args[2][0] == '+' && args[2][0] == 't'
-#define REMOVE_T    args[2][0] == '-' && args[2][0] == 't'
-#define SET_K       args[2][0] == '+' && args[2][0] == 'k'
-#define REMOVE_K    args[2][0] == '-' && args[2][0] == 'k'
-#define SET_O       args[2][0] == '+' && args[2][0] == 'o'
-#define REMOVE_O    args[2][0] == '-' && args[2][0] == 'o'
-#define SET_L       args[2][0] == '+' && args[2][0] == 'l'
-#define REMOVE_L    args[2][0] == '-' && args[2][0] == 'l'
+#define SET_I       args[2] == "+i"
+#define REMOVE_I    args[2] == "-i"
+#define SET_T       args[2] == "+t"
+#define REMOVE_T    args[2] == "-t"
+#define SET_K       args[2] == "+k"
+#define REMOVE_K    args[2] == "-k"
+#define SET_O       args[2] == "+o"
+#define REMOVE_O    args[2] == "-o"
+#define SET_L       args[2] == "+l"
+#define REMOVE_L    args[2] == "-l"
 
 // nimeric
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
@@ -64,6 +64,8 @@
 #define RPL_KICK(buffer, channel, target, reason)       ":" + buffer + " KICK " + channel + " " + target + " :" + reason
 #define RPL_MODE(buffer, channel, modes, args)          ":" + buffer + " MODE " + channel + " " + modes + " " + args
 #define RPL_AUTHENTICATED(nickname)                     (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
+#define RPL_ALREADYSET(nickname)                        (": 998 " + nickname + ": Password already set\r\n")
+#define RPL_NOPASSSET(nickname)                        (": 997 " + nickname + ": No assword set\r\n")
 
 
 #endif//

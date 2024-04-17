@@ -46,6 +46,7 @@ class Servrr
 
 		void	auth2(std::string str, clientito& client);
         void    trimUser(const std::string& str);
+        Channel & getChannel(std::string channel);
         void    trimSpaces(const std::string& str, bool x);
 
 		std::string&		getPassword();

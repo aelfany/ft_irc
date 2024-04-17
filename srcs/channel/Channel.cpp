@@ -11,6 +11,13 @@ Channel::Channel(std::string name)
 
 Channel::~Channel(){}
 
+bool Channel::getPass() {
+    return _pass;
+}
+
+void	Channel::setUserLimit(bool limit) {
+    _userlimit = limit;
+}
 std::string&	Channel::getChannelName()
 {
     return _name;

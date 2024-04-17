@@ -6,13 +6,13 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 22:23:41 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/06 02:44:41 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/07 22:29:38 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/replies.hpp"
 #include "../../include/irc.hpp"
 
-void inviteOnly() {
+// void inviteOnly() {
     
-}
+// }
