@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/18 00:26:16 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/18 02:10:58 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ void Servrr::command(std::string buffer, size_t i) {
         {
             try {
                 //****** no parsing ******//
-                Channel &mode = getChannel(args[1]); 
+                Channel &mode = getChannel(args[1]);
+                std::cout << "name: " << mode.getChannelName() << std::endl;
                 std::cout << "channel found secssusfly '*`" << std::endl;
                 if(SET_I) {
                     mode.setInvOnly(true);
