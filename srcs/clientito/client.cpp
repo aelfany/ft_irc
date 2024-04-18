@@ -6,6 +6,7 @@
 	_nickFlag = false;
 	_userFlag = false;
     _authenticated = false;
+    _operator = false;
  }
 
 clientito::clientito(int sockefd)
@@ -15,6 +16,7 @@ clientito::clientito(int sockefd)
 	_nickFlag = false;
 	_userFlag = false;
     _authenticated = false;
+    _operator = false;
 }
 
 clientito::~clientito(){}

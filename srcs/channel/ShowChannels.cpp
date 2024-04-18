@@ -13,6 +13,7 @@ void printChannelClients(Channel &obj)
         std::cout << "	Nickname: " << it->first << std::endl;
         std::cout << " 	Sock_fd : " << it->second.getClinetFd() << std::endl;
         std::cout << "	Authentication: " << it->second.isAuthed() << std::endl;
+        std::cout << "	Operator: " << it->second.getOperator() << std::endl;
         std::cout << "      ---------------------\n";
     }
 }

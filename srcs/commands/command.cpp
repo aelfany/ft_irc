@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/18 02:10:58 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/18 06:11:40 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,20 @@ void Servrr::command(std::string buffer, size_t i) {
                 std::cout << "name: " << mode.getChannelName() << std::endl;
                 std::cout << "channel found secssusfly '*`" << std::endl;
                 if(SET_I) {
-                    mode.setInvOnly(true);
+                    if (getClientitoByIndex(i-1).getOperator() == true)
+                        mode.setInvOnly(true);
                 }
                 else if(REMOVE_I) {
-                    mode.setInvOnly(false);
+                    if (getClientitoByIndex(i-1).getOperator() == true)
+                        mode.setInvOnly(false);
                 }
                 if(SET_T) {
-                    mode.setTopc(true);       
+                    if (getClientitoByIndex(i-1).getOperator() == true)
+                        mode.setTopc(true);       
                 }
                 else if(REMOVE_T) {
-                    mode.setTopc(false);
+                    if (getClientitoByIndex(i-1).getOperator() == true)
+                        mode.setTopc(false);
                 }
                 //**************************//
                 //-------need parsing-------//
@@ -71,8 +75,11 @@ void Servrr::command(std::string buffer, size_t i) {
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ALREADYSET(s));
                     else
                     {
-                       mode.setPassword(args[3]);
-                       mode.setPass(true);
+                        if (getClientitoByIndex(i-1).getOperator() == true)
+                        {
+                            mode.setPassword(args[3]);
+                            mode.setPass(true);
+                        }
                     }
                 }
                 else if(REMOVE_K) {
@@ -80,8 +87,11 @@ void Servrr::command(std::string buffer, size_t i) {
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NOPASSSET(s));
                     else
                     {
-                        mode.getPassword().erase();
-                        mode.setPass(false);
+                        if (getClientitoByIndex(i-1).getOperator() == true)
+                        {
+                            mode.getPassword().erase();
+                            mode.setPass(false);
+                        }
                     }
                 }
                 //---------------------//

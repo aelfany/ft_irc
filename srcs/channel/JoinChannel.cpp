@@ -49,6 +49,7 @@ void	Servrr::proccessChannels(int clientfd)
             it->second.setusersSize(1);
             return ;
         }
+        getClientitoByfd(clientfd).setOperator(true);
         newchannel.pushtomap(nickname, getClientitoByfd(clientfd));
 		if (std::getline(pass, password, ','))
         {
