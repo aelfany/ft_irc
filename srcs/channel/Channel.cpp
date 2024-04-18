@@ -7,15 +7,18 @@ Channel::Channel(std::string name)
     _pass = false;
     _topc = false;
     _limit = -1;
+    _usersSize = 1;
 }
 
 Channel::~Channel(){}
 
-bool Channel::getPass() {
+bool Channel::getPass()
+{
     return _pass;
 }
 
-void	Channel::setUserLimit(bool limit) {
+void	Channel::setUserLimit(bool limit)
+{
     _userlimit = limit;
 }
 std::string&	Channel::getChannelName()

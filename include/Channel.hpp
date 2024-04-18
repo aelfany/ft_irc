@@ -18,6 +18,7 @@ class Channel
         std::string		_password;
         std::string		_topic;
         map_users		_users;
+        std::string		_AdminName;
         Channel();
     public:
         Channel(std::string	_name);
@@ -47,6 +48,3 @@ class Channel
 };
 
 void ShowChannels(std::map<std::string, Channel> ChannelsMap);
-
-//check if channel is invite only==> 
-//v

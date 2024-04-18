@@ -31,7 +31,7 @@
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
 #define ERR_NEEDMOREPARAMS(buffer, cmd)             	":" + buffer + " 461 " + cmd + " :Not enough parameters\r\n"
 #define ERR_NONICKNAMEGIVEN(buffer)                     "431 " + buffer + " :Nickname not given"
-#define ERR_NICKNAMEINUSE(buffer)                       "433 " + buffer + " " + buffer  + " :Nickname is already in use"
+#define ERR_NICKNAMEINUSE(buffer)                       "433 " + buffer + " " + buffer  + " :Nickname is already in use\r\n"
 
 #define ERR_UNKNOWNcmd(buffer, cmd)             		"421 " + buffer + " " + cmd + " :Unknown cmd"
 

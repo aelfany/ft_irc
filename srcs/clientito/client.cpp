@@ -42,6 +42,11 @@ bool	clientito::getuflag()
     return _userFlag;
 }
 
+bool	clientito::getOperator()
+{
+	return _operator;
+}
+
 void 	clientito::setNickName(std::string nickname) {
     _nickName = nickname;
 }
@@ -61,4 +66,9 @@ void	clientito::setuflag(bool flag)
 {
     _userFlag = flag;
     _authenticated = true;
+}
+
+void	clientito::setOperator(bool oper)
+{
+	_operator = oper;
 }

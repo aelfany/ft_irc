@@ -37,13 +37,13 @@ void	Servrr::proccessChannels(int clientfd)
                 std::cout << "Client is already a member in this channel" << std::endl;
                 return ;
             }
-            if (/*chnnel is invitOnly*/it->second.getInvOnly() == true)
+            if (it->second.getInvOnly() == true)
                 return ;
-            // if (/*chnnel is invitOnly*/it->second.getusersSize() > 10)
-            // {
-            //     std::cout << it->first << " channel is full" << std::endl;
-            //     return ;
-            // }
+            if (it->second.getusersSize() >= 3)
+            {
+                std::cout << it->first << " channel is full" << std::endl;
+                return ;
+            }
             sendMsgToClient(clientfd, RPL_JOINN(nickname, channel));
             it->second.pushtomap(nickname, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
