@@ -13,6 +13,7 @@ class Channel
         bool			_topc;
         bool            _userlimit;
         size_t          _limit;
+        size_t			_usersSize;
         std::string		_name;
         std::string		_password;
         std::string		_topic;
@@ -25,8 +26,12 @@ class Channel
 		//getters
 		std::string&	getChannelName();
 		std::string&	getPassword();
-		clientito&		getUser(std::string _nickname);
-    bool            getPass();
+        clientito&		getUserBynickname(std::string _nickname);
+        map_users&		getUsersMap();
+        bool            getPass();
+        bool            getInvOnly();
+		size_t			getusersSize();
+
 
 		//setters
 		void	setPassword(std::string	password);//
@@ -36,8 +41,12 @@ class Channel
         void	setPass(bool pass);
         void	setTopc(bool top);
         void	setLimit(size_t limit);
+		void	setusersSize(size_t user);
 
 		void pushtomap(std::string _nickname, clientito& obj);
 };
 
 void ShowChannels(std::map<std::string, Channel> ChannelsMap);
+
+//check if channel is invite only==> 
+//v

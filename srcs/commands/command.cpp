@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/17 18:30:31 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/18 00:26:16 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ Channel & Servrr::getChannel(std::string channel) {
         throw "No channel found";
     return it->second;
 }
-void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
+void Servrr::command(std::string buffer, size_t i) {
     std::string s = inet_ntoa(_addr.sin_addr);
-    std::string nick = servrr.getClientito(i-1).getNickName();
+    std::string nick = getClientitoByIndex(i-1).getNickName();
     trimSpaces(buffer,false);
     if(getClientitoByIndex(i-1).isAuthed() == false) {
         auth2(buffer, getClientitoByIndex(i-1));
@@ -67,7 +67,7 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
                 //-------need parsing-------//
                 if(SET_K) {
                     if(mode.getPass() == true)
-                        sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), RPL_ALREADYSET(s));
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ALREADYSET(s));
                     else
                     {
                        mode.setPassword(args[3]);
@@ -76,7 +76,7 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
                 }
                 else if(REMOVE_K) {
                     if(mode.getPass() == false)
-                        sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), RPL_NOPASSSET(s));
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NOPASSSET(s));
                     else
                     {
                         mode.getPassword().erase();
@@ -103,7 +103,7 @@ void Servrr::command(std::string buffer, size_t i, Servrr& servrr) {
                 }
             }
             catch(...) {
-                sendMsgToClient(servrr.getClientito(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
             }
         }
         // else 

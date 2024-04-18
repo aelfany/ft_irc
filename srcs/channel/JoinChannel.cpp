@@ -30,8 +30,16 @@ void	Servrr::proccessChannels(int clientfd)
 		Channel newchannel(channel);
         if (it != _channels.end())
         {
+            if (/*chnnel is invitOnly*/it->second.getInvOnly() == true)
+                return ;
+            if (/*chnnel is invitOnly*/it->second.getusersSize() > 10)
+            {
+                std::cout << it->first << " channel is full" << std::endl;
+                return ;
+            }
             sendMsgToClient(clientfd, RPL_JOINN(nickname, channel));
             it->second.pushtomap(nickname, getClientitoByfd(clientfd));
+            it->second.setusersSize(1);
             return ;
         }
         newchannel.pushtomap(nickname, getClientitoByfd(clientfd));

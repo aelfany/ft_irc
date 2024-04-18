@@ -43,6 +43,16 @@ void	Channel::setPassword(std::string password)
     _password = password;
 }
 
+bool    Channel::getInvOnly()
+{
+    return _inv;
+}
+
+size_t  Channel::getusersSize()
+{
+    return _usersSize;
+}
+
 void	Channel::setTopic(std::string topic)
 {
     _topic = topic;
@@ -65,6 +75,10 @@ void	Channel::setLimit(size_t limit)
     _limit = limit;
 }
 
+void	Channel::setusersSize(size_t user)
+{
+    _usersSize += user;
+}
 
 void Channel::pushtomap(std::string _nickname, clientito& obj)
 {
