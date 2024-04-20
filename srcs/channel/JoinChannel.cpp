@@ -2,14 +2,10 @@
 #include "../../include/Channel.hpp"
 #include <iomanip>
 
-
-
-// #define RPL_JOINN(nickname, hostname) ":" + nickname + " has joined (~" + nickname + "@" + hostname + ")\r\n"
-
-#define RPL_JOINN(serverHostname, channel) (":" + serverHostname + " JOIN :#" + channel + "\r\n")
-#define RPL_TOPICC(serverHostname, nickname, channel, channelTopic) ":" + serverHostname + " 332 " + nickname + " #" + channel + " :" + channelTopic + "\r\n"
-#define RPL_NAMREPLYY(serverHostname, nickname, channel) ":" + serverHostname + " 353 " + nickname + " = #" + channel + " :" + nickname + " @otheruser\r\n"
-#define RPL_ENDOFNAMESS(serverHostname, nickname, channel) ":" + serverHostname + " 366 " + nickname + " #" + channel + " :End of /NAMES list.\r\n"
+#define RPL_JOINN(topic, nickname, channel) ":irc.bmeek.chat 311 " + nickname + " " + channel + " :" + topic + "\r\n"
+#define RPL_TOPICC(mode, nickname, username, channel) ":" + nickname + "!" + username + "@127.0.0.1" + " JOIN " + channel + " " + mode +  "\r\n"
+#define RPL_NAMREPLYY(listofnames, nickname, channel) ":irc.bmeel.chat 353 " + nickname + " @ " + "" + channel + " :" + listofnames +"\r\n"
+#define RPL_ENDOFNAMESS(nickname, channel) ":irc.bmeel.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
 
 
 void	Servrr::proccessChannels(int clientfd)
@@ -20,6 +16,7 @@ void	Servrr::proccessChannels(int clientfd)
     std::string password;
     std::string nickname = getClientitoByfd(clientfd).getNickName();
     std::string serverHostname = "127.0.0.1";
+    std::string channelTopic = "drug dealers";
     while (std::getline(chan, channel, ','))
 	{
         if(channel[0] == '#' && channel != "JOIN")
@@ -31,7 +28,6 @@ void	Servrr::proccessChannels(int clientfd)
         if (it != _channels.end())
         {
             // map_users mapOfClients = it->second.getUsersMap();
-            // clientito & t = getClientitoByfd(clientfd);
             // map_users::iterator itr = mapOfClients.find(nickname);
             // if (itr != mapOfClients.end())
             // {
@@ -40,12 +36,7 @@ void	Servrr::proccessChannels(int clientfd)
             // }
             if (it->second.getInvOnly() == true)
                 return ;
-            // if (it->second.getusersSize() >= 3)
-            // {
-            //     std::cout << it->first << " channel is full" << std::endl;
-            //     return ;
-            // }
-            sendMsgToClient(clientfd, RPL_JOINN(nickname, channel));
+            sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
             return ;
@@ -58,11 +49,10 @@ void	Servrr::proccessChannels(int clientfd)
             newchannel.setPass(true);
         }
 		_channels.insert(std::make_pair(channel, newchannel));
-        std::string channelTopic = "drug dealers";
-		sendMsgToClient(clientfd, RPL_JOINN(nickname, serverHostname));
-		sendMsgToClient(clientfd, RPL_TOPICC(serverHostname, nickname, channel, channelTopic));
-		sendMsgToClient(clientfd, RPL_NAMREPLYY(serverHostname, nickname, channel));
-        sendMsgToClient(clientfd, RPL_ENDOFNAMESS(serverHostname, nickname, channel));
+		sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
+		sendMsgToClient(clientfd, RPL_TOPICC("o", nickname, "user", channel));
+		sendMsgToClient(clientfd, RPL_NAMREPLYY("@hdhd hdhd dhhd @hdd", nickname, channel));
+        sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
 	}
 }
 
