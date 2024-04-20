@@ -26,6 +26,7 @@
 #define REMOVE_L    args[2] == "-l"
 
 // nimeric
+
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
 #define ERR_ALREADYREGISTERED(buffer, nick)             (":" + buffer + " 462 " + nick + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
@@ -41,11 +42,10 @@
 #define ERR_BADCHANNELKEY(buffer, channel)              "475 " + buffer + " " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(buffer, channel)              "471 " + buffer + " " + channel + " :Cannot join channel (+l)"
 #define ERR_CANNOTSENDTOCHAN(buffer, channel)           "404 " + buffer + " " + channel + " :Cannot send to channel"
-#define ERR_CHANOPRIVSNEEDED(buffer, channel)           "482 " + buffer + " " + channel + " :You're not channel operator"
+#define ERR_CHANOPRIVSNEEDED(buffer, channel)           ":" + buffer + " 482 " + channel + " :You're not channel operator\r\n"
 
 #define ERR_NOSUCHNICK(buffer, nickname)                "401 " + buffer + " " + nickname + " :No such nick/channel"
 #define ERR_USERNOTINCHANNEL(buffer, nickname, channel) "441 " + buffer + " " + nickname + " " + channel + " :They aren't on that channel"
-
 
 /* Numeric Responses */
 

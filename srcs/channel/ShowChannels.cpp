@@ -10,10 +10,10 @@ void printChannelClients(Channel &obj)
     std::cout << "+-------------------------------------------------+\n";
     for (; it != usersMap.end(); ++it)
     {
-        std::cout << "	Nickname: " << it->first << std::endl;
+        std::cout << "	Nickname: " << it->second.getNickName() << std::endl;
         std::cout << " 	Sock_fd : " << it->second.getClinetFd() << std::endl;
         std::cout << "	Authentication: " << it->second.isAuthed() << std::endl;
-        std::cout << "	Operator: " << it->second.getOperator() << std::endl;
+        std::cout << "	Operator: " << it->first << std::endl;
         std::cout << "      ---------------------\n";
     }
 }

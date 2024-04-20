@@ -30,27 +30,28 @@ void	Servrr::proccessChannels(int clientfd)
 		Channel newchannel(channel);
         if (it != _channels.end())
         {
-            map_users mapOfClients = it->second.getUsersMap();
-            map_users::iterator itr = mapOfClients.find(nickname);
-            if (itr != mapOfClients.end())
-            {
-                std::cout << "Client is already a member in this channel" << std::endl;
-                return ;
-            }
+            // map_users mapOfClients = it->second.getUsersMap();
+            // clientito & t = getClientitoByfd(clientfd);
+            // map_users::iterator itr = mapOfClients.find(nickname);
+            // if (itr != mapOfClients.end())
+            // {
+            //     std::cout << "Client is already a member in this channel" << std::endl;
+            //     return ;
+            // }
             if (it->second.getInvOnly() == true)
                 return ;
-            if (it->second.getusersSize() >= 3)
-            {
-                std::cout << it->first << " channel is full" << std::endl;
-                return ;
-            }
+            // if (it->second.getusersSize() >= 3)
+            // {
+            //     std::cout << it->first << " channel is full" << std::endl;
+            //     return ;
+            // }
             sendMsgToClient(clientfd, RPL_JOINN(nickname, channel));
-            it->second.pushtomap(nickname, getClientitoByfd(clientfd));
+            it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
             return ;
         }
-        getClientitoByfd(clientfd).setOperator(true);
-        newchannel.pushtomap(nickname, getClientitoByfd(clientfd));
+        // getClientitoByfd(clientfd).setOperator(true);
+        newchannel.pushtomap(true, getClientitoByfd(clientfd));
 		if (std::getline(pass, password, ','))
         {
 		    newchannel.setPassword(password);

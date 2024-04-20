@@ -33,7 +33,27 @@ std::string&	Channel::getPassword()
 
 clientito&		Channel::getUserBynickname(std::string _nickname)
 {
-    return _users[_nickname];
+    map_users::iterator it = _users.begin();
+    for(; it != _users.end(); it++) {
+        if(it->second.getNickName() == _nickname)
+            return it->second;
+    }
+    throw std::runtime_error("User not found");
+}
+
+bool	Channel::getPrvBynickname(std::string _nickname)
+{
+    map_users::iterator it = _users.begin();
+
+    std::cout << _users.size() << std::endl;
+    for(; it != _users.end(); it++) {
+        if(it->second.getNickName() == _nickname)
+        {
+            std::cout << it->first << std::endl;
+            return it->first;
+        }
+    }
+    throw std::runtime_error("bool not found");
 }
 
 map_users&		Channel::getUsersMap()
@@ -83,7 +103,8 @@ void	Channel::setusersSize(size_t user)
     _usersSize += user;
 }
 
-void Channel::pushtomap(std::string _nickname, clientito& obj)
+void Channel::pushtomap(bool privilege, clientito& obj)
 {
-	_users.insert(std::make_pair(_nickname, obj));
+    // clientito & t = getUserBynickname();
+	_users.insert(std::make_pair(privilege, obj));
 }
