@@ -8,6 +8,18 @@
 #define RPL_ENDOFNAMESS(nickname, channel) ":irc.bmeel.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
 
 
+bool alreadyAmember(int clientfd, Channel channel)
+{
+    map_users mapOfClients = channel.getUsersMap();
+    map_users::iterator iter;
+    for(iter = mapOfClients.begin(); iter != mapOfClients.end(); iter++)
+    {
+        if (iter->second.getClinetFd() == clientfd)
+            return true;
+    }
+    return false;
+}
+
 void	Servrr::proccessChannels(int clientfd)
 {
 	std::stringstream chan(_result[1]);
@@ -19,21 +31,19 @@ void	Servrr::proccessChannels(int clientfd)
     std::string channelTopic = "drug dealers";
     while (std::getline(chan, channel, ','))
 	{
-        if(channel[0] == '#' && channel != "JOIN")
-            channel = channel.substr(1, std::string::npos);
+        if(channel[0] != '#' && channel != "JOIN")
+            channel = "#"+channel;
         
         //this can be removed, cuz map container handle it(if we push the same key it will keep the old one).
         std::map<std::string, Channel>::iterator it = _channels.find(channel);
 		Channel newchannel(channel);
         if (it != _channels.end())
         {
-            // map_users mapOfClients = it->second.getUsersMap();
-            // map_users::iterator itr = mapOfClients.find(nickname);
-            // if (itr != mapOfClients.end())
-            // {
-            //     std::cout << "Client is already a member in this channel" << std::endl;
-            //     return ;
-            // }
+            if (alreadyAmember(clientfd, it->second) == true)
+            {
+                std::cout << "Client " << nickname << " is already a member in this channel" << std::endl;
+                return ;
+            }
             if (it->second.getInvOnly() == true)
                 return ;
             sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
@@ -41,7 +51,6 @@ void	Servrr::proccessChannels(int clientfd)
             it->second.setusersSize(1);
             return ;
         }
-        // getClientitoByfd(clientfd).setOperator(true);
         newchannel.pushtomap(true, getClientitoByfd(clientfd));
 		if (std::getline(pass, password, ','))
         {
@@ -50,8 +59,8 @@ void	Servrr::proccessChannels(int clientfd)
         }
 		_channels.insert(std::make_pair(channel, newchannel));
 		sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		sendMsgToClient(clientfd, RPL_TOPICC("o", nickname, "user", channel));
-		sendMsgToClient(clientfd, RPL_NAMREPLYY("@hdhd hdhd dhhd @hdd", nickname, channel));
+		sendMsgToClient(clientfd, RPL_TOPICC("", nickname, "user1", channel));
+		sendMsgToClient(clientfd, RPL_NAMREPLYY("", nickname, channel));
         sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
 	}
 }
