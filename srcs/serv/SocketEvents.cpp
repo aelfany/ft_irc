@@ -15,9 +15,6 @@ void Servrr::eventOnServerSock()
         poll_fd.fd = client_sock_fd;
         poll_fd.events = POLLIN | POLLOUT;
         getPollfdVect().push_back(poll_fd);
-        std::string s1 = "test";
-        std::string s2 = "test";
-        sendMsgToClient(client_sock_fd, RPL_WELCOME(s1, s2));
     }
 }
 

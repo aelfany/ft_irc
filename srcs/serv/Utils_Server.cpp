@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/21 10:49:16 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/21 12:06:33 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ void    Servrr::sendmessage(std::string _destination, std::string _message, int 
                 return ;
             }
         }
+        // reply 667
         // sendMsgToClient(iter->second.getClinetFd(), _message);
     }
     std::cout << _message << std::endl;
