@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_Server.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/07 00:38:21 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/21 10:30:01 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,39 @@ void	Servrr::auth2(std::string str, clientito& client)
         sendMsgToClient(client.getClinetFd(), RPL_AUTHENTICATED(nickname));
     }
     return ;
+}
+
+
+void    broadcastMessage(Channel _channel, std::string _message)
+{
+    map_users mapOfClients = _channel.getUsersMap();
+    map_users::iterator iter;
+    for(iter = mapOfClients.begin(); iter != mapOfClients.end(); iter++)
+    {
+        sendMsgToClient(iter->second.getClinetFd(), _message);
+    }
+}
+
+void    Servrr::sendmessage(std::string _destination, std::string _message)
+{
+    std::map<std::string, Channel>::iterator it = _channels.find(_destination);
+    if (it != _channels.end())
+    {
+        //Broadcast the message to all clients in this channel
+        broadcastMessage(it->second, _message);
+        std::cout << "destination is a channel" << std::endl;
+    }
+    else
+    {
+        for (size_t i = 0; _clients.size(); i++)
+        {
+            if (_clients[i].getNickName() == _destination)
+            {
+                std::cout << "You're about to send msg to " << _clients[i].getNickName() << "..." <<std::endl;
+            }
+        }
+        // sendMsgToClient(iter->second.getClinetFd(), _message);
+        std::cout << "destination is solo client" << std::endl;
+    }
+    std::cout << _message << std::endl;
 }

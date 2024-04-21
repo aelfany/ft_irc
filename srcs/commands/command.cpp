@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/20 20:39:33 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/21 10:11:46 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 #include "../../include/client.hpp"
-
-
 
 Channel & Servrr::getChannel(std::string channel) {
 
@@ -124,6 +122,10 @@ void Servrr::command(std::string buffer, size_t i) {
             catch(...) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
             }
+        }
+        else if (args[0] == "PRIVMSG")
+        {
+            sendmessage(args[1], args[2]);
         }
         // else 
     }

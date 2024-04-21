@@ -2,10 +2,10 @@
 #include "../../include/Channel.hpp"
 #include <iomanip>
 
-#define RPL_JOINN(topic, nickname, channel) ":irc.bmeek.chat 311 " + nickname + " " + channel + " :" + topic + "\r\n"
+#define RPL_JOINN(topic, nickname, channel) ":irc.idryab.chat 311 " + nickname + " " + channel + " :" + topic + "\r\n"
 #define RPL_TOPICC(mode, nickname, username, channel) ":" + nickname + "!" + username + "@127.0.0.1" + " JOIN " + channel + " " + mode +  "\r\n"
-#define RPL_NAMREPLYY(listofnames, nickname, channel) ":irc.bmeel.chat 353 " + nickname + " @ " + "" + channel + " :" + listofnames +"\r\n"
-#define RPL_ENDOFNAMESS(nickname, channel) ":irc.bmeel.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
+#define RPL_NAMREPLYY(listofnames, nickname, channel) ":irc.idryab.chat 353 " + nickname + " @ " + "" + channel + " :" + listofnames +"\r\n"
+#define RPL_ENDOFNAMESS(nickname, channel) ":irc.idryab.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
 
 
 bool alreadyAmember(int clientfd, Channel channel)
@@ -27,16 +27,12 @@ void	Servrr::proccessChannels(int clientfd)
     std::string channel;
     std::string password;
     std::string nickname = getClientitoByfd(clientfd).getNickName();
-    std::string serverHostname = "127.0.0.1";
     std::string channelTopic = "drug dealers";
     while (std::getline(chan, channel, ','))
 	{
         if(channel[0] != '#' && channel != "JOIN")
             channel = "#"+channel;
-        
-        //this can be removed, cuz map container handle it(if we push the same key it will keep the old one).
         std::map<std::string, Channel>::iterator it = _channels.find(channel);
-		Channel newchannel(channel);
         if (it != _channels.end())
         {
             if (alreadyAmember(clientfd, it->second) == true)
@@ -51,6 +47,7 @@ void	Servrr::proccessChannels(int clientfd)
             it->second.setusersSize(1);
             return ;
         }
+		Channel newchannel(channel);
         newchannel.pushtomap(true, getClientitoByfd(clientfd));
 		if (std::getline(pass, password, ','))
         {
