@@ -45,7 +45,7 @@ void	Servrr::proccessChannels(int clientfd)
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
             sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		    sendMsgToClient(clientfd, RPL_TOPICC("+i", nickname, "user1", channel));
+		    sendMsgToClient(clientfd, RPL_TOPICC("", nickname, "user1", channel));
 		    sendMsgToClient(clientfd, RPL_NAMREPLYY("", nickname, channel));
             sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
             return ;
@@ -59,7 +59,7 @@ void	Servrr::proccessChannels(int clientfd)
         }
 		_channels.insert(std::make_pair(channel, newchannel));
 		sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		sendMsgToClient(clientfd, RPL_TOPICC("+i", nickname, "user1", channel));
+		sendMsgToClient(clientfd, RPL_TOPICC("", nickname, "user1", channel));
 		sendMsgToClient(clientfd, RPL_NAMREPLYY("", nickname, channel));
         sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
 	}
