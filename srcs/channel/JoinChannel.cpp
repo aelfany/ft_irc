@@ -20,6 +20,21 @@ bool alreadyAmember(int clientfd, Channel channel)
     return false;
 }
 
+
+std::string getListOfNames(map_users _users)
+{
+    std::string listOfNames;
+    map_users::iterator iter;
+    for(iter = _users.begin(); iter != _users.end(); iter++)
+    {
+        if (iter->first == true)
+            listOfNames += "@" + iter->second.getNickName() + " ";
+        else
+            listOfNames += iter->second.getNickName() + " ";
+    }
+    return listOfNames;
+}
+
 void	Servrr::proccessChannels(int clientfd)
 {
 	std::stringstream chan(_result[1]);
@@ -28,6 +43,7 @@ void	Servrr::proccessChannels(int clientfd)
     std::string password;
     std::string nickname = getClientitoByfd(clientfd).getNickName();
     std::string channelTopic = "drug dealers";
+    std::string listofnames;
     while (std::getline(chan, channel, ','))
 	{
         if(channel[0] != '#' && channel != "JOIN")
@@ -44,12 +60,14 @@ void	Servrr::proccessChannels(int clientfd)
                 return ;
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
+            listofnames = getListOfNames(it->second.getUsersMap());
             sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		    sendMsgToClient(clientfd, RPL_TOPICC("", nickname, "user1", channel));
-		    sendMsgToClient(clientfd, RPL_NAMREPLYY("", nickname, channel));
+		    sendMsgToClient(clientfd, RPL_TOPICC("+", nickname, "DefaultUser", channel));
+		    sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
             sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
             return ;
         }
+        listofnames = "@"+nickname;
 		Channel newchannel(channel);
         newchannel.pushtomap(true, getClientitoByfd(clientfd));
 		if (std::getline(pass, password, ','))
@@ -59,8 +77,8 @@ void	Servrr::proccessChannels(int clientfd)
         }
 		_channels.insert(std::make_pair(channel, newchannel));
 		sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		sendMsgToClient(clientfd, RPL_TOPICC("", nickname, "user1", channel));
-		sendMsgToClient(clientfd, RPL_NAMREPLYY("", nickname, channel));
+		sendMsgToClient(clientfd, RPL_TOPICC("+", nickname, "DefaultUser", channel));
+		sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
         sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
 	}
 }
