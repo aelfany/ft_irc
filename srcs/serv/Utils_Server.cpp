@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/21 12:06:33 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/21 22:35:00 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	Servrr::auth2(std::string str, clientito& client)
 }
 
 
-void    broadcastMessage(Channel _channel, std::string _message, int _clientfd)
+void    Servrr::broadcastMessage(Channel _channel, std::string _message, int _clientfd)
 {
     map_users mapOfClients = _channel.getUsersMap();
     map_users::iterator iter;
@@ -127,8 +127,5 @@ void    Servrr::sendmessage(std::string _destination, std::string _message, int 
                 return ;
             }
         }
-        // reply 667
-        // sendMsgToClient(iter->second.getClinetFd(), _message);
     }
-    std::cout << _message << std::endl;
 }

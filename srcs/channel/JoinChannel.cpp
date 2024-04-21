@@ -61,10 +61,19 @@ void	Servrr::proccessChannels(int clientfd)
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
             listofnames = getListOfNames(it->second.getUsersMap());
+
             sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		    sendMsgToClient(clientfd, RPL_TOPICC("+", nickname, "DefaultUser", channel));
+            broadcastMessage(it->second, RPL_JOINN(channelTopic, nickname, channel), clientfd);
+
+		    sendMsgToClient(clientfd, RPL_TOPICC("+t", nickname, nickname, channel));
+            broadcastMessage(it->second, RPL_TOPICC("+t", nickname, nickname, channel), clientfd);
+
 		    sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
+            broadcastMessage(it->second, RPL_NAMREPLYY(listofnames, nickname, channel), clientfd);
+
             sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
+            broadcastMessage(it->second, RPL_ENDOFNAMESS(nickname, channel), clientfd);
+
             return ;
         }
         listofnames = "@"+nickname;
@@ -77,9 +86,16 @@ void	Servrr::proccessChannels(int clientfd)
         }
 		_channels.insert(std::make_pair(channel, newchannel));
 		sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-		sendMsgToClient(clientfd, RPL_TOPICC("+", nickname, "DefaultUser", channel));
+        broadcastMessage(newchannel, RPL_JOINN(channelTopic, nickname, channel), clientfd);
+
+		sendMsgToClient(clientfd, RPL_TOPICC("+t", nickname, nickname, channel));
+        broadcastMessage(newchannel, RPL_TOPICC("+t", nickname, nickname, channel), clientfd);
+
 		sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
+        broadcastMessage(newchannel, RPL_NAMREPLYY(listofnames, nickname, channel), clientfd);
+
         sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
+        broadcastMessage(newchannel, RPL_ENDOFNAMESS(nickname, channel), clientfd);
 	}
 }
 
