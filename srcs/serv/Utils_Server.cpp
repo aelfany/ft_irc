@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/21 10:43:04 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/21 10:49:16 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ void    Servrr::sendmessage(std::string _destination, std::string _message, int 
             if (_clients[i].getNickName() == _destination)
             {
                 std::cout << "You're about to send msg to " << _clients[i].getNickName() << "..." <<std::endl;
+                sendMsgToClient(_clients[i].getClinetFd(), _message);
+                return ;
             }
         }
         // sendMsgToClient(iter->second.getClinetFd(), _message);
