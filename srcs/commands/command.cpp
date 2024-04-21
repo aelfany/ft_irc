@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/21 10:11:46 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/21 10:40:50 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if (args[0] == "PRIVMSG")
         {
-            sendmessage(args[1], args[2]);
+            sendmessage(args[1], args[2], getClientitoByIndex(i-1).getClinetFd());
         }
         // else 
     }

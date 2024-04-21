@@ -73,7 +73,7 @@ class Servrr
         void    eventOnServerSock();
         void    eventOnClientSock();
 
-        void	sendmessage(std::string _destination, std::string _message);
+        void	sendmessage(std::string _destination, std::string _message, int clientfd);
 };
 void	sendMsgToClient(int clientfd, std::string msg);
 bool	check_port(std::string port);
