@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/21 22:35:00 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/22 23:15:05 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,15 @@ void	Servrr::auth2(std::string str, clientito& client)
     else if (!client.getuflag())
        sendMsgToClient(client.getClinetFd(), "Username ain't correct, try again ... (in a the form above)\n");
     if(client.isAuthed())
-    {
-        std::string nickname = "сукаблять";
-        sendMsgToClient(client.getClinetFd(), RPL_AUTHENTICATED(nickname));
+    {   
+        std::string nick = client.getNickName();
+        std::string host = "127.0.0.1";
+        sendMsgToClient(client.getClinetFd(), RPL_WELCOME(nick, host));
+        sendMsgToClient(client.getClinetFd(), RPL_YOURHOST(nick, host));
+        sendMsgToClient(client.getClinetFd(), RPL_CREATED(nick, host));
+        sendMsgToClient(client.getClinetFd(), RPL_MYINFO(nick, host));
+        // std::string nickname = "сукаблять";
+        // sendMsgToClient(client.getClinetFd(), RPL_AUTHENTICATED(nickname));
     }
     return ;
 }

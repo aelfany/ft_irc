@@ -27,6 +27,15 @@
 
 // nimeric
 
+
+#define RPL_WELCOME(nick, hostname) ":" + hostname + " 001 " + nick + " :Welcome " + nick + " to the ft_irc network !\r\n"
+#define RPL_YOURHOST(nick, hostname) ":" + hostname + " 002 " + nick + " :Your host is " + hostname + " running version 1.0 !\r\n"
+#define RPL_CREATED(nick, hostname) ":" + hostname + " 003 " + nick + " :This server was created 2023-9-15 !\r\n"
+#define RPL_MYINFO(nick, hostname) ":" + hostname + " 004 " + nick + " :Host: " + hostname + ", Version: 1.0, User mode: none, Channel modes: o, t, k, i !\r\n"
+#define RPL_JOIN(nick, username, channelname, ipaddress) ":" + nick + "!~" + username + "@" + ipaddress + " JOIN " + channelname + "\r\n"
+#define RPL_NAMREPLY(hostname, clients, channelname, nick) ":" + hostname + " 353 " + nick + " = " + channelname + " :" + clients + "\r\n"
+#define RPL_ENDOFNAMES(hostname, nick, channelname) ":" + hostname + " 366 " + nick + " " + channelname + " :END of /NAMES list\r\n"
+
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
 #define ERR_ALREADYREGISTERED(buffer, nick)             (":" + buffer + " 462 " + nick + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
@@ -47,15 +56,9 @@
 #define ERR_NOSUCHNICK(buffer, nickname)                "401 " + buffer + " " + nickname + " :No such nick/channel"
 #define ERR_USERNOTINCHANNEL(buffer, nickname, channel) "441 " + buffer + " " + nickname + " " + channel + " :They aren't on that channel"
 
-/* Numeric Responses */
-
-#define RPL_WELCOME(buffer, netw)                       (":" + buffer + " 001 " + netw + " :Welcome to the ft_irc network\r\n")
-#define RPL_NAMREPLY(buffer, channel, users)            ":" + buffer + " 353 " + buffer + " = " + channel + " :" + users
-#define RPL_ENDOFNAMES(buffer, channel)                 "366 " + buffer + " " + channel + " :End of /NAMES list."
 
 
 /* command Responses */
-// #define RPL_JOIN(buffer, channel)                       ":" + buffer + " JOIN :" + channel
 #define RPL_PART(buffer, channel)                       ":" + buffer + " PART :" + channel
 #define RPL_PING(buffer, token)                         ":" + buffer + " PONG :" + token
 #define RPL_PRIVMSG(buffer, target, message)            ":" + buffer + " PRIVMSG " + target + " :" + message

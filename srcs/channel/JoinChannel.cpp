@@ -2,10 +2,15 @@
 #include "../../include/Channel.hpp"
 #include <iomanip>
 
-#define RPL_JOINN(topic, nickname, channel) ":irc.idryab.chat 311 " + nickname + " " + channel + " :" + topic + "\r\n"
-#define RPL_TOPICC(mode, nickname, username, channel) ":" + nickname + "!" + username + "@127.0.0.1" + " JOIN " + channel + " " + mode +  "\r\n"
-#define RPL_NAMREPLYY(listofnames, nickname, channel) ":irc.idryab.chat 353 " + nickname + " @ " + "" + channel + " :" + listofnames +"\r\n"
-#define RPL_ENDOFNAMESS(nickname, channel) ":irc.idryab.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
+
+#define	JOIN_CHANNEL1(nickname,username,channelname) (":" + nickname + "!~" + username + "@127.0.0.1" + " JOIN " + channelname + "\r\n")
+#define	RPL_NAMREPLY1(nickname,channelname,listclient) (":353 " + nickname + " = " + channelname + " :" + listclient + "\r\n")
+#define	RPL_ENDOFNAMES1(nickname,channelname) (":366 " + nickname + " " + channelname + " :End of /NAMES list\r\n")
+
+// #define RPL_JOINN(topic, nickname, channel) ":irc.idryab.chat 311 " + nickname + " " + channel + " :" + topic + "\r\n"
+// #define RPL_TOPICC(mode, nickname, username, channel) ":" + nickname + "!" + username + "@127.0.0.1" + " JOIN " + channel + " " + mode +  "\r\n"
+// #define RPL_NAMREPLYY(listofnames, nickname, channel) ":irc.idryab.chat 353 " + nickname + " @ " + "" + channel + " :" + listofnames +"\r\n"
+// #define RPL_ENDOFNAMESS(nickname, channel) ":irc.idryab.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
 
 
 bool alreadyAmember(int clientfd, Channel channel)
@@ -44,6 +49,7 @@ void	Servrr::proccessChannels(int clientfd)
     std::string nickname = getClientitoByfd(clientfd).getNickName();
     std::string channelTopic = "drug dealers";
     std::string listofnames;
+     std::string serverHostname = "127.0.0.";
     while (std::getline(chan, channel, ','))
 	{
         if(channel[0] != '#' && channel != "JOIN")
@@ -62,18 +68,24 @@ void	Servrr::proccessChannels(int clientfd)
             it->second.setusersSize(1);
             listofnames = getListOfNames(it->second.getUsersMap());
 
-            sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-            broadcastMessage(it->second, RPL_JOINN(channelTopic, nickname, channel), clientfd);
 
-		    sendMsgToClient(clientfd, RPL_TOPICC("+t", nickname, nickname, channel));
-            broadcastMessage(it->second, RPL_TOPICC("+t", nickname, nickname, channel), clientfd);
+            // broadcastMessage(it->second, RPL_TOPICC("+t", nickname, nickname, channel), clientfd);
 
-		    sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
-            broadcastMessage(it->second, RPL_NAMREPLYY(listofnames, nickname, channel), clientfd);
+            // broadcastMessage(it->second, RPL_NAMREPLYY(listofnames, nickname, channel), clientfd);
 
-            sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
-            broadcastMessage(it->second, RPL_ENDOFNAMESS(nickname, channel), clientfd);
+            // broadcastMessage(it->second, RPL_ENDOFNAMESS(nickname, channel), clientfd);
+			// sendMsgToClient(clientfd, JOIN_CHANNEL1(nickname, nickname, channel));
+            // broadcastMessage(it->second, JOIN_CHANNEL1(nickname, nickname, channel), clientfd);
 
+			// sendMsgToClient(clientfd, RPL_NAMREPLY1(nickname, channel, listofnames));
+			// broadcastMessage(it->second, RPL_NAMREPLY1(nickname, channel, listofnames), clientfd);
+
+			// sendMsgToClient(clientfd, RPL_ENDOFNAMES1(nickname, channel));
+			// broadcastMessage(it->second, RPL_ENDOFNAMES1(nickname, channel), clientfd);
+
+            sendMsgToClient(clientfd, RPL_JOIN(nickname, "temp",channel, serverHostname));
+            sendMsgToClient(clientfd, RPL_NAMREPLY(serverHostname, listofnames, channel, nickname));
+            sendMsgToClient(clientfd, RPL_ENDOFNAMES(serverHostname, nickname, channel));
             return ;
         }
         listofnames = "@"+nickname;
@@ -85,17 +97,25 @@ void	Servrr::proccessChannels(int clientfd)
             newchannel.setPass(true);
         }
 		_channels.insert(std::make_pair(channel, newchannel));
-		sendMsgToClient(clientfd, RPL_JOINN(channelTopic, nickname, channel));
-        broadcastMessage(newchannel, RPL_JOINN(channelTopic, nickname, channel), clientfd);
+		sendMsgToClient(clientfd, RPL_JOIN(nickname, "temp",channel, serverHostname));
+        sendMsgToClient(clientfd, RPL_NAMREPLY(serverHostname, listofnames, channel, nickname));
+        sendMsgToClient(clientfd, RPL_ENDOFNAMES(serverHostname, nickname, channel));
 
-		sendMsgToClient(clientfd, RPL_TOPICC("+t", nickname, nickname, channel));
-        broadcastMessage(newchannel, RPL_TOPICC("+t", nickname, nickname, channel), clientfd);
+		// sendMsgToClient(clientfd, RPL_NAMREPLY1(nickname, channel, listofnames));
+		// broadcastMessage(it->second, RPL_NAMREPLY1(nickname, channel, listofnames), clientfd);
 
-		sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
-        broadcastMessage(newchannel, RPL_NAMREPLYY(listofnames, nickname, channel), clientfd);
+		// sendMsgToClient(clientfd, RPL_ENDOFNAMES1(nickname, channel));
+		// broadcastMessage(it->second, RPL_ENDOFNAMES1(nickname, channel), clientfd);
 
-        sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
-        broadcastMessage(newchannel, RPL_ENDOFNAMESS(nickname, channel), clientfd);
+        // broadcastMessage(newchannel, RPL_JOINN(channelTopic, nickname, channel), clientfd);
+		// sendMsgToClient(clientfd, RPL_TOPICC("+t", nickname, nickname, channel));
+        // broadcastMessage(newchannel, RPL_TOPICC("+t", nickname, nickname, channel), clientfd);
+
+		// sendMsgToClient(clientfd, RPL_NAMREPLYY(listofnames, nickname, channel));
+        // broadcastMessage(newchannel, RPL_NAMREPLYY(listofnames, nickname, channel), clientfd);
+
+        // sendMsgToClient(clientfd, RPL_ENDOFNAMESS(nickname, channel));
+        // broadcastMessage(newchannel, RPL_ENDOFNAMESS(nickname, channel), clientfd);
 	}
 }
 
