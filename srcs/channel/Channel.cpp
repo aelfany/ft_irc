@@ -31,14 +31,14 @@ std::string&	Channel::getPassword()
     return _password;
 }
 
-clientito&		Channel::getUserBynickname(std::string _nickname)
+bool		Channel::checkUserexist(std::string _nickname)
 {
     map_users::iterator it = _users.begin();
     for(; it != _users.end(); it++) {
         if(it->second.getNickName() == _nickname)
-            return it->second;
+            return true;
     }
-    throw std::runtime_error("User not found");
+    return false;
 }
 
 bool	Channel::getPrvBynickname(std::string _nickname)

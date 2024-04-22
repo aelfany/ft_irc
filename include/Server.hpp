@@ -48,7 +48,7 @@ class Servrr
         void    trimUser(const std::string& str);
         Channel & getChannel(std::string channel);
         void    trimSpaces(const std::string& str, bool x);
-
+        std::string  _time(std::string nick);
 		std::string&		getPassword();
 		unsigned int		getPort();
 		int					getSockFd();
@@ -72,6 +72,7 @@ class Servrr
         //Server main functions
         void    eventOnServerSock();
         void    eventOnClientSock();
+        void    Topic(std::string nick, size_t i);
 };
 void	sendMsgToClient(int clientfd, std::string msg);
 bool	check_port(std::string port);

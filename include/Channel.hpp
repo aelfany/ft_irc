@@ -18,6 +18,8 @@ class Channel
         size_t			_usersSize;
         std::string		_name;
         std::string		_password;
+        std::string     topicseter;
+        std::string     topictime;
         std::string		_topic;
         map_users		_users;
         std::string		_AdminName;
@@ -29,7 +31,9 @@ class Channel
 		//getters
 		std::string&	getChannelName();
 		std::string&	getPassword();
-        clientito&		getUserBynickname(std::string _nickname);
+        std::string     getAllUsers();
+        // clientito&		getUserBynickname(std::string _nickname);
+        bool		    checkUserexist(std::string _nickname);
         bool	        getPrvBynickname(std::string _nickname);
         map_users&		getUsersMap();
         bool            getPass();
@@ -45,7 +49,9 @@ class Channel
         void	setPass(bool pass);
         void	setTopc(bool top);
         void	setLimit(size_t limit);
+        // void	topicSet(std::string seter);
 		void	setusersSize(size_t user);
+        void    setTopicAttr(std::string topic, bool topc, std::string seter, std::string time);
 
 		void pushtomap(bool privilege, clientito& obj);
 };

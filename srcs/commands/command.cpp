@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/20 20:39:33 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:47:10 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../include/client.hpp"
 
 
-
+//Sun Apr 21 17:43:10 2024
 Channel & Servrr::getChannel(std::string channel) {
 
     if(args[1][0] == '#')
@@ -25,6 +25,7 @@ Channel & Servrr::getChannel(std::string channel) {
     return it->second;
 }
 void Servrr::command(std::string buffer, size_t i) {
+
     std::string s = inet_ntoa(_addr.sin_addr);
     std::string channel;
     std::string nick = getClientitoByIndex(i-1).getNickName();
@@ -48,6 +49,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
         }
         else if(args[0] == "TOPIC") {
+            Topic(nick,i);
         }
         else if(args[0] == "MODE")
         {
@@ -122,7 +124,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 }
             }
             catch(...) {
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick, "#" + args[1]));
             }
         }
         // else 
