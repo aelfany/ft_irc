@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/22 23:15:05 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/23 00:36:48 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,16 +119,13 @@ void    Servrr::sendmessage(std::string _destination, std::string _message, int 
     {
         //Broadcast the message to all clients in this channel
         broadcastMessage(it->second, _message, clientfd);
-        std::cout << "destination is a channel" << std::endl;
     }
     else
     {
-        std::cout << "destination is solo client" << std::endl;
         for (size_t i = 0; _clients.size(); i++)
         {
             if (_clients[i].getNickName() == _destination)
             {
-                std::cout << "You're about to send msg to " << _clients[i].getNickName() << "..." <<std::endl;
                 sendMsgToClient(_clients[i].getClinetFd(), _message);
                 return ;
             }
