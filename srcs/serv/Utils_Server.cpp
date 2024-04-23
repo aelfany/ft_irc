@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/23 06:49:32 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/23 06:54:50 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,19 +112,16 @@ void    Servrr::broadcastMessage(Channel _channel, std::string _message, int _cl
     }
 }
 
-void    Servrr::sendmessage(clientito &client, std::string reciever, std::string _message, int clientfd)
+void    Servrr::sendmessage(clientito &client, std::string reciever, std::string _message)
 {
 
     std::string senderNick = client.getNickName();
-    std::string senderUsername = client.getNickName();
+    std::string senderUsername = client.getNickName();//don't forget to change this
     
     std::map<std::string, Channel>::iterator it = _channels.find(reciever);
     if (it != _channels.end())
     {
-        //Broadcast the message to all clients in this channel
-        // :obahi1!~l@197.230.30.146 PRIVMSG obahi2 :hi
-        // std::string host = "127.0.0.1";
-        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", clientfd);
+        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
     }
     else
     {

@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/23 06:49:50 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/23 08:07:52 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,24 @@ void Servrr::command(std::string buffer, size_t i) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
             }
         }
+        // std::string _message;
+        // size_t pos = _recvBuffer.find(":");
+        // _message = _recvBuffer.substr(pos, std::string::npos);
         else if (args[0] == "PRIVMSG")
         {
-            sendmessage(getClientitoByIndex(i-1), args[1], args[2], getClientitoByIndex(i-1).getClinetFd());
+            std::string _message;
+            for(size_t i = 0; i < args.size(); i++)
+            {
+                if(i > 1)
+                {
+                    if (args[i][0] == ':')
+                        _message = args[i].substr(1, std::string::npos) + " ";
+                    else
+                        _message += args[i] + " ";
+                }
+            }
+            sendmessage(getClientitoByIndex(i-1), args[1], _message);
         }
-        // else 
     }
     args.clear();
 }
