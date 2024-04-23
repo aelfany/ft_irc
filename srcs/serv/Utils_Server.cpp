@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/23 00:36:48 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/23 06:49:32 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,21 +112,27 @@ void    Servrr::broadcastMessage(Channel _channel, std::string _message, int _cl
     }
 }
 
-void    Servrr::sendmessage(std::string _destination, std::string _message, int clientfd)
+void    Servrr::sendmessage(clientito &client, std::string reciever, std::string _message, int clientfd)
 {
-    std::map<std::string, Channel>::iterator it = _channels.find(_destination);
+
+    std::string senderNick = client.getNickName();
+    std::string senderUsername = client.getNickName();
+    
+    std::map<std::string, Channel>::iterator it = _channels.find(reciever);
     if (it != _channels.end())
     {
         //Broadcast the message to all clients in this channel
-        broadcastMessage(it->second, _message, clientfd);
+        // :obahi1!~l@197.230.30.146 PRIVMSG obahi2 :hi
+        // std::string host = "127.0.0.1";
+        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", clientfd);
     }
     else
     {
         for (size_t i = 0; _clients.size(); i++)
         {
-            if (_clients[i].getNickName() == _destination)
+            if (_clients[i].getNickName() == reciever)
             {
-                sendMsgToClient(_clients[i].getClinetFd(), _message);
+                sendMsgToClient(_clients[i].getClinetFd(), ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n");
                 return ;
             }
         }

@@ -2,17 +2,6 @@
 #include "../../include/Channel.hpp"
 #include <iomanip>
 
-
-#define	JOIN_CHANNEL1(nickname,username,channelname) (":" + nickname + "!~" + username + "@127.0.0.1" + " JOIN " + channelname + "\r\n")
-#define	RPL_NAMREPLY1(nickname,channelname,listclient) (":353 " + nickname + " = " + channelname + " :" + listclient + "\r\n")
-#define	RPL_ENDOFNAMES1(nickname,channelname) (":366 " + nickname + " " + channelname + " :End of /NAMES list\r\n")
-
-// #define RPL_JOINN(topic, nickname, channel) ":irc.idryab.chat 311 " + nickname + " " + channel + " :" + topic + "\r\n"
-#define RPL_TOPICC(mode, nickname, username, channel) ":" + nickname + "!" + username + "@127.0.0.1" + " JOIN " + channel + " " + mode +  "\r\n"
-// #define RPL_NAMREPLYY(listofnames, nickname, channel) ":irc.idryab.chat 353 " + nickname + " @ " + "" + channel + " :" + listofnames +"\r\n"
-// #define RPL_ENDOFNAMESS(nickname, channel) ":irc.idryab.chat 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n"
-
-
 bool alreadyAmember(int clientfd, Channel channel)
 {
     map_users mapOfClients = channel.getUsersMap();
@@ -88,7 +77,7 @@ void	Servrr::proccessChannels(int clientfd)
         }
 		_channels.insert(std::make_pair(channel, newchannel));
 		sendMsgToClient(clientfd, RPL_JOIN(nickname, nickname,channel, serverHostname));
-		sendMsgToClient(clientfd, RPL_TOPICC("+o", nickname, nickname, channel));
+		// sendMsgToClient(clientfd, RPL_TOPICC("+o", nickname, nickname, channel));
         sendMsgToClient(clientfd, RPL_NAMREPLY(serverHostname, listofnames, channel, nickname));
         sendMsgToClient(clientfd, RPL_ENDOFNAMES(serverHostname, nickname, channel));
 	}
