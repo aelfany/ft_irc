@@ -99,7 +99,8 @@ void    Servrr::createChannel(std::string command, int clientfd)
     if (_result[0] == "JOIN")
     {
         if (_result[1].empty())
-            sendMsgToClient(clientfd, "Plz, Provide a channnel name\n");
+            sendMsgToClient(clientfd, ERR_NEEDMOREPARAMS(getClientitoByfd(clientfd).getNickName(), "JOIN"));
+            // sendMsgToClient(clientfd, "Plz, Provide a channnel name\n");
         else
         {
 			proccessChannels(clientfd);
