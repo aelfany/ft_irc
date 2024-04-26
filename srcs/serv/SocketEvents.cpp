@@ -18,6 +18,30 @@ void Servrr::eventOnServerSock()
     }
 }
 
+
+
+void Servrr::removeFromChannel(int client_fd)
+{
+    channelsMap::iterator it = _channels.begin();
+
+
+    for (; it != _channels.end(); it++)
+    {
+        map_users &users_map = it->second.getUsersMap();
+        map_users::iterator iter = users_map.begin();
+        for (;iter != users_map.end(); iter++)
+        {
+            if(client_fd == iter->second.getClinetFd())
+            {
+                std::cout << "Before client removed "<< users_map.size() << std::endl;
+                users_map.erase(iter);
+                return ;
+                std::cout << "After client removed "<< users_map.size() << std::endl;
+            }
+        }
+    }
+}
+
 void Servrr::eventOnClientSock()
 {
     std::vector<pollfd>& fds = getPollfdVect();
@@ -35,6 +59,8 @@ void Servrr::eventOnClientSock()
         close(client_sock_fd);
         fds.erase(fds.begin() + _index);
         removeClient(_index-1);
+        //remove client from channel
+        removeFromChannel(client_sock_fd);
         _index--;
     }
     else

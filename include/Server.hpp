@@ -63,6 +63,7 @@ class Servrr
         
         void	runServer();
         void	removeClient(int id);
+        void	removeFromChannel(int fd);
 
         //channel section
         void	createChannel(std::string command, int client_fd);

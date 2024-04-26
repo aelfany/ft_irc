@@ -8,6 +8,7 @@ void printChannelClients(Channel &obj)
     map_users usersMap = obj.getUsersMap();
     map_users::iterator it = usersMap.begin();
     std::cout << "+-------------------------------------------------+\n";
+    std::cout << "channel size: " << usersMap.size() << std :: endl;
     for (; it != usersMap.end(); ++it)
     {
         std::cout << "	Nickname: " << it->second.getNickName() << std::endl;
