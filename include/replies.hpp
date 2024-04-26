@@ -62,7 +62,7 @@
 #define RPL_PING(buffer, token)                         ":" + buffer + " PONG :" + token
 #define RPL_PRIVMSG(buffer, target, message)            ":" + buffer + " PRIVMSG " + target + " :" + message
 #define RPL_NOTICE(buffer, target, message)             ":" + buffer + " NOTICE " + target + " :" + message
-#define RPL_QUIT(buffer, message)                       ":" + buffer + " QUIT :Quit: " + message
+#define RPL_QUIT(buffer, message)                       ":" + buffer + " QUIT :Quit: " + message + "\r\n"
 #define RPL_KICK(buffer, channel, target, reason)       ":" + buffer + " KICK " + channel + " " + target + " :" + reason
 #define RPL_MODE(buffer, channel, modes, args)          ":" + buffer + " MODE " + channel + " " + modes + " " + args
 #define RPL_AUTHENTICATED(nickname)                     (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")

@@ -33,10 +33,12 @@ void Servrr::removeFromChannel(int client_fd)
         {
             if(client_fd == iter->second.getClinetFd())
             {
-                std::cout << "Before client removed "<< users_map.size() << std::endl;
+                std::cout << "size Before client removed "<< users_map.size() << std::endl;
+                broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@127.0.0.1 QUIT :Remote host closed the connection\r\n", client_fd);
                 users_map.erase(iter);
-                return ;
-                std::cout << "After client removed "<< users_map.size() << std::endl;
+                // :sabir!~sabir@197.230.30.146 QUIT :Remote host closed the connection
+                std::cout << "size After client removed "<< users_map.size() << std::endl;
+                break ;
             }
         }
     }
@@ -61,6 +63,7 @@ void Servrr::eventOnClientSock()
         removeClient(_index-1);
         //remove client from channel
         removeFromChannel(client_sock_fd);
+        //send message to channels he joined that client has been deconnected
         _index--;
     }
     else
