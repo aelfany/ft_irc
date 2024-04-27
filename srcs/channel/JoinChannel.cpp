@@ -2,7 +2,7 @@
 #include "../../include/Channel.hpp"
 #include <iomanip>
 
-bool alreadyAmember(int clientfd, Channel channel)
+bool Servrr::alreadyAmember(int clientfd, Channel channel)
 {
     map_users mapOfClients = channel.getUsersMap();
     map_users::iterator iter;

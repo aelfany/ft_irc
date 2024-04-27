@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/27 08:39:40 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/27 09:07:02 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,13 +140,24 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if (args[0] == "INVITE")
         {
+            if (!alreadyAmember(getClientitoByIndex(i-1).getClinetFd(), getChannel(args[2])))
+            {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[0]));
+                return ;
+            }
+            if(args.size() < 3)
+            {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[2]));
+                return ;
+            }
             while(i < _clients.size())
             {
                 if (_clients[i].getNickName() == args[1])
                 {
                     //otman!~otman@172.0.0.1 INVITE sabir :#osabir
-                    std::string msg = nick+"!~"+nick+"@127.0.0.1 INVITE "+nick+" :"+getChannel(args[2]).getChannelName()+"\r\n";
+                    std::string msg = args[1]+"!~"+nick+"@127.0.0.1 INVITE "+args[1]+" :"+args[2]+"\r\n";
                     sendMsgToClient(_clients[i].getClinetFd(), msg);
+                    // sendMsgToClient(_clients[i].getClinetFd(), RPL_INVITING());
                     break ;
                 }
                 i++;

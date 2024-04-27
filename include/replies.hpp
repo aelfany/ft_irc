@@ -38,14 +38,14 @@
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
 #define ERR_ALREADYREGISTERED(buffer, nick)             (":" + buffer + " 462 " + nick + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
-#define ERR_NEEDMOREPARAMS(buffer, cmd)             	":" + buffer + " 461 " + cmd + " :Not enough parameters\r\n"
+#define ERR_NEEDMOREPARAMS(client, cmd)             	":" + client + " 461 " + cmd + " :Not enough parameters\r\n"
 #define ERR_NONICKNAMEGIVEN(buffer)                     "431 " + buffer + " :Nickname not given"
 #define ERR_NICKNAMEINUSE(buffer)                       "433 " + buffer + " " + buffer  + " :Nickname is already in use\r\n"
 
 #define ERR_UNKNOWNcmd(buffer, cmd)             		"421 " + buffer + " " + cmd + " :Unknown cmd"
 
 #define ERR_TOOMANYCHANNELS(buffer, channel)            "405 " + buffer + " " + channel + " :You have joined too many channels"
-#define ERR_NOTONCHANNEL(buffer, channel)               "442 " + buffer + " " + channel + " :You're not on that channel"
+#define ERR_NOTONCHANNEL(client, channel)               "442 " + client + " " + channel + " :You're not on that channel\r\n"
 #define ERR_NOSUCHCHANNEL(buffer, channel)              "403 " + buffer + " " + channel + " :No such channel"
 #define ERR_BADCHANNELKEY(buffer, channel)              "475 " + buffer + " " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(buffer, channel)              "471 " + buffer + " " + channel + " :Cannot join channel (+l)"

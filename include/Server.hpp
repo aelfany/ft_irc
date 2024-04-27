@@ -69,6 +69,7 @@ class Servrr
         void	createChannel(std::string command, int client_fd);
 		void	parseJoinCommand(const std::string& command);
 		void	proccessChannels(int clientfd);
+        bool    alreadyAmember(int clientfd, Channel channel);
 
         //Server main functions
         void    eventOnServerSock();
