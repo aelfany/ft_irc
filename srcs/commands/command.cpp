@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/26 12:01:51 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/27 08:39:40 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,6 @@ void Servrr::command(std::string buffer, size_t i) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
             }
         }
-        // std::string _message;
-        // size_t pos = _recvBuffer.find(":");
-        // _message = _recvBuffer.substr(pos, std::string::npos);
         else if (args[0] == "PRIVMSG")
         {
             std::string _message;
@@ -143,16 +140,18 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if (args[0] == "INVITE")
         {
-            //otman!~otman@172.0.0.1 INVITE sabir :#osabir
-            // std::string msg = channel + "!~" + channel+ "@172.0.0.1 INVITE " + channel + " :" + getChannel(args[2]).getChannelName() +"\r\n";
-            // sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), msg);
-            
+            while(i < _clients.size())
+            {
+                if (_clients[i].getNickName() == args[1])
+                {
+                    //otman!~otman@172.0.0.1 INVITE sabir :#osabir
+                    std::string msg = nick+"!~"+nick+"@127.0.0.1 INVITE "+nick+" :"+getChannel(args[2]).getChannelName()+"\r\n";
+                    sendMsgToClient(_clients[i].getClinetFd(), msg);
+                    break ;
+                }
+                i++;
+            }
         }
-        
     }
     args.clear();
 }
-            // puts("******************************");
-            // std::cout << mode.getChannelName() << std::endl; 
-            // std::cout << mode.getPassword() << std::endl; 
-            // puts("******************************");
