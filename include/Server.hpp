@@ -56,6 +56,8 @@ class Servrr
 		struct sockaddr_in&	getSockAddr();
         clientito&			getClientitoByIndex(int index);
         clientito&			getClientitoByfd(int clientfd);
+        void                Topic(std::string nick, size_t i);
+        std::string         _time(std::string nick);
 
 		void	setSockAddr();
 		void	setSockFd(int sock_fd);

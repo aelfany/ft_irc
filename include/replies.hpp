@@ -36,6 +36,7 @@
 #define RPL_ENDOFNAMES(hostname, nick, channelname) ":" + hostname + " 366 " + nick + " " + channelname + " :END of /NAMES list\r\n"
 
 #define ERR_NOTREGISTERED(buffer)                       "451 " + buffer + " :You have not registered"
+#define ERR_WASNOSUCHNICK(buffer,cmd)                   ":" + buffer + " 406 " + cmd + " :There was no such nickname\n\r"
 #define ERR_ALREADYREGISTERED(buffer, nick)             (":" + buffer + " 462 " + nick + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(buffer, cmd)					(":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
 #define ERR_NEEDMOREPARAMS(client, cmd)             	":" + client + " 461 " + cmd + " :Not enough parameters\r\n"
@@ -46,7 +47,7 @@
 
 #define ERR_TOOMANYCHANNELS(buffer, channel)            "405 " + buffer + " " + channel + " :You have joined too many channels"
 #define ERR_NOTONCHANNEL(client, channel)               "442 " + client + " " + channel + " :You're not on that channel\r\n"
-#define ERR_NOSUCHCHANNEL(buffer, channel)              "403 " + buffer + " " + channel + " :No such channel"
+#define ERR_NOSUCHCHANNEL(buffer, nick, channel)        ":" + buffer + " 403 " + nick + " " + channel + " :No such channel\r\n"
 #define ERR_BADCHANNELKEY(buffer, channel)              "475 " + buffer + " " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(buffer, channel)              "471 " + buffer + " " + channel + " :Cannot join channel (+l)"
 #define ERR_CANNOTSENDTOCHAN(buffer, channel)           "404 " + buffer + " " + channel + " :Cannot send to channel"

@@ -4,7 +4,7 @@
 #include <map>
 
 // typedef std::map<std::string, clientito> map_users;
-typedef std::map<bool, clientito> map_users;
+typedef std::map<std::pair<bool, std::string>, clientito> map_users;
 //                     is_opertator==1  ,obj
 
 class Channel
@@ -17,6 +17,8 @@ class Channel
         size_t          _limit;
         size_t			_usersSize;
         std::string		_name;
+        std::string		topicseter;
+        std::string		topictime;
         std::string		_password;
         std::string		_topic;
         map_users		_users;
@@ -29,11 +31,14 @@ class Channel
 		//getters
 		std::string&	getChannelName();
 		std::string&	getPassword();
+        void            setTopicAttr(std::string topic, bool topc, std::string seter, std::string time);
         clientito&		getUserBynickname(std::string _nickname);
         bool	        getPrvBynickname(std::string _nickname);
+        void            setPrvByNickname(std::string _nickname, bool prv, clientito & obj);
         map_users&		getUsersMap();
         bool            getPass();
         bool            getInvOnly();
+        bool            getTopc();
 		size_t			getusersSize();
 
 
@@ -46,6 +51,7 @@ class Channel
         void	setTopc(bool top);
         void	setLimit(size_t limit);
 		void	setusersSize(size_t user);
+        bool    checkUserexist(std::string _nickname);
 
 		void pushtomap(bool privilege, clientito& obj);
 };

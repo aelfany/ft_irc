@@ -21,7 +21,7 @@ std::string getListOfNames(map_users _users)
     map_users::iterator iter;
     for(iter = _users.begin(); iter != _users.end(); iter++)
     {
-        if (iter->first == true)
+        if (iter->first.first == true)
             listOfNames += "@" + iter->second.getNickName() + " ";
         else
             listOfNames += iter->second.getNickName() + " ";
@@ -58,7 +58,7 @@ void	Servrr::proccessChannels(int clientfd)
                 return ;
             }
             it->second.pushtomap(false, getClientitoByfd(clientfd));
-            it->second.setusersSize(1);
+            // it->second.setusersSize(1);
             listofnames = getListOfNames(it->second.getUsersMap());
 
             sendMsgToClient(clientfd, RPL_JOIN(nickname, nickname,channel, serverHostname));

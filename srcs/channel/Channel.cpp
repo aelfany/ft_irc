@@ -17,6 +17,20 @@ bool Channel::getPass()
     return _pass;
 }
 
+bool		Channel::checkUserexist(std::string _nickname) {
+    map_users::iterator it = _users.begin();
+    for(size_t a = 0; a < _users.size(); a++) {
+        if(it->second.getNickName() == _nickname) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool            Channel::getTopc() {
+    return _topc;
+}
+
 void	Channel::setUserLimit(bool limit)
 {
     _userlimit = limit;
@@ -49,8 +63,20 @@ bool	Channel::getPrvBynickname(std::string _nickname)
     for(; it != _users.end(); it++) {
         if(it->second.getNickName() == _nickname)
         {
-            std::cout << it->first << std::endl;
-            return it->first;
+            // std::cout << it->first << std::endl;
+            return it->first.first;
+        }
+    }
+    throw std::runtime_error("bool not found");
+}
+
+void Channel::setPrvByNickname(std::string _nickname, bool prv, clientito & obj) {
+    map_users::iterator it = _users.begin();
+    std::pair<bool, std::string> p(prv, obj.getNickName());
+    for(; it != _users.end(); it++) {
+        if(it->second.getNickName() == _nickname) {
+            _users.erase(it);
+            _users.insert(std::make_pair(p, obj));
         }
     }
     throw std::runtime_error("bool not found");
@@ -106,5 +132,8 @@ void	Channel::setusersSize(size_t user)
 void Channel::pushtomap(bool privilege, clientito& obj)
 {
     // clientito & t = getUserBynickname();
-	_users.insert(std::make_pair(privilege, obj));
+    std::pair<bool, std::string> p;
+    p.first = privilege;
+    p.second = obj.getNickName(); 
+	_users.insert(std::make_pair(p, obj));
 }

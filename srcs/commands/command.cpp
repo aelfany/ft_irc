@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/27 09:07:02 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/27 11:36:22 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 #include "../../include/client.hpp"
 
+
+//Sun Apr 21 17:43:10 2024
 Channel & Servrr::getChannel(std::string channel) {
 
     if(args[1][0] == '#')
@@ -23,6 +25,7 @@ Channel & Servrr::getChannel(std::string channel) {
     return it->second;
 }
 void Servrr::command(std::string buffer, size_t i) {
+
     std::string s = inet_ntoa(_addr.sin_addr);
     std::string channel;
     std::string nick = getClientitoByIndex(i-1).getNickName();
@@ -46,6 +49,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
         }
         else if(args[0] == "TOPIC") {
+            Topic(nick,i);
         }
         else if(args[0] == "MODE")
         {
@@ -74,7 +78,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 else if(REMOVE_T) {
                     if (mode.getPrvBynickname(channel) == false)
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(s,channel));
-                    else    
+                    else
                         mode.setTopc(false);
                 }
                 //**************************//
@@ -85,7 +89,6 @@ void Servrr::command(std::string buffer, size_t i) {
                     else if (mode.getPrvBynickname(channel) == false) 
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(s,channel));
                     else {
-                        std::cout << "33333" << std::endl;
                         mode.setPassword(args[3]);
                         mode.setPass(true);
                     }
@@ -102,10 +105,46 @@ void Servrr::command(std::string buffer, size_t i) {
                 }
                 //---------------------//
                 if(SET_O) {
+                    
+                    puts("////////////////////////////////////////////////");   
+                    if(args.size() < 4)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,channel));
+                    else if(mode.getPrvBynickname(channel) == false)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(s,channel));
+                    else {
+                        try {
+                            mode.getUserBynickname(args[3]);
+                        }
+                        catch(const char *) {
+                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_WASNOSUCHNICK(s,channel));
+                        }
+                    }
+                    printf("////////////////////////////////////////////////\n");   
+                    std::cout << "@->>" << mode.getPrvBynickname(channel) << std::endl; 
+                    std::cout << "@->>" << mode.getPrvBynickname(channel) << std::endl; 
+                    mode.setPrvByNickname(channel, false, mode.getUserBynickname(channel));
+                    printf("////////////////////////////////////////////////\n");   
                     /***/
+                    
                 }
                 else if(REMOVE_O) {
                     /***/
+                    if(args.size() < 4)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,channel));
+                    else if(mode.getPrvBynickname(channel) == false)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(s,channel));
+                    else {
+                        try {
+                            mode.getUserBynickname(args[3]);
+                        }
+                        catch(const char *) {
+                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_WASNOSUCHNICK(s,channel));
+                        }
+                    }
+                    std::cout << "@->>" << mode.getPrvBynickname(channel) << std::endl; 
+                    mode.setPrvByNickname(channel, false, mode.getUserBynickname(channel));
+                    std::cout << "@->>" << mode.getPrvBynickname(channel) << std::endl; 
+                    puts("----------------------------------------");
                 }
                 if(SET_L) {
                     std::stringstream ss(args[3]);
@@ -120,7 +159,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 }
             }
             catch(...) {
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick, "#" + args[1]));
             }
         }
         else if (args[0] == "PRIVMSG")
@@ -163,6 +202,11 @@ void Servrr::command(std::string buffer, size_t i) {
                 i++;
             }
         }
+        else if (args[0] == "PART")
+        {
+            removeFromChannel(getClientitoByIndex(i-1).getClinetFd());
+        }
+        // else 
     }
     args.clear();
 }
