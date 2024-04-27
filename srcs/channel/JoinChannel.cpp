@@ -52,7 +52,11 @@ void	Servrr::proccessChannels(int clientfd)
                 return ;
             }
             if (it->second.getInvOnly() == true)
+            {
+                //<client> <channel> :Cannot join channel (+i)
+                sendMsgToClient(clientfd, "473 " + nickname + " " +  it->first + " :Cannot join channel (+i)\r\n");
                 return ;
+            }
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
             listofnames = getListOfNames(it->second.getUsersMap());

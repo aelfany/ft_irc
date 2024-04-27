@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/23 08:07:52 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/26 12:01:51 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,14 @@ void Servrr::command(std::string buffer, size_t i) {
             }
             sendmessage(getClientitoByIndex(i-1), args[1], _message);
         }
+        else if (args[0] == "INVITE")
+        {
+            //otman!~otman@172.0.0.1 INVITE sabir :#osabir
+            // std::string msg = channel + "!~" + channel+ "@172.0.0.1 INVITE " + channel + " :" + getChannel(args[2]).getChannelName() +"\r\n";
+            // sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), msg);
+            
+        }
+        
     }
     args.clear();
 }
