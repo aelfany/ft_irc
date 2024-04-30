@@ -40,6 +40,16 @@ std::string&	Channel::getChannelName()
     return _name;
 }
 
+std::string Channel::getChannelNameDisplay()
+{
+    return _nameToDisplay;
+}
+
+void    Channel::setChannelNameDisplay(std::string _name)
+{
+    _nameToDisplay = _name;
+}
+
 std::string&	Channel::getPassword()
 {
     return _password;

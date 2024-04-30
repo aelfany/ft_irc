@@ -72,6 +72,7 @@ class Servrr
 		void	parseJoinCommand(const std::string& command);
 		void	proccessChannels(int clientfd);
         bool    alreadyAmember(int clientfd, Channel channel);
+        std::string tolowercases(std::string _str1);
 
         //Server main functions
         void    eventOnServerSock();

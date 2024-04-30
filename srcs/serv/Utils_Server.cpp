@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/27 08:16:17 by idryab           ###   ########.fr       */
+/*   Updated: 2024/04/30 22:53:03 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
     std::string senderNick = client.getNickName();
     std::string senderUsername = client.getNickName();//don't forget to change this
     
-    std::map<std::string, Channel>::iterator it = _channels.find(reciever);
+    std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(reciever));
     if (it != _channels.end())
         broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
     else

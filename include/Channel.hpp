@@ -22,7 +22,7 @@ class Channel
         std::string		_password;
         std::string		_topic;
         map_users		_users;
-        std::string		_AdminName;
+        std::string		_nameToDisplay;
     public:
         Channel(std::string	_name);
         ~Channel();
@@ -30,6 +30,8 @@ class Channel
 
 		//getters
 		std::string&	getChannelName();
+        std::string     getChannelNameDisplay();
+        void            setChannelNameDisplay(std::string _name);
 		std::string&	getPassword();
         void            setTopicAttr(std::string topic, bool topc, std::string seter, std::string time);
         clientito&		getUserBynickname(std::string _nickname);
