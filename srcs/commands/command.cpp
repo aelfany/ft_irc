@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/04/27 11:36:22 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/01 04:16:21 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 //Sun Apr 21 17:43:10 2024
 Channel & Servrr::getChannel(std::string channel) {
 
-    if(args[1][0] == '#')
-        args[1] = args[1].substr(1, std::string::npos);
-    std::map<std::string, Channel>::iterator it = _channels.find(channel);
+std::cout << "here111111: " << std::endl;
+    // if(args[1][0] == '#')
+    //     args[1] = args[1].substr(1, std::string::npos);
+    std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(channel));
     if (it == _channels.end())
         throw "No channel found";
     return it->second;
@@ -30,7 +31,7 @@ void Servrr::command(std::string buffer, size_t i) {
     std::string channel;
     std::string nick = getClientitoByIndex(i-1).getNickName();
     Channel a;
-    trimSpaces(buffer,false);
+    trimSpaces(buffer,false); 
     if(getClientitoByIndex(i-1).isAuthed() == false) {
         auth2(buffer, getClientitoByIndex(i-1));
     }
@@ -53,6 +54,12 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if(args[0] == "MODE")
         {
+            if (args.size() < 3)
+            {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, "MODE"));
+                args.clear();
+                return ;
+            }
             try {
                 Channel &mode = getChannel(args[1]);
                 channel = getClientitoByIndex(i-1).getNickName();
@@ -165,12 +172,26 @@ void Servrr::command(std::string buffer, size_t i) {
         else if (args[0] == "PRIVMSG")
         {
             std::string _message;
+            try
+            {
+                if (!alreadyAmember(getClientitoByIndex(i-1).getClinetFd(), getChannel(args[1])))
+                {
+                    sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[0]));
+                    args.clear();
+                    return ;
+                }
+            }
+            catch(...)
+            {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[0]));
+                std::cerr << "You're not on that channel\n";
+            }
             for(size_t i = 0; i < args.size(); i++)
             {
                 if(i > 1)
                 {
                     if (args[i][0] == ':')
-                        _message = args[i].substr(1, std::string::npos) + " ";
+                        _message = args[i].substr(1) + " ";
                     else
                         _message += args[i] + " ";
                 }
@@ -205,6 +226,7 @@ void Servrr::command(std::string buffer, size_t i) {
         else if (args[0] == "PART")
         {
             removeFromChannel(getClientitoByIndex(i-1).getClinetFd());
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ":" + nick + "!~" + nick + "@127.0.0.1 QUIT :Remote host closed the connection\r\n");
         }
         // else 
     }

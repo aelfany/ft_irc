@@ -34,7 +34,7 @@ class Servrr
         clientVect	                _clients;
         channelsMap					_channels;
         JoinVect					_result;
-        std::vector<std::string>    args;
+        JoinVect                    args;
         Servrr();
     public:
         size_t	_index;

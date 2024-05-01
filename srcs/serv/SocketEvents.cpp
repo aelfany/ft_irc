@@ -24,7 +24,6 @@ void Servrr::removeFromChannel(int client_fd)
 {
     channelsMap::iterator it = _channels.begin();
 
-
     for (; it != _channels.end(); it++)
     {
         map_users &users_map = it->second.getUsersMap();
