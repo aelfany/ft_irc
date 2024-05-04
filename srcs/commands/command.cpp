@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/01 04:16:21 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/04 21:39:23 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@
 
 //Sun Apr 21 17:43:10 2024
 Channel & Servrr::getChannel(std::string channel) {
-
-std::cout << "here111111: " << std::endl;
-    // if(args[1][0] == '#')
-    //     args[1] = args[1].substr(1, std::string::npos);
     std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(channel));
     if (it == _channels.end())
         throw "No channel found";
@@ -225,10 +221,20 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if (args[0] == "PART")
         {
-            removeFromChannel(getClientitoByIndex(i-1).getClinetFd());
-            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ":" + nick + "!~" + nick + "@127.0.0.1 QUIT :Remote host closed the connection\r\n");
+            try
+            {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ":" + nick + "!~" + nick + "@127.0.0.1 QUIT :Remote host closed the connection\r\n");
+                removeFromChannel(getClientitoByIndex(i-1).getClinetFd());
+                Channel &obj = getChannel(args[1]);
+                if (obj.getusersSize() == 0)
+                    eraseChannel(tolowercases(args[1]));
+            }
+            catch(...)
+            {
+                return ;
+            }
+            
         }
-        // else 
     }
     args.clear();
 }

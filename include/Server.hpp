@@ -78,6 +78,8 @@ class Servrr
         void    eventOnServerSock();
         void    eventOnClientSock();
 
+        void eraseChannel(std::string _name);
+
         void    sendmessage(clientito &client, std::string _destination, std::string _message);
         void    broadcastMessage(Channel _channel, std::string _message, int _clientfd);
 };

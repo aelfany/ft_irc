@@ -20,6 +20,42 @@ void Servrr::eventOnServerSock()
 
 
 
+// void Servrr::removeFromChannel(int client_fd)
+// {
+//     channelsMap::iterator it = _channels.begin();
+
+//     while (it != _channels.end())
+//     {
+//         map_users &users_map = it->second.getUsersMap();
+//         map_users::iterator iter = users_map.begin();
+//         while (iter != users_map.end())
+//         {
+//             if (client_fd == iter->second.getClinetFd())
+//             {
+//                 broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@127.0.0.1 QUIT :Remote host closed the connection\r\n", client_fd);
+//                 iter = users_map.erase(iter); // Increment iterator after erasing
+//                 if (users_map.empty())
+//                 {
+//                     _channels.erase(it++);
+//                     continue; // Move to next channel
+//                 }
+//                 break; // Exit user loop
+//             }
+//             else
+//             {
+//                 ++iter; // Increment iterator if no match found
+//             }
+//         }
+//         it++; // Increment channel iterator
+//     }
+// }
+
+
+void Servrr::eraseChannel(std::string _name)
+{
+    _channels.erase(_name);
+}
+
 void Servrr::removeFromChannel(int client_fd)
 {
     channelsMap::iterator it = _channels.begin();
@@ -28,12 +64,22 @@ void Servrr::removeFromChannel(int client_fd)
     {
         map_users &users_map = it->second.getUsersMap();
         map_users::iterator iter = users_map.begin();
-        for (;iter != users_map.end(); iter++)
+        for (;iter != users_map.end(); ++iter)
         {
             if(client_fd == iter->second.getClinetFd())
             {
                 broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@127.0.0.1 QUIT :Remote host closed the connection\r\n", client_fd);
                 users_map.erase(iter);
+                it->second.setusersSize(-1);
+                // if(users_map.empty())
+                // {
+                //     std::cout << "chanNameBef: " << it->first << std::endl;
+                //     it = _channels.erase(it);
+                //     if (it == _channels.end())  {
+                //         it--;
+                //     }
+                //     break;
+                // }
                 break ;
             }
         }
