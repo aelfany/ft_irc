@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/04 21:39:23 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/05 16:08:40 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,9 +231,24 @@ void Servrr::command(std::string buffer, size_t i) {
             }
             catch(...)
             {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[1]));
                 return ;
             }
             
+        }
+        else if (args[0] == "QUIT")
+        {
+            int client_sock_fd =  getClientitoByIndex(i-1).getClinetFd();
+            
+            // If client disconnected print this==> && close its socket && erase its data in our vector
+            std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
+            close(client_sock_fd);
+            _fds.erase(_fds.begin() + _index);
+            removeClient(_index-1);
+            //remove client from channel
+            //send message to channels he joined that client has been deconnected
+            removeFromChannel(client_sock_fd);
+            _index--;
         }
     }
     args.clear();

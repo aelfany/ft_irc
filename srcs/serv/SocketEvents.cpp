@@ -8,47 +8,18 @@ void Servrr::eventOnServerSock()
         perror("accepttt");
     else
     {
-        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
+        char cladd[16];
+        inet_ntop(AF_INET, &_addr, cladd, 16);
+        std::cout << "New connection from client with fd: " << client_sock_fd << " and address: " << cladd << std::endl;
         clientito cleintObj(client_sock_fd);
         setClientito(cleintObj);
+        cleintObj.setIpAddr(cladd);
         struct pollfd poll_fd;
         poll_fd.fd = client_sock_fd;
         poll_fd.events = POLLIN | POLLOUT;
         getPollfdVect().push_back(poll_fd);
     }
 }
-
-
-
-// void Servrr::removeFromChannel(int client_fd)
-// {
-//     channelsMap::iterator it = _channels.begin();
-
-//     while (it != _channels.end())
-//     {
-//         map_users &users_map = it->second.getUsersMap();
-//         map_users::iterator iter = users_map.begin();
-//         while (iter != users_map.end())
-//         {
-//             if (client_fd == iter->second.getClinetFd())
-//             {
-//                 broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@127.0.0.1 QUIT :Remote host closed the connection\r\n", client_fd);
-//                 iter = users_map.erase(iter); // Increment iterator after erasing
-//                 if (users_map.empty())
-//                 {
-//                     _channels.erase(it++);
-//                     continue; // Move to next channel
-//                 }
-//                 break; // Exit user loop
-//             }
-//             else
-//             {
-//                 ++iter; // Increment iterator if no match found
-//             }
-//         }
-//         it++; // Increment channel iterator
-//     }
-// }
 
 
 void Servrr::eraseChannel(std::string _name)
@@ -71,15 +42,6 @@ void Servrr::removeFromChannel(int client_fd)
                 broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@127.0.0.1 QUIT :Remote host closed the connection\r\n", client_fd);
                 users_map.erase(iter);
                 it->second.setusersSize(-1);
-                // if(users_map.empty())
-                // {
-                //     std::cout << "chanNameBef: " << it->first << std::endl;
-                //     it = _channels.erase(it);
-                //     if (it == _channels.end())  {
-                //         it--;
-                //     }
-                //     break;
-                // }
                 break ;
             }
         }
@@ -91,6 +53,7 @@ void Servrr::eventOnClientSock()
     std::vector<pollfd>& fds = getPollfdVect();
     // Event on client socket (data available)
     int client_sock_fd = fds[_index].fd;
+    clientito &clientobj = getClientitoByfd(client_sock_fd);
     char buffer[1024];
     memset(buffer, 0, 1024);
     ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
@@ -98,19 +61,30 @@ void Servrr::eventOnClientSock()
         perror("recvvv");
     else if (recvData == 0)
     {
-        // If client disconnected print this==> && close its socket && erase its data in our vector
-        std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
-        close(client_sock_fd);
-        fds.erase(fds.begin() + _index);
-        removeClient(_index-1);
-        //remove client from channel
-        removeFromChannel(client_sock_fd);
-        //send message to channels he joined that client has been deconnected
-        _index--;
+        return  ;
     }
     else
     {
-        std::cout << "Received: " << buffer << std::endl;
-        command(buffer, _index);
+        if (strstr(buffer, "\r\n"))
+        {
+            std::cout << "Received1: " << buffer << std::endl;
+            command(buffer, _index);
+            memset(buffer, 0, 1024);
+        }
+        else
+        {
+            std::cout << "Received2: " << buffer << std::endl;
+            std::string _line;
+            _line = _line.append(buffer);
+            memset(buffer, 0, 1024);
+            clientobj.setrecvLine(_line);
+            command(clientobj.getrecvLine(), _index);
+        }
     }
+     // std::cout << "handle CTR+D for client with sfd: " << _clients[_index-1].getClinetFd() << std::endl;
+    // else
+    // {
+    //     std::cout << "Received: " << buffer << std::endl;
+    //     command(buffer, _index);
+    // }
 }
