@@ -4,7 +4,8 @@ COLOUR_BLUE=\033[0;34m
 COLOUR_END=\033[0m
 
 NAME			=	ircserv
-CFLAGS			=	-Wall -Wextra -Werror -std=c++98 -g -fsanitize=address 
+CFLAGS			=	-Wall -Wextra -Werror -std=c++98 -g
+# -g -fsanitize=address 
 
 PREFIX			=	srcs/
 HPEFIX			=	include/

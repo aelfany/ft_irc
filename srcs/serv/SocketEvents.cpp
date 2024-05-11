@@ -8,12 +8,9 @@ void Servrr::eventOnServerSock()
         perror("accepttt");
     else
     {
-        char cladd[16];
-        inet_ntop(AF_INET, &_addr, cladd, 16);
-        std::cout << "New connection from client with fd: " << client_sock_fd << " and address: " << cladd << std::endl;
+        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
         clientito cleintObj(client_sock_fd);
         setClientito(cleintObj);
-        cleintObj.setIpAddr(cladd);
         struct pollfd poll_fd;
         poll_fd.fd = client_sock_fd;
         poll_fd.events = POLLIN | POLLOUT;
@@ -57,34 +54,37 @@ void Servrr::eventOnClientSock()
     char buffer[1024];
     memset(buffer, 0, 1024);
     ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
+    buffer[recvData] = '\0';
     if (recvData == -1)
         perror("recvvv");
     else if (recvData == 0)
     {
+            // If client disconnected print this==> && close its socket && erase its data in our vector
+            std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
+            close(client_sock_fd);
+            _fds.erase(_fds.begin() + _index);
+            removeClient(_index-1);
+            //remove client from channel && send message to channels he joined that client has been deconnected
+            removeFromChannel(client_sock_fd);
+            _index--;
         return  ;
     }
     else
     {
-        if (strstr(buffer, "\r\n"))
-        {
-            std::cout << "Received1: " << buffer << std::endl;
-            command(buffer, _index);
+        clientobj.setrecvLine(buffer);// join a join b \r\n
             memset(buffer, 0, 1024);
-        }
-        else
+        if (strstr(clientobj.getrecvLine().c_str(), "\n"))
         {
-            std::cout << "Received2: " << buffer << std::endl;
-            std::string _line;
-            _line = _line.append(buffer);
-            memset(buffer, 0, 1024);
-            clientobj.setrecvLine(_line);
-            command(clientobj.getrecvLine(), _index);
+            std::cout << "Fih r&&n "<< std::endl;
+            size_t pos  = clientobj.getrecvLine().find_first_of("\n");
+
+            if (pos > clientobj.getrecvLine().size())
+                return;
+            std::string cmd = clientobj.getrecvLine().substr(0, pos + 1);
+            // cmd.substr(0,pos);
+            command(cmd, _index);
+            std::cout << "-------> " <<clientobj.getrecvLine() << std::endl;
+            clientobj.getrecvLine() = clientobj.getrecvLine().erase(0,pos+1);
         }
     }
-     // std::cout << "handle CTR+D for client with sfd: " << _clients[_index-1].getClinetFd() << std::endl;
-    // else
-    // {
-    //     std::cout << "Received: " << buffer << std::endl;
-    //     command(buffer, _index);
-    // }
 }

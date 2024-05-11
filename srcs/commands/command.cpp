@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/05 16:08:40 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/11 03:41:33 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,24 @@ Channel & Servrr::getChannel(std::string channel) {
 }
 void Servrr::command(std::string buffer, size_t i) {
 
+    std::cout << buffer << "\n";
     std::string s = inet_ntoa(_addr.sin_addr);
     std::string channel;
     std::string nick = getClientitoByIndex(i-1).getNickName();
     Channel a;
-    trimSpaces(buffer,false); 
+    trimSpaces(buffer,false);
+    args[0] = tolowercases(args[0]);
     if(getClientitoByIndex(i-1).isAuthed() == false) {
         auth2(buffer, getClientitoByIndex(i-1));
     }
     else {
-        if(args[0] == "PASS") {
+        if(args[0] == "pass") {
             if(args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
             else
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_ALREADYREGISTERED(s,"abelfany"));
         }
-        else if(args[0] == "JOIN") {
+        else if(args[0] == "join") {
             trimSpaces(buffer,true);
             if(args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
@@ -165,7 +167,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick, "#" + args[1]));
             }
         }
-        else if (args[0] == "PRIVMSG")
+        else if (args[0] == "privmsg")
         {
             std::string _message;
             try
@@ -194,7 +196,7 @@ void Servrr::command(std::string buffer, size_t i) {
             }
             sendmessage(getClientitoByIndex(i-1), args[1], _message);
         }
-        else if (args[0] == "INVITE")
+        else if (args[0] == "invite")
         {
             if (!alreadyAmember(getClientitoByIndex(i-1).getClinetFd(), getChannel(args[2])))
             {
@@ -219,7 +221,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 i++;
             }
         }
-        else if (args[0] == "PART")
+        else if (args[0] == "part")
         {
             try
             {
@@ -236,7 +238,7 @@ void Servrr::command(std::string buffer, size_t i) {
             }
             
         }
-        else if (args[0] == "QUIT")
+        else if (args[0] == "quit")
         {
             int client_sock_fd =  getClientitoByIndex(i-1).getClinetFd();
             

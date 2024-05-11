@@ -75,24 +75,12 @@ void	clientito::setOperator(bool oper)
 	_operator = oper;
 }
 
-std::string clientito::getrecvLine()
+std::string& clientito::getrecvLine()
 {
     return _recvLine;
 }
 
 void    clientito::setrecvLine(std::string recvline)
 {
-    _recvLine = recvline;
-}
-
-
-
-void	clientito::setIpAddr(std::string ipAddr)
-{
-    _ipAddr = ipAddr;
-}
-
-std::string clientito::getIpAddr()
-{
-    return _ipAddr;
+    _recvLine += recvline;
 }

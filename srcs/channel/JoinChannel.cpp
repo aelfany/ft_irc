@@ -66,7 +66,7 @@ void	Servrr::proccessChannels(int clientfd)
      std::string serverHostname = "127.0.0.";
     while (std::getline(chan, channel, ','))
 	{
-        if(channel[0] != '#' && channel != "JOIN")
+        if(channel[0] != '#' && channel != "join")
             channel = "#"+channel;
         std::string channellower = tolowercases(channel);
         std::map<std::string, Channel>::iterator it = _channels.find(channellower);
@@ -129,10 +129,10 @@ void    Servrr::parseJoinCommand(const std::string& command)
 void    Servrr::createChannel(std::string command, int clientfd)
 {
     parseJoinCommand(command);
-    if (_result[0] == "JOIN")
+    if (_result[0] == "join")
     {
         if (_result[1].empty())
-            sendMsgToClient(clientfd, ERR_NEEDMOREPARAMS(getClientitoByfd(clientfd).getNickName(), "JOIN"));
+            sendMsgToClient(clientfd, ERR_NEEDMOREPARAMS(getClientitoByfd(clientfd).getNickName(), "join"));
         else
         {
 			proccessChannels(clientfd);

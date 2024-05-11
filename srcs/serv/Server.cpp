@@ -149,15 +149,10 @@ void SocketAddrInfo(struct sockaddr_in& addr, int port_n)
 
 void interFace(Servrr obj)
 {
-    char* addrrr = inet_ntoa(&obj.getSockAddr());
-    char seadd[16];
-    inet_ntop(AF_INET, &obj.getSockAddr(), seadd, 16);
     //print some basic info
     std::cout << "#---------------------------#" << std::endl;
     std::cout << "#  Port    : "<< obj.getPort()<< std::endl;
     std::cout << "#  Password: "<< obj.getPassword()<< std::endl;
-    std::cout << "#  Ip      : "<< seadd<< std::endl;
-    std::cout << "#  Ip      : "<< addrrr << std::endl;
     std::cout << "#---------------------------#" << std::endl;
 }
 

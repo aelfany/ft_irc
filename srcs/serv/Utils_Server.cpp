@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/07 17:13:22 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/11 00:49:39 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void Servrr::parsNick(clientito& client) {
 // }
 void	Servrr::auth2(std::string str, clientito& client)
 {
-    std::cout << "*******\n" << args.size() << "\n*******" << std::endl;
     if (args.size() < 2)
     {
         args.clear();
@@ -61,7 +60,7 @@ void	Servrr::auth2(std::string str, clientito& client)
     std::cout << "----------------------" << std::endl;
     std::cout << args[0] << " " << args[1] << std::endl;
     std::cout << "----------------------" << std::endl;
-    if(args[0] == "PASS"  && args[1] == _password && client.getpflag() == false) {
+    if(args[0] == "pass"  && args[1] == _password && client.getpflag() == false) {
         client.setpflag(true);
         args.clear();
         return ;
@@ -72,9 +71,8 @@ void	Servrr::auth2(std::string str, clientito& client)
         args.clear();
         return ;
     }
-    if(args[0] == "NICK" && !args[1].empty() && client.getpflag() && !client.getnflag())
+    if(args[0] == "nick" && !args[1].empty() && client.getpflag() && !client.getnflag())
     {
-        std::cout << "OK" << std::endl;
         client.setnflag(true);
         std::cout << args[1] << std::endl;
         parsNick(client);
@@ -88,8 +86,8 @@ void	Servrr::auth2(std::string str, clientito& client)
         args.clear();
         return ;
     }
-    if(args[0] == "USER" && !args[1].empty() && client.getpflag() && client.getnflag() && !client.getuflag()) {
-        std::cout << "OK" << std::endl;
+    if(args[0] == "user" && !args[1].empty() && client.getpflag() && client.getnflag() && !client.getuflag()) {
+
         client.setuflag(true);
         args.clear();
     }
