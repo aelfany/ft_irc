@@ -129,7 +129,7 @@ void    Servrr::parseJoinCommand(const std::string& command)
 void    Servrr::createChannel(std::string command, int clientfd)
 {
     parseJoinCommand(command);
-    if (_result[0] == "join")
+    if (tolowercases(_result[0]) == "join")
     {
         if (_result[1].empty())
             sendMsgToClient(clientfd, ERR_NEEDMOREPARAMS(getClientitoByfd(clientfd).getNickName(), "join"));
