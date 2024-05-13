@@ -75,16 +75,13 @@ void Servrr::eventOnClientSock()
             memset(buffer, 0, 1024);
         if (strstr(clientobj.getrecvLine().c_str(), "\n"))
         {
-            std::cout << "Fih r&&n "<< std::endl;
             size_t pos  = clientobj.getrecvLine().find_first_of("\n");
 
             if (pos > clientobj.getrecvLine().size())
                 return;
-            std::string cmd = clientobj.getrecvLine().substr(0, pos + 1);
-            // cmd.substr(0,pos);
+            std::string cmd = clientobj.getrecvLine().substr(0, pos+1);
             command(cmd, _index);
-            std::cout << "-------> " <<clientobj.getrecvLine() << std::endl;
-            clientobj.getrecvLine() = clientobj.getrecvLine().erase(0,pos+1);
+            clientobj.getrecvLine() = clientobj.getrecvLine().erase(0, pos+1);
         }
     }
 }

@@ -81,6 +81,7 @@ void	Servrr::proccessChannels(int clientfd)
                 newchannel.setPass(true);
             }
             newchannel.setChannelNameDisplay(channel);
+            newchannel.setusersSize(1);
 		    _channels.insert(std::make_pair(channellower, newchannel));
 		    sendMsgToClient(clientfd, RPL_JOIN(nickname, nickname,channel, serverHostname));
 		    // sendMsgToClient(clientfd, RPL_TOPICC("+o", nickname, nickname, channel));

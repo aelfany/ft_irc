@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/13 01:26:17 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/13 02:48:35 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ void Servrr::command(std::string buffer, size_t i) {
     else {
         if(args[0] == "pass") {
             if(args.size() < 2)
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,nick));
             else
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_ALREADYREGISTERED(s,"abelfany"));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_ALREADYREGISTERED(s,nick));
         }
         else if(args[0] == "join") {
             trimSpaces(buffer,true);
             if(args.size() < 2)
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,"abelfany"));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(s,nick));
             else
                 createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
         }
@@ -249,18 +249,15 @@ void Servrr::command(std::string buffer, size_t i) {
                 //remove client from channel && send message to channels he joined that client has been deconnected.
                 removeFromChannel(client_sock_fd);
                 _index--;
-            try
-            {
-                Channel &obj = getChannel(args[1]);
-                if (obj.getusersSize() == 0)
-                    eraseChannel(tolowercases(args[1]));
-            }
-            catch(...)
-            {
-                // sendMsgToClient(client_sock_fd, ERR_NOTONCHANNEL(nick, args[1]));
-                return ;
-            }
-        }
+                channelsMap::iterator it = _channels.begin();
+                while (it != _channels.end())
+                {
+                    if (it->second.getusersSize() == 0)
+                        it = _channels.erase(it);
+                    else
+                        ++it;
+                }
     }
     args.clear();
+}
 }

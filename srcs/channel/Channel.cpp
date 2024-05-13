@@ -7,7 +7,7 @@ Channel::Channel(std::string name)
     _pass = false;
     _topc = false;
     _limit = -1;
-    _usersSize = 1;
+    _usersSize = 0;
 }
 
 Channel::~Channel(){}
