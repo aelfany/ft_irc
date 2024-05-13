@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/12 22:19:54 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/13 01:26:17 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,16 +241,25 @@ void Servrr::command(std::string buffer, size_t i) {
         else if (args[0] == "quit")
         {
             int client_sock_fd =  getClientitoByIndex(i-1).getClinetFd();
-            
-            // If client disconnected print this==> && close its socket && erase its data in our vector
-            std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
-            close(client_sock_fd);
-            _fds.erase(_fds.begin() + _index);
-            removeClient(_index-1);
-            //remove client from channel
-            //send message to channels he joined that client has been deconnected
-            removeFromChannel(client_sock_fd);
-            _index--;
+                // If client disconnected print this==> && close its socket && erase its data in our vector
+                std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
+                close(client_sock_fd);
+                _fds.erase(_fds.begin() + _index);
+                removeClient(_index-1);
+                //remove client from channel && send message to channels he joined that client has been deconnected.
+                removeFromChannel(client_sock_fd);
+                _index--;
+            try
+            {
+                Channel &obj = getChannel(args[1]);
+                if (obj.getusersSize() == 0)
+                    eraseChannel(tolowercases(args[1]));
+            }
+            catch(...)
+            {
+                // sendMsgToClient(client_sock_fd, ERR_NOTONCHANNEL(nick, args[1]));
+                return ;
+            }
         }
     }
     args.clear();
