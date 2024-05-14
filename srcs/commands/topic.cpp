@@ -38,19 +38,29 @@ void Servrr::Topic(std::string nick, size_t i) {
     try {
         Channel &mode = getChannel(args[1]);
         if(mode.checkUserexist(nick) == false) {
+                std::cout << "" << "{" << nick << "}" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(s,nick));
         }
-        std::cout << "_(" << args.size() << ")_" << std::endl;
+        // std::cout << "_(" << args.size() << ")_" << std::endl;
+        if(args.size() == 2) {
+            // std::cout << "" << "{" << mode.getTopic() << "}" << std::endl;
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICDISPLAY(s, nick,mode.getChannelName(),mode.getTopic()));
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICWHOTIME(s, nick, mode.getChannelName(),mode.gettopictime()));
+        }
         if(args.size() == 3) {
                 std::cout << "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << std::endl;
                 if (mode.getPrvBynickname(nick) == false && mode.getTopc() == true && mode.checkUserexist(nick) == true) {
-                    std::cout << "" << "{" << mode.getTopc() << "}" << std::endl;
-                    std::cout << "" << "{" << mode.getPrvBynickname(nick) << "}" << std::endl;
+                    // std::cout << "" << "{" << mode.getPrvBynickname(nick) << "}" << std::endl;
                     sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(s,nick));      
                 }
+                mode.setTopicAttr(args[2], true, nick, _time(nick));
+                SendToAll(mode, RPL_NEWTOPICSETTED(nick, mode.gettopicseter(), s,mode.getChannelName(),args[2]));
             }
+            // mode.setTopic(args[2]);
+            // sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_NEWTOPICSETTED(nick, mode.gettopicseter(), s,mode.getChannelName(),args[2]));
         }
     catch(const char *str) {
+            // printf("\033[0;31m //////////////////////////////////////////////// \033[0m\n");   
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(s, nick, "#" + args[1]));
     }
         

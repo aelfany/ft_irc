@@ -54,6 +54,9 @@ class Channel
         void	setLimit(size_t limit);
 		void	setusersSize(size_t user);
         bool    checkUserexist(std::string _nickname);
+        std::string     gettopicseter();
+        std::string     getTopic();
+        std::string     gettopictime();
 
 		void pushtomap(bool privilege, clientito& obj);
 };

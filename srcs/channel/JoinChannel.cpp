@@ -14,6 +14,16 @@ bool Servrr::alreadyAmember(int clientfd, Channel channel)
     return false;
 }
 
+std::string     Channel::gettopicseter() {
+    return topicseter;
+}
+std::string     Channel::gettopictime() {
+    return topictime;
+}
+
+std::string     Channel::getTopic() {
+    return _topic;
+}
 
 std::string getListOfNames(map_users _users)
 {

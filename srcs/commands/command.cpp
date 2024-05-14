@@ -47,10 +47,10 @@ void Servrr::command(std::string buffer, size_t i) {
             else
                 createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
         }
-        else if(args[0] == "TOPIC") {
+        else if(args[0] == "topic") {
             Topic(nick,i);
         }
-        else if(args[0] == "MODE")
+        else if(args[0] == "mode")
         {
             if (args.size() < 3)
             {

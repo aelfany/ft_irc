@@ -51,23 +51,20 @@ void Servrr::parsNick(clientito& client) {
 // }
 void	Servrr::auth2(std::string str, clientito& client)
 {
+    std::string nick = client.getNickName();
     if (args.size() < 2)
     {
         args.clear();
         return ;
     }
     trimSpaces(str,false);
-    std::cout << "----------------------" << std::endl;
-    std::cout << args[0] << " " << args[1] << std::endl;
-    std::cout << "----------------------" << std::endl;
     if(args[0] == "pass"  && args[1] == _password && client.getpflag() == false) {
         client.setpflag(true);
         args.clear();
         return ;
     }
     else if (client.getpflag() == false) {
-        std::string buffer = "abelfany";
-        sendMsgToClient(client.getClinetFd(), ERR_PASSWDMISMATCH(inet_ntoa(_addr.sin_addr), buffer));
+        sendMsgToClient(client.getClinetFd(), ERR_PASSWDMISMATCH(inet_ntoa(_addr.sin_addr), nick));
         args.clear();
         return ;
     }
@@ -116,6 +113,15 @@ void    Servrr::broadcastMessage(Channel _channel, std::string _message, int _cl
     {
         if (iter->second.getClinetFd() != _clientfd)
             sendMsgToClient(iter->second.getClinetFd(), _message);
+    }
+}
+
+void    Servrr::SendToAll(Channel _channel, std::string _message)
+{
+    map_users mapOfClients = _channel.getUsersMap();
+    map_users::iterator iter;
+    for(iter = mapOfClients.begin(); iter != mapOfClients.end(); iter++) {
+        sendMsgToClient(iter->second.getClinetFd(), _message);
     }
 }
 
