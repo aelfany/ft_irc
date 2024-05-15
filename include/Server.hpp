@@ -27,6 +27,7 @@ class Servrr
 {
     private:
         int							_portNumber;
+        std::map<std::string, std::string> bot;
         std::string					_password;
         PollfdVect					_fds;
         sockaddr_in					_addr;

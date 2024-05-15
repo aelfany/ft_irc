@@ -23,6 +23,7 @@ class Channel
         std::string		_topic;
         map_users		_users;
         std::string		_nameToDisplay;
+        // std::vector<clientito> invite;
     public:
         Channel(std::string	_name);
         ~Channel();
