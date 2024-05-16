@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/11 00:49:39 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/16 02:44:12 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void	Servrr::auth2(std::string str, clientito& client)
     if(args[0] == "nick" && !args[1].empty() && client.getpflag() && !client.getnflag())
     {
         client.setnflag(true);
-        std::cout << args[1] << std::endl;
         parsNick(client);
         if(client.getnflag())
             client.setNickName(args[1]);
@@ -131,7 +130,23 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
     std::string senderUsername = client.getNickName();//don't forget to change this
     std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(reciever));
     if (it != _channels.end())
+    {
+        try
+        {
+            if (!alreadyAmember(client.getClinetFd(), getChannel(args[1])))
+            {
+                sendMsgToClient(client.getClinetFd(), ERR_NOTONCHANNEL(senderNick, args[0]));
+                args.clear();
+                return ;
+            }
+        }
+        catch(...)
+        {
+            sendMsgToClient(client.getClinetFd(), ERR_NOTONCHANNEL(senderNick, args[0]));
+            std::cerr << "You're not on that channel\n";
+        }
         broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
+    }
     else
     {
         size_t i = 0;

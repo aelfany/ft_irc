@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/13 02:48:35 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/16 02:44:52 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,20 +170,6 @@ void Servrr::command(std::string buffer, size_t i) {
         else if (args[0] == "privmsg")
         {
             std::string _message;
-            try
-            {
-                if (!alreadyAmember(getClientitoByIndex(i-1).getClinetFd(), getChannel(args[1])))
-                {
-                    sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[0]));
-                    args.clear();
-                    return ;
-                }
-            }
-            catch(...)
-            {
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[0]));
-                std::cerr << "You're not on that channel\n";
-            }
             for(size_t i = 0; i < args.size(); i++)
             {
                 if(i > 1)
@@ -257,6 +243,19 @@ void Servrr::command(std::string buffer, size_t i) {
                     else
                         ++it;
                 }
+    }
+    else if (args[0] == "bot")
+    {
+        if(args.size() < 2)
+        {
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[0]));
+                return ;
+        }
+        // else
+        // {
+        //         getcli
+        // }
+            
     }
     args.clear();
 }
