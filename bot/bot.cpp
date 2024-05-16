@@ -125,9 +125,9 @@ void    parseData(const std::string& command, std::vector<std::string> &botCmd)
 }
 
 
-void parceWeather(std::string weather_data, int sockfd)
+void parceWeather(std::string weather_data, int sockfd, std::string receiver)
 {
-    std::string msg;
+    std::string _message;
     std::string str = weather_data;
 
     std::string search[6] = {"\"temp\":", "\"temp_min\":", "\"temp_max\":", "\"humidity\":", "\"speed\":", "\"country\":"};
@@ -141,10 +141,10 @@ void parceWeather(std::string weather_data, int sockfd)
         data.push_back(std::make_pair(dt[a], res));
     }
     std::vector<std::pair<std::string, std::string> >::iterator it = data.begin(); 
-    for(; it != data.end(); it++) {
-        msg += "privmsg issame "+ it->first + it->second + "\r\n";
-        sendMsgToClient(sockfd, msg);
-        std::cout << it->first << it->second << std::endl;
+    for(; it != data.end(); it++)
+    {
+        _message = "privmsg " + receiver + " " + it->first + it->second;
+        sendMsgToClient(sockfd, _message + "\r\n");
     }
 }
 
@@ -172,6 +172,8 @@ int receivedata(int sockfd)
 
     std::vector<std::string> botCmd;
     parseData(buffer, botCmd);
+    size_t pos = botCmd[0].find("!");
+    std::string receiver = botCmd[0].substr(1, pos-1);
     if(botCmd[1] == "PRIVMSG")
     {
         if(botCmd.size() < 4)
@@ -179,7 +181,7 @@ int receivedata(int sockfd)
         if(botCmd[3][0] == ':')
             botCmd[3] = botCmd[3].substr(1);
         std::string weather_data = get_weather(botCmd[3], api_key);
-        parceWeather(weather_data, sockfd);
+        parceWeather(weather_data, sockfd, receiver);
     }
     return 1;
 }
@@ -226,8 +228,8 @@ int main(int ac, char **av)
             {
                 sockfd = connectToServer(av[1], port);
                 sendMsgToClient(sockfd, "pass " + password + "\r\n");
-                sendMsgToClient(sockfd, "nick fBoot\r\n");
-                sendMsgToClient(sockfd, "user fBoot\r\n");
+                sendMsgToClient(sockfd, "nick fBot\r\n");
+                sendMsgToClient(sockfd, "user fBot\r\n");
                 authed = true;
             }
             authed = receivedata(sockfd);

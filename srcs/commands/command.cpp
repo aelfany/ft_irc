@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/16 06:08:13 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/16 06:27:05 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,19 +244,19 @@ void Servrr::command(std::string buffer, size_t i) {
                         ++it;
                 }
     }
-    else if (args[0] == "bot")
-    {
-        if(args.size() < 2)
-        {
-            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[0]));
-                return ;
-        }
-        else
-        {
+    // else if (args[0] == "bot")
+    // {
+    //     if(args.size() < 2)
+    //     {
+    //         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[0]));
+    //             return ;
+    //     }
+    //     else
+    //     {
             
-        }
+    //     }
             
-    }
+    // }
     args.clear();
 }
 }
