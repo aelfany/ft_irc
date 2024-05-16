@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/16 02:44:52 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/16 06:08:13 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,10 +251,10 @@ void Servrr::command(std::string buffer, size_t i) {
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[0]));
                 return ;
         }
-        // else
-        // {
-        //         getcli
-        // }
+        else
+        {
+            
+        }
             
     }
     args.clear();

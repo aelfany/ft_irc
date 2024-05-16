@@ -109,7 +109,7 @@ void sendMsgToClient(int clientfd, std::string msg)
     {
         ssize_t bytes = send(clientfd, msg.c_str(), msg.length(), 0);
         if (bytes == -1)
-            throw std::runtime_error("Failed to send message to server");
+            return ;
     }
     usleep(100);
 }
@@ -127,7 +127,9 @@ void    parseData(const std::string& command, std::vector<std::string> &botCmd)
 
 void parceWeather(std::string weather_data, int sockfd)
 {
+    std::string msg;
     std::string str = weather_data;
+
     std::string search[6] = {"\"temp\":", "\"temp_min\":", "\"temp_max\":", "\"humidity\":", "\"speed\":", "\"country\":"};
     std::string dt[6] = {"Temperature: ", "Minimum Temperature: ", "Maximum Temperature: ", "Humidity: ", "Wind Speed: ", "Country: "};
     std::vector<std::pair<std::string, std::string> > data;
@@ -140,14 +142,14 @@ void parceWeather(std::string weather_data, int sockfd)
     }
     std::vector<std::pair<std::string, std::string> >::iterator it = data.begin(); 
     for(; it != data.end(); it++) {
-        std::string msg = it->first + it->second+"\r\n";
-        std::cout << it->first << it->second << std::endl;
+        msg += "privmsg issame "+ it->first + it->second + "\r\n";
         sendMsgToClient(sockfd, msg);
+        std::cout << it->first << it->second << std::endl;
     }
 }
 
 
-void receivedata(int sockfd)
+int receivedata(int sockfd)
 {
     std::string api_key = "da36e6b8af17694f0fd72e962a735c3d";
     char buffer[1024];
@@ -157,13 +159,13 @@ void receivedata(int sockfd)
     if (bytes_received < 0)
     {
         close(sockfd);
-        throw std::runtime_error("Failed to receive data from server");
+        return 0;
     }
     else if (bytes_received == 0)
     {
         // Connection closed by server
         close(sockfd);
-        throw std::runtime_error("Connection closed by server");
+        return 0;
     }
     buffer[bytes_received] = '\0';
     std::cout << buffer << std::endl;
@@ -173,39 +175,67 @@ void receivedata(int sockfd)
     if(botCmd[1] == "PRIVMSG")
     {
         if(botCmd.size() < 4)
-            return ;
-        std::string weather_data = get_weather(botCmd[4], api_key);
+            return 1;
+        if(botCmd[3][0] == ':')
+            botCmd[3] = botCmd[3].substr(1);
+        std::string weather_data = get_weather(botCmd[3], api_key);
         parceWeather(weather_data, sockfd);
     }
+    return 1;
+}
 
+bool check_port(std::string port)
+{
+    if (port[0] == '+' || port[0] == '-')
+        return false;
+    for(size_t i = 0; i < port.length(); ++i)
+    {
+        if (!isdigit(port[i]))
+            return false;
+    }
+    return true;
+}
+
+void programRequirement(int ac, char *port)
+{
+    if(ac != 4)
+    {
+        std::cerr << "ERROR: <.ircserv> <host> <port> <password>\n";
+        exit(EXIT_FAILURE);
+    }
+    if (!check_port(port))
+    {
+        std::cerr << "ERROR: '" << port << "' : check port number then try again...\n";
+        exit(EXIT_FAILURE);
+    }
 }
 
 int main(int ac, char **av)
 {
-    int sockfd = connectToServer("localhost", 4545);
+    programRequirement(ac, av[2]);
+    int sockfd;
     bool authed = false;
+    int port = atoi(av[2]);
+    std::string password = av[3];
+
     while (true)
     {
-        if(authed == false)
+        try
         {
-            try
+            if(authed == false)
             {
-                sendMsgToClient(sockfd, "pass 123\r\n");
-                sendMsgToClient(sockfd, "nick fuckinBoot\r\n");
-                sendMsgToClient(sockfd, "user fuckinBoot\r\n");
+                sockfd = connectToServer(av[1], port);
+                sendMsgToClient(sockfd, "pass " + password + "\r\n");
+                sendMsgToClient(sockfd, "nick fBoot\r\n");
+                sendMsgToClient(sockfd, "user fBoot\r\n");
+                authed = true;
             }
-            catch(const std::exception& e)
-            {
-                std::cerr << e.what() << '\n';
-            }
-            authed = true;
-            if(authed)
-            {
-                sendMsgToClient(sockfd, "Hello human, I'm a stupid bot and I'm going to provide you with useless info\r\n");
-                sendMsgToClient(sockfd, "Try: BOT yourcity\r\n");
-            }
+            authed = receivedata(sockfd);
         }
-        receivedata(sockfd);
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
     }
     return 0;
 }
