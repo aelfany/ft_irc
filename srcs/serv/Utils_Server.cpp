@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/18 11:20:53 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/18 11:44:33 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,11 @@ void	Servrr::auth2(std::string str, clientito& client)
     if(client.isAuthed())
     {   
         std::string nick = client.getNickName();
-        std::string host = inet_ntoa(getSockAddr().sin_addr);
-        std::cout << "host is : " << host << std::endl;
+        std::string host = client.getipaddr();
         sendMsgToClient(client.getClinetFd(), RPL_WELCOME(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_YOURHOST(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_CREATED(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_MYINFO(nick, host));
-        // std::string nickname = "сукаблять";
-        // sendMsgToClient(client.getClinetFd(), RPL_AUTHENTICATED(nickname));
     }
     return ;
 }

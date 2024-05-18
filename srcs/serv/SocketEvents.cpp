@@ -72,6 +72,7 @@ void Servrr::eventOnClientSock()
             channelsMap::iterator it = _channels.begin();
             while (it != _channels.end())
             {
+                std::cout << "shto za: " << it->first << std::endl;
                 if (it->second.getusersSize() == 0)
                     it = _channels.erase(it);
                 else
