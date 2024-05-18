@@ -69,6 +69,14 @@ void Servrr::eventOnClientSock()
             //remove client from channel && send message to channels he joined that client has been deconnected
             removeFromChannel(client_sock_fd);
             _index--;
+            channelsMap::iterator it = _channels.begin();
+            while (it != _channels.end())
+            {
+                if (it->second.getusersSize() == 0)
+                    it = _channels.erase(it);
+                else
+                    ++it;
+            }
         return  ;
     }
     else
