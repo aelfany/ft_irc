@@ -2,6 +2,7 @@
 
 #include "client.hpp"
 #include <map>
+#include <vector>
 
 // typedef std::map<std::string, clientito> map_users;
 typedef std::map<std::pair<bool, std::string>, clientito> map_users;
@@ -23,7 +24,7 @@ class Channel
         std::string		_topic;
         map_users		_users;
         std::string		_nameToDisplay;
-        // std::vector<clientito> invite;
+        std::vector<int> _invited;
     public:
         Channel(std::string	_name);
         ~Channel();
@@ -43,6 +44,7 @@ class Channel
         bool            getInvOnly();
         bool            getTopc();
 		size_t			getusersSize();
+        bool            isInvited(int sockfd);
 
 
 		//setters
@@ -54,6 +56,7 @@ class Channel
         void	setTopc(bool top);
         void	setLimit(size_t limit);
 		void	setusersSize(size_t user);
+        void    setinvited(int sockfd);
         bool    checkUserexist(std::string _nickname);
         std::string     gettopicseter();
         std::string     getTopic();

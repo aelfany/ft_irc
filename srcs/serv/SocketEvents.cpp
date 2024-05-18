@@ -72,7 +72,11 @@ void Servrr::eventOnClientSock()
             channelsMap::iterator it = _channels.begin();
             while (it != _channels.end())
             {
-                std::cout << "shto za: " << it->first << std::endl;
+                //the following 3 lines are just temporary
+                // std::string tobeOperator = getClientitoByIndex(_index).getNickName();
+                // if(it->second.getPrvBynickname(tobeOperator) == false)
+                //     it->second.setPrvByNickname(tobeOperator, true, getClientitoByIndex(_index));
+
                 if (it->second.getusersSize() == 0)
                     it = _channels.erase(it);
                 else

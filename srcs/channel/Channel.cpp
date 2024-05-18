@@ -139,6 +139,22 @@ void	Channel::setusersSize(size_t user)
     _usersSize += user;
 }
 
+void    Channel::setinvited(int sockfd)
+{
+    _invited.push_back(sockfd);
+}
+
+bool	Channel::isInvited(int sockfd)
+{
+	std::vector<int>::iterator it = std::find(_invited.begin(), _invited.end(), sockfd);
+    if(it != _invited.end())
+    {
+        _invited.erase(it);
+        return true;
+    }
+    return false;
+}
+
 void Channel::pushtomap(bool privilege, clientito& obj)
 {
     // clientito & t = getUserBynickname();

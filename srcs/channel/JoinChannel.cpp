@@ -105,7 +105,7 @@ void	Servrr::proccessChannels(int clientfd)
                 std::cout << "Client " << nickname << " is already a member in this channel" << std::endl;
                 return ;
             }
-            if (it->second.getInvOnly() == true)
+            if (it->second.getInvOnly() == true && it->second.isInvited(clientfd) == false)
             {
                 //<client> <channel> :Cannot join channel (+i)
                 sendMsgToClient(clientfd, "473 " + nickname + " " +  it->second.getChannelNameDisplay() + " :Cannot join channel (+i)\r\n");

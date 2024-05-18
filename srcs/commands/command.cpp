@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/18 11:29:25 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/19 00:30:34 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,10 +198,11 @@ void Servrr::command(std::string buffer, size_t i) {
             {
                 if (_clients[i].getNickName() == args[1])
                 {
-                    //otman!~otman@172.0.0.1 INVITE sabir :#osabir
-                    std::string msg = args[1]+"!~"+nick+"@" + _clients[i].getipaddr() + " INVITE "+args[1]+" :"+args[2]+"\r\n";
+                    std::string msg = ":" + nick+"!~"+nick+"@" + _clients[i].getipaddr() + " INVITE "+args[1]+" :"+args[2]+"\r\n";
+                    sendMsgToClient(_clients[i].getClinetFd(), ":irc.idryab.chat 341 " + args[1] + " " + args[1] + " " + channel + "\r\n");
                     sendMsgToClient(_clients[i].getClinetFd(), msg);
-                    // sendMsgToClient(_clients[i].getClinetFd(), RPL_INVITING());
+                    Channel &obj = getChannel(args[2]);
+                    obj.setinvited(_clients[i].getClinetFd());
                     break ;
                 }
                 i++;
