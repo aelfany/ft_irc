@@ -73,7 +73,7 @@ void	Servrr::proccessChannels(int clientfd)
     std::string nickname = getClientitoByfd(clientfd).getNickName();
     std::string channelTopic = "drug dealers";
     std::string listofnames;
-     std::string serverHostname = "127.0.0.";
+     std::string serverHostname = getClientitoByfd(clientfd).getipaddr();
     while (std::getline(chan, channel, ','))
 	{
         if(channel[0] != '#' && channel != "join")

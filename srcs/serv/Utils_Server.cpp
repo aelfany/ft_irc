@@ -6,14 +6,15 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/16 02:44:12 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/18 11:20:53 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 #include "../../include/client.hpp"
 #include "../../include/replies.hpp"
-
+ #include <netdb.h>
+ 
 void Servrr::trimSpaces(const std::string& str, bool x)
 {
     std::stringstream splt(str);
@@ -92,7 +93,8 @@ void	Servrr::auth2(std::string str, clientito& client)
     if(client.isAuthed())
     {   
         std::string nick = client.getNickName();
-        std::string host = "127.0.0.1";
+        std::string host = inet_ntoa(getSockAddr().sin_addr);
+        std::cout << "host is : " << host << std::endl;
         sendMsgToClient(client.getClinetFd(), RPL_WELCOME(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_YOURHOST(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_CREATED(nick, host));
@@ -145,7 +147,7 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
             sendMsgToClient(client.getClinetFd(), ERR_NOTONCHANNEL(senderNick, args[0]));
             std::cerr << "You're not on that channel\n";
         }
-        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
+        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@" + gethostbyname("localhost")->h_addr + " PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
     }
     else
     {
@@ -154,7 +156,7 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
         {
             if (_clients[i].getNickName() == reciever)
             {
-                sendMsgToClient(_clients[i].getClinetFd(), ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n");
+                sendMsgToClient(_clients[i].getClinetFd(), ":" + senderNick + "!~" + senderUsername + "@"+ _clients[i].getipaddr() + " PRIVMSG " + reciever + " :" + _message + "\r\n");
                 return ;
             }
             i++;

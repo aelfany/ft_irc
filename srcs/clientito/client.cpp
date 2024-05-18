@@ -49,6 +49,11 @@ bool	clientito::getOperator()
 	return _operator;
 }
 
+std::string& clientito::getipaddr()
+{
+    return _ipAddr;
+}
+
 void 	clientito::setNickName(std::string nickname) {
     _nickName = nickname;
 }
@@ -83,4 +88,9 @@ std::string& clientito::getrecvLine()
 void    clientito::setrecvLine(std::string recvline)
 {
     _recvLine += recvline;
+}
+
+void    clientito::setipaddr(std::string _ip)
+{
+    _ipAddr = _ip;
 }

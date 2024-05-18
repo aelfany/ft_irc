@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/16 06:27:05 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/18 11:18:11 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 if (_clients[i].getNickName() == args[1])
                 {
                     //otman!~otman@172.0.0.1 INVITE sabir :#osabir
-                    std::string msg = args[1]+"!~"+nick+"@127.0.0.1 INVITE "+args[1]+" :"+args[2]+"\r\n";
+                    std::string msg = args[1]+"!~"+nick+"@" + _clients[i].getipaddr() + " INVITE "+args[1]+" :"+args[2]+"\r\n";
                     sendMsgToClient(_clients[i].getClinetFd(), msg);
                     // sendMsgToClient(_clients[i].getClinetFd(), RPL_INVITING());
                     break ;
@@ -211,7 +211,7 @@ void Servrr::command(std::string buffer, size_t i) {
         {
             try
             {
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ":" + nick + "!~" + nick + "@127.0.0.1 QUIT :Remote host closed the connection\r\n");
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ":" + nick + "!~" + nick + "@" + _clients[i].getipaddr() + " QUIT :Remote host closed the connection\r\n");
                 removeFromChannel(getClientitoByIndex(i-1).getClinetFd());
                 Channel &obj = getChannel(args[1]);
                 if (obj.getusersSize() == 0)

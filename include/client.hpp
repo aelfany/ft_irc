@@ -30,6 +30,7 @@ class clientito
 	bool		getuflag();
 	bool		getOperator();
 	std::string& getrecvLine();
+	std::string& getipaddr();
 
 	//setters
 	void 	setNickName(std::string nickname);
@@ -37,6 +38,7 @@ class clientito
 	void	setnflag(bool flag);
 	void	setuflag(bool flag);
 	void	setOperator(bool flag);
+	void	setipaddr(std::string _ip);
 
 	void setrecvLine(std::string recvline);
 };

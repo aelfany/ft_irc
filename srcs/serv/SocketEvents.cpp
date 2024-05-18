@@ -4,12 +4,14 @@ void Servrr::eventOnServerSock()
 {
     socklen_t client_addr_l = sizeof(_addr);
     int client_sock_fd = accept(getSockFd(), (struct sockaddr *)&_addr, &client_addr_l);
+    std::string clip = inet_ntoa(_addr.sin_addr);
     if (client_sock_fd == -1)
         perror("accepttt");
     else
     {
-        std::cout << "New connection from client with fd: " << client_sock_fd << std::endl;
+        std::cout << "New connection from client with fd: " << client_sock_fd << " and IP: " << clip << std::endl;
         clientito cleintObj(client_sock_fd);
+        cleintObj.setipaddr(clip);
         setClientito(cleintObj);
         struct pollfd poll_fd;
         poll_fd.fd = client_sock_fd;
@@ -36,7 +38,7 @@ void Servrr::removeFromChannel(int client_fd)
         {
             if(client_fd == iter->second.getClinetFd())
             {
-                broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@127.0.0.1 QUIT :Remote host closed the connection\r\n", client_fd);
+                broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@" + iter->second.getipaddr() + " QUIT :Remote host closed the connection\r\n", client_fd);
                 users_map.erase(iter);
                 it->second.setusersSize(-1);
                 break ;
