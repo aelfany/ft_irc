@@ -19,7 +19,7 @@ bool Channel::getPass()
 
 bool		Channel::checkUserexist(std::string _nickname) {
     map_users::iterator it = _users.begin();
-    for(size_t a = 0; a < _users.size(); a++) {
+    for(;it != _users.end(); it++) {
         if(it->second.getNickName() == _nickname) {
             return true;
         }

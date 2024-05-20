@@ -15,6 +15,8 @@ class clientito
 		bool		_userFlag;
         bool		_authenticated;
 		bool		_operator;
+		std::string _UserName;
+	 	std::string _RealName;
 	 	std::string _nickName;
 		std::string _recvLine;
     public:
@@ -22,6 +24,8 @@ class clientito
 		clientito(int sockefd);
 		~clientito();
 	//getters
+	std::string getRealName();
+	std::string getUserName();
 	std::string	getNickName();
 	int			getClinetFd();
     bool		isAuthed();
@@ -33,6 +37,8 @@ class clientito
 	std::string& getipaddr();
 
 	//setters
+	void 	setRealName(std::string realname);
+	void 	setUserName(std::string username);
 	void 	setNickName(std::string nickname);
 	void	setpflag(bool flag);
 	void	setnflag(bool flag);

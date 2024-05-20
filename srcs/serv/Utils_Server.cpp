@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_Server.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/18 11:44:33 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/20 12:51:30 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/Server.hpp"
 #include "../../include/client.hpp"
 #include "../../include/replies.hpp"
- #include <netdb.h>
- 
+
 void Servrr::trimSpaces(const std::string& str, bool x)
 {
     std::stringstream splt(str);
@@ -23,18 +22,10 @@ void Servrr::trimSpaces(const std::string& str, bool x)
         args.clear();
     while(splt >> s) {
         if(!(x && s == "#")) {
-            // std::cout << s << std::endl;
             args.push_back(s);
         }
     }
 }
-// void Servrr::trimUser(const std::string& str)
-// {
-//     std::stringstream splt(str);
-//     std::string sv;
-//     std::string s;
-//     splt >> args[0]; splt >> args[1]; splt >> args[2]; splt >> args[3];
-// }
 
 void Servrr::parsNick(clientito& client) {
     std::string str = "@&#:1234567890";
@@ -48,30 +39,29 @@ void Servrr::parsNick(clientito& client) {
         client.setnflag(false);
 }
 
-// void Servrr::parsUser(clientito& client) {
-// }
 void	Servrr::auth2(std::string str, clientito& client)
 {
+    (void)str;
     std::string nick = client.getNickName();
     if (args.size() < 2)
     {
         args.clear();
         return ;
     }
-    trimSpaces(str,false);
     if(args[0] == "pass"  && args[1] == _password && client.getpflag() == false) {
         client.setpflag(true);
         args.clear();
         return ;
     }
     else if (client.getpflag() == false) {
-        sendMsgToClient(client.getClinetFd(), ERR_PASSWDMISMATCH(inet_ntoa(_addr.sin_addr), nick));
+        sendMsgToClient(client.getClinetFd(), ERR_PASSWDMISMATCH(host, nick));
         args.clear();
         return ;
     }
     if(args[0] == "nick" && !args[1].empty() && client.getpflag() && !client.getnflag())
     {
         client.setnflag(true);
+        std::cout << args[1] << std::endl;
         parsNick(client);
         if(client.getnflag())
             client.setNickName(args[1]);
@@ -84,9 +74,14 @@ void	Servrr::auth2(std::string str, clientito& client)
         return ;
     }
     if(args[0] == "user" && !args[1].empty() && client.getpflag() && client.getnflag() && !client.getuflag()) {
-
-        client.setuflag(true);
-        args.clear();
+        if(args.size() < 5)
+            sendMsgToClient(client.getClinetFd(), ERR_NEEDMOREPARAMS(host, nick));
+        else {
+            client.setuflag(true);
+            client.setUserName(args[1]);
+            client.setRealName(args[4]);
+            args.clear();
+        }
     }
     else if (!client.getuflag())
        sendMsgToClient(client.getClinetFd(), "Username ain't correct, try again ... (in a the form above)\n");
@@ -99,6 +94,7 @@ void	Servrr::auth2(std::string str, clientito& client)
         sendMsgToClient(client.getClinetFd(), RPL_CREATED(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_MYINFO(nick, host));
     }
+    args.clear();
     return ;
 }
 
@@ -129,23 +125,7 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
     std::string senderUsername = client.getNickName();//don't forget to change this
     std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(reciever));
     if (it != _channels.end())
-    {
-        try
-        {
-            if (!alreadyAmember(client.getClinetFd(), getChannel(args[1])))
-            {
-                sendMsgToClient(client.getClinetFd(), ERR_NOTONCHANNEL(senderNick, args[0]));
-                args.clear();
-                return ;
-            }
-        }
-        catch(...)
-        {
-            sendMsgToClient(client.getClinetFd(), ERR_NOTONCHANNEL(senderNick, args[0]));
-            std::cerr << "You're not on that channel\n";
-        }
-        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@" + gethostbyname("localhost")->h_addr + " PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
-    }
+        broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
     else
     {
         size_t i = 0;
@@ -153,7 +133,7 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
         {
             if (_clients[i].getNickName() == reciever)
             {
-                sendMsgToClient(_clients[i].getClinetFd(), ":" + senderNick + "!~" + senderUsername + "@"+ _clients[i].getipaddr() + " PRIVMSG " + reciever + " :" + _message + "\r\n");
+                sendMsgToClient(_clients[i].getClinetFd(), ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n");
                 return ;
             }
             i++;

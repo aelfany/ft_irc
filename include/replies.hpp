@@ -27,6 +27,10 @@
 
 // nimeric
 
+# define RPL_MODE(channel, nick, mode)                                ":" + nick + " MODE " + channel + " " + mode + "\r\n"
+# define RPL_INVITING(hostname, inviting, invited, channel)                 ":" + hostname + " 341 " + inviting + " " + invited + " " + channel + " :Inviting " + invited + " to " + channel + "\r\n"
+# define RPL_INVITE(nick, username ,clienthostname, invited, channel)       ":" + nick + "!" + username + "@" + clienthostname + " INVITE " + invited + " :" + channel + "\r\n"
+# define ERR_INVITEONLY(hostname, nick, channelName)                        ":" + hostname + " 473 " + nick + " " + channelName + " :Cannot join channel, you must be invited (+i)\r\n"
 #define RPL_TOPICWHOTIME(client, channel, nick, setat) ":" + client + " 333 " + channel + " " + nick + "  " + setat + "\r\n"
 #define RPL_NOTOPIC(hostname, nick, chann) ":" + hostname + " 331 " + nick + " " + chann + " :No topic is set.\r\n"
 #define RPL_TOPIC(hostname, nick, chann, topic) ":" + hostname + " 332 " + nick + " " + chann + " :" + topic + "\r\n"
@@ -67,13 +71,14 @@
 
 
 /* command Responses */
-#define RPL_PART(buffer, channel)                       ":" + buffer + " PART :" + channel
+#define RPL_QUIT(nick, host, message)                   ":" + nick + "!" + "~" + nick + "@" + host + " QUIT : " + message + "\r\n"
+#define RPL_PART(buffer,host,user, channel)             ":" + buffer + "!~" + user + "@" + host + " PART :" + channel + "\r\n" 
 #define RPL_PING(buffer, token)                         ":" + buffer + " PONG :" + token
 #define RPL_PRIVMSG(buffer, target, message)            ":" + buffer + " PRIVMSG " + target + " :" + message
 #define RPL_NOTICE(buffer, target, message)             ":" + buffer + " NOTICE " + target + " :" + message
-#define RPL_QUIT(buffer, message)                       ":" + buffer + " QUIT :Quit: " + message + "\r\n"
+// #define RPL_QUIT(buffer, message)                       ":" + buffer + " QUIT :Quit: " + message + "\r\n"
 #define RPL_KICK(buffer, channel, target, reason)       ":" + buffer + " KICK " + channel + " " + target + " :" + reason
-#define RPL_MODE(buffer, channel, modes, args)          ":" + buffer + " MODE " + channel + " " + modes + " " + args
+// #define RPL_MODE(buffer, channel, modes, args)          ":" + buffer + " MODE " + channel + " " + modes + " " + args
 #define RPL_AUTHENTICATED(nickname)                     (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
 #define RPL_ALREADYSET(nickname)                        (": 998 " + nickname + ": Password already set\r\n")
 #define RPL_NOPASSSET(nickname)                        (": 997 " + nickname + ": No assword set\r\n")

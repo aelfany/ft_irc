@@ -31,6 +31,19 @@ bool clientito::isAuthed()
     return _authenticated;
 }
 
+std::string clientito::getRealName() {
+    return _RealName;
+}
+std::string clientito::getUserName() {
+    return _UserName;
+}
+void 		clientito::setRealName(std::string realname) {
+    _RealName = realname;
+}
+void 		clientito::setUserName(std::string username) {
+    _UserName = username;
+}
+
 bool	clientito::getpflag()
 {
     return _passFlag;

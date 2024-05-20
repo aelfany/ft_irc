@@ -29,6 +29,7 @@ class Servrr
         int							_portNumber;
         std::map<std::string, std::string> bot;
         std::string					_password;
+        std::string					host;
         PollfdVect					_fds;
         sockaddr_in					_addr;
         int							_sock_fd;

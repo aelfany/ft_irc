@@ -38,7 +38,8 @@ void Servrr::removeFromChannel(int client_fd)
         {
             if(client_fd == iter->second.getClinetFd())
             {
-                broadcastMessage(it->second, ":" + iter->second.getNickName() + "!~" + iter->second.getNickName() + "@" + iter->second.getipaddr() + " QUIT :Remote host closed the connection\r\n", client_fd);
+                
+                broadcastMessage(it->second, RPL_QUIT(iter->second.getNickName(), host, "good bye"), client_fd);
                 users_map.erase(iter);
                 it->second.setusersSize(-1);
                 break ;
@@ -95,6 +96,7 @@ void Servrr::eventOnClientSock()
             if (pos > clientobj.getrecvLine().size())
                 return;
             std::string cmd = clientobj.getrecvLine().substr(0, pos+1);
+            std::cout << "\033[0;31m" << cmd << "\033[0m" << std::endl;
             command(cmd, _index);
             clientobj.getrecvLine() = clientobj.getrecvLine().erase(0, pos+1);
         }
