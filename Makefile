@@ -12,7 +12,7 @@ HPEFIX			=	include/
 
 SOURCES_FILES	=	serv/main.cpp serv/Server.cpp serv/SocketEvents.cpp serv/Utils_Server.cpp clientito/client.cpp \
 					channel/Channel.cpp channel/JoinChannel.cpp channel/ShowChannels.cpp \
-					commands/command.cpp commands/mode.cpp commands/utils.cpp commands/topic.cpp
+					commands/command.cpp commands/kick.cpp commands/utils.cpp commands/topic.cpp
 HEADERS_FILES	=	Server.hpp replies.hpp irc.hpp client.hpp Channel.hpp
 
 SOURCES			=	$(addprefix $(PREFIX), $(SOURCES_FILES))

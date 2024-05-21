@@ -76,7 +76,8 @@
 #define RPL_PING(buffer, token)                         ":" + buffer + " PONG :" + token
 #define RPL_PRIVMSG(buffer, target, message)            ":" + buffer + " PRIVMSG " + target + " :" + message
 #define RPL_NOTICE(buffer, target, message)             ":" + buffer + " NOTICE " + target + " :" + message
-#define RPL_KICK(buffer, channel, target, reason)       ":" + buffer + " KICK " + channel + " " + target + " :" + reason
+#define RPL_KICK(nick, username, hostname, kicked, channel, reason) ":" + nick + "!" + "~" + username + "@" + hostname + " KICK " + channel + " " + kicked + " " + reason + "\r\n"
+// #define RPL_KICK(buffer, channel, target, reason)       ":" + buffer + " KICK " + channel + " " + target + " :" + reason
 #define RPL_AUTHENTICATED(nickname)                     (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
 #define RPL_ALREADYSET(nickname)                        (": 998 " + nickname + ": Password already set\r\n")
 #define RPL_NOPASSSET(nickname)                        (": 997 " + nickname + ": No assword set\r\n")

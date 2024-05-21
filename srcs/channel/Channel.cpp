@@ -81,15 +81,28 @@ bool	Channel::getPrvBynickname(std::string _nickname)
 }
 
 void Channel::setPrvByNickname(std::string _nickname, bool prv, clientito & obj) {
-    map_users::iterator it = _users.begin();
-    std::pair<bool, std::string> p(prv, obj.getNickName());
-    for(; it != _users.end(); it++) {
-        if(it->second.getNickName() == _nickname) {
+    (void)obj;
+    std::map<std::pair<bool, std::string>, clientito>::iterator it = _users.begin();
+    bool found = false;
+
+    for (; it != _users.end(); ++it) {
+        if (it->first.second == _nickname) {
+            clientito tempObj = it->second;
+            std::pair<bool, std::string> newKey(prv, _nickname); 
+            _users.insert(std::make_pair(newKey, tempObj));
             _users.erase(it);
-            _users.insert(std::make_pair(p, obj));
+            found = true;
+            break; 
         }
     }
-    throw std::runtime_error("bool not found");
+    if (!found) {
+        throw std::runtime_error("Nickname not found");
+    }
+    for (std::map<std::pair<bool, std::string>, clientito>::iterator it2 = _users.begin(); it2 != _users.end(); ++it2) {
+        std::cout << "\033[0;31m" << "##################" << "\033[0m" << std::endl;
+        std::cout << it2->first.second << std::endl;
+        std::cout << "\033[0;31m" << "##################" << "\033[0m" << std::endl;
+    }
 }
 
 map_users&		Channel::getUsersMap()

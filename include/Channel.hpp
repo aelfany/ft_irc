@@ -31,6 +31,7 @@ class Channel
         Channel(){};
 
 		//getters
+        void            deletClient(std::string nick);
 		std::string&	getChannelName();
         std::string     getChannelNameDisplay();
         void            setChannelNameDisplay(std::string _name);

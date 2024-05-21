@@ -23,6 +23,7 @@ typedef std::map<std::string, Channel> channelsMap;//map of channels
 typedef std::vector<std::string> JoinVect;//vector for Parse join
 typedef std::vector<struct pollfd> PollfdVect;
 
+
 class Servrr
 {
     private:
@@ -46,11 +47,12 @@ class Servrr
         void parsNick(clientito& client);
         // void parsUser(clientito& client);
 
-		void	auth2(std::string str, clientito& client);
-        void    trimUser(const std::string& str);
-        Channel & getChannel(std::string channel);
-        void    trimSpaces(const std::string& str, bool x);
-
+		void	            auth2(std::string str, clientito& client);
+        void                trimUser(const std::string& str);
+        Channel &           getChannel(std::string channel);
+        void                trimSpaces(const std::string& str, bool x);
+        void                kick(std::string buffer, size_t i);
+        void                split(std::string buffer, size_t i);
 		std::string&		getPassword();
 		unsigned int		getPort();
 		int					getSockFd();

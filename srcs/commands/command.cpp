@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/20 23:35:43 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:01:45 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,24 @@ Channel & Servrr::getChannel(std::string channel) {
         throw "No channel found";
     return it->second;
 }
+
 void Servrr::command(std::string buffer, size_t i) {
     char buf[256];
     if(gethostname(buf,sizeof(buf)))
         return ;
     host = buf;
+    std::string nick = getClientitoByIndex(i-1).getNickName();
+    // std::cout << "\033[0;31m" << "->>> ##################" << "\033[0m" << std::endl;
     std::cout << host << std::endl;
     std::string channel;
     Channel a;
     trimSpaces(buffer,false);
+    // split(args[2]);
     args[0] = tolowercases(args[0]);
     if(getClientitoByIndex(i-1).isAuthed() == false) {
-        // std::cout << "\033[0;31m" << "->>> ##################" << "\033[0m" << std::endl;
         auth2(buffer, getClientitoByIndex(i-1));
     }
     else {
-        std::string nick = getClientitoByIndex(i-1).getNickName();
         if(args[0] == "pass") {
             if(args.size() < 2)
             {
@@ -185,6 +187,9 @@ void Servrr::command(std::string buffer, size_t i) {
             catch(...) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, args[1]));
             }
+        }
+        else if (args[0] == "kick") {
+            kick(args[2], i);
         }
         else if (args[0] == "privmsg")
         {
