@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/20 12:51:30 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/20 22:33:06 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,33 +43,30 @@ void	Servrr::auth2(std::string str, clientito& client)
 {
     (void)str;
     std::string nick = client.getNickName();
-    if (args.size() < 2)
-    {
+    if (args.size() < 2) {
+        sendMsgToClient(client.getClinetFd(), ERR_NEEDMOREPARAMS(nick, "pass"));
         args.clear();
         return ;
     }
     if(args[0] == "pass"  && args[1] == _password && client.getpflag() == false) {
-        client.setpflag(true);
-        args.clear();
-        return ;
+            client.setpflag(true);
+            args.clear();
+            return ;
     }
-    else if (client.getpflag() == false) {
+    else if (args[0] == "pass" && client.getpflag() == false) {
         sendMsgToClient(client.getClinetFd(), ERR_PASSWDMISMATCH(host, nick));
         args.clear();
         return ;
     }
-    if(args[0] == "nick" && !args[1].empty() && client.getpflag() && !client.getnflag())
-    {
-        client.setnflag(true);
-        std::cout << args[1] << std::endl;
-        parsNick(client);
-        if(client.getnflag())
+    if(args[0] == "nick" && client.getpflag() && !client.getnflag()) {
+            client.setnflag(true);
+            parsNick(client);
+            if(client.getnflag())
             client.setNickName(args[1]);
-        args.clear();
-        return ;
+            args.clear();
+            return ;
     }
     else if (client.getpflag() && !client.getnflag()) {
-        sendMsgToClient(client.getClinetFd(), "Nickname ain't correct, try again ... (in a the form above)\n");
         args.clear();
         return ;
     }
@@ -83,8 +80,10 @@ void	Servrr::auth2(std::string str, clientito& client)
             args.clear();
         }
     }
-    else if (!client.getuflag())
-       sendMsgToClient(client.getClinetFd(), "Username ain't correct, try again ... (in a the form above)\n");
+    else if (!client.getuflag()) {
+        args.clear();
+        return ;
+    }
     if(client.isAuthed())
     {   
         std::string nick = client.getNickName();

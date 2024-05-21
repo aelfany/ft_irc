@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/20 13:28:00 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/20 23:35:43 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "../../include/client.hpp"
 
 
-//Sun Apr 21 17:43:10 2024
 Channel & Servrr::getChannel(std::string channel) {
     std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(channel));
     if (it == _channels.end())
@@ -32,7 +31,7 @@ void Servrr::command(std::string buffer, size_t i) {
     trimSpaces(buffer,false);
     args[0] = tolowercases(args[0]);
     if(getClientitoByIndex(i-1).isAuthed() == false) {
-        printf("++++++++++++++\n");
+        // std::cout << "\033[0;31m" << "->>> ##################" << "\033[0m" << std::endl;
         auth2(buffer, getClientitoByIndex(i-1));
     }
     else {
@@ -40,7 +39,7 @@ void Servrr::command(std::string buffer, size_t i) {
         if(args[0] == "pass") {
             if(args.size() < 2)
             {
-                std::cout << "\033[0;31m" << "1 = ##################" << "\033[0m" << std::endl;
+                // std::cout << "\033[0;31m" << "1 = ##################" << "\033[0m" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
             }
             else
@@ -49,7 +48,7 @@ void Servrr::command(std::string buffer, size_t i) {
         else if(args[0] == "join") {
             trimSpaces(buffer,true);
             if(args.size() < 2) {
-                std::cout << "\033[0;31m" << "2 = ##################" << "\033[0m" << std::endl;
+                // std::cout << "\033[0;31m" << "2 = ##################" << "\033[0m" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
             }
             else
@@ -62,7 +61,6 @@ void Servrr::command(std::string buffer, size_t i) {
         {
             if (args.size() < 3)
             {
-                std::cout << "\033[0;31m" << "3 ##################" << "\033[0m" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, "MODE"));
                 args.clear();
                 return ;
@@ -107,8 +105,6 @@ void Servrr::command(std::string buffer, size_t i) {
                         mode.setTopc(false);
                     }
                 }
-                //**************************//
-                //-------need parsing-------//
                 if(SET_K) {
                     if(mode.getPass() == true)
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ALREADYSET(nick));
@@ -136,7 +132,7 @@ void Servrr::command(std::string buffer, size_t i) {
                     
                     if(args.size() < 4)
                     {
-                        std::cout << "\033[0;31m" << "4 = ##################" << "\033[0m" << std::endl;
+                        // std::cout << "\033[0;31m" << "4 = ##################" << "\033[0m" << std::endl;
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,channel));
                     }
                     else if(mode.getPrvBynickname(channel) == false)
@@ -156,7 +152,7 @@ void Servrr::command(std::string buffer, size_t i) {
                     /***/
                     if(args.size() < 4)
                     {
-                        std::cout << "\033[0;31m" << "5 = ##################" << "\033[0m" << std::endl;
+                        // std::cout << "\033[0;31m" << "5 = ##################" << "\033[0m" << std::endl;
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,channel));
                     }
                     else if(mode.getPrvBynickname(channel) == false)
@@ -187,7 +183,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 }
             }
             catch(...) {
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, "#" + args[1]));
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, args[1]));
             }
         }
         else if (args[0] == "privmsg")
@@ -209,7 +205,7 @@ void Servrr::command(std::string buffer, size_t i) {
         {
             if(args.size() < 3)
             {
-                std::cout << "\033[0;31m" << "6 = ##################" << "\033[0m" << std::endl;
+                // std::cout << "\033[0;31m" << "6 = ##################" << "\033[0m" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[2]));
                 return ;
             }
@@ -222,9 +218,6 @@ void Servrr::command(std::string buffer, size_t i) {
             {
                 if (_clients[i].getNickName() == args[1])
                 {
-                    // std::string msg = ":" + nick+"!~"+nick+"@" + _clients[i].getipaddr() + " INVITE "+args[1]+" :"+args[2]+"\r\n";
-                    // sendMsgToClient(_clients[i].getClinetFd(), ":irc.idryab.chat 341 " + args[1] + " " + args[1] + " " + channel + "\r\n");
-                    // sendMsgToClient(_clients[i].getClinetFd(), msg);
                     sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_INVITING(host, nick, args[1], args[2]));
                     sendMsgToClient(_clients[i].getClinetFd(), RPL_INVITE(nick, _clients[i].getUserName(), host, args[1], args[2]));
                     Channel &obj = getChannel(args[2]);
@@ -255,12 +248,10 @@ void Servrr::command(std::string buffer, size_t i) {
         else if (args[0] == "quit")
         {
             int client_sock_fd =  getClientitoByIndex(i-1).getClinetFd();
-                // If client disconnected print this==> && close its socket && erase its data in our vector
                 std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
                 close(client_sock_fd);
                 _fds.erase(_fds.begin() + _index);
                 removeClient(_index-1);
-                //remove client from channel && send message to channels he joined that client has been deconnected.
                 removeFromChannel(client_sock_fd);
                 _index--;
                 channelsMap::iterator it = _channels.begin();

@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 10:10:19 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/20 12:46:33 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/20 22:54:19 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,19 @@ void Servrr::Topic(std::string nick, size_t i) {
                 std::cout << "" << "{" << nick << "}" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(host,nick));
         }
-        // std::cout << "_(" << args.size() << ")_" << std::endl;
         if(args.size() == 2) {
-            // std::cout << "" << "{" << mode.getTopic() << "}" << std::endl;
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICDISPLAY(host, nick,mode.getChannelName(),mode.getTopic()));
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICWHOTIME(host, nick, mode.getChannelName(),mode.gettopictime()));
         }
         if(args.size() == 3) {
                 if (mode.getPrvBynickname(nick) == false && mode.getTopc() == true && mode.checkUserexist(nick) == true) {
-                    // std::cout << "" << "{" << mode.getPrvBynickname(nick) << "}" << std::endl;
                     sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,nick));      
                 }
                 mode.setTopicAttr(args[2], true, nick, _time(nick));
                 SendToAll(mode, RPL_NEWTOPICSETTED(nick, mode.gettopicseter(), host,mode.getChannelName(),args[2]));
             }
-            // mode.setTopic(args[2]);
-            // sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_NEWTOPICSETTED(nick, mode.gettopicseter(), s,mode.getChannelName(),args[2]));
         }
     catch(const char *str) {
-            // printf("\033[0;31m //////////////////////////////////////////////// \033[0m\n");   
-            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, "#" + args[1]));
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, args[1]));
     }
-        
-    // if(args.size() == 3)
 }
-
-
-
-// PART #A Leaving... if some one leaving 

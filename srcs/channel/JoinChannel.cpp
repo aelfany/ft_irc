@@ -122,6 +122,7 @@ void	Servrr::proccessChannels(int clientfd)
             broadcastMessage(it->second, RPL_NAMREPLY(serverHostname, listofnames, it->second.getChannelNameDisplay(), nickname), clientfd);
 
             sendMsgToClient(clientfd, RPL_ENDOFNAMES(serverHostname, nickname, it->second.getChannelNameDisplay()));
+            
             broadcastMessage(it->second, RPL_ENDOFNAMES(serverHostname, nickname, it->second.getChannelNameDisplay()), clientfd);
         }
 	}
