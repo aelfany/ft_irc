@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/22 14:29:15 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/22 15:26:45 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,7 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if (args[0] == "invite")
         {
+            size_t indx = 0;
             if(args.size() < 3)
             {
                 // std::cout << "\033[0;31m" << "6 = ##################" << "\033[0m" << std::endl;
@@ -219,17 +220,17 @@ void Servrr::command(std::string buffer, size_t i) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[0]));
                 return ;
             }
-            while(i < _clients.size())
+            while(indx < _clients.size())
             {
-                if (_clients[i].getNickName() == args[1])
+                if (_clients[indx].getNickName() == args[1])
                 {
-                    sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_INVITING(host, nick, args[1], args[2]));
-                    sendMsgToClient(_clients[i].getClinetFd(), RPL_INVITE(nick, _clients[i].getUserName(), host, args[1], args[2]));
+                    sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_INVITING(host, nick, args[1], args[2]));//who invite 
+                    sendMsgToClient(_clients[indx].getClinetFd(), RPL_INVITE(nick, _clients[indx].getUserName(), host, args[1], args[2]));//c being invited
                     Channel &obj = getChannel(args[2]);
-                    obj.setinvited(_clients[i].getClinetFd());
+                    obj.setinvited(_clients[indx].getClinetFd());
                     break ;
                 }
-                i++;
+                indx++;
             }
         }
         else if (args[0] == "part")
