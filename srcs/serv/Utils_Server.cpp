@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/22 14:05:14 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/22 20:17:09 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,14 @@ void	Servrr::auth2(std::string str, clientito& client)
     }
     if(client.isAuthed())
     {   
+        time_t now = time(0);
+        std::string tmp = ctime(&now);
         std::string nick = client.getNickName();
         std::string host = client.getipaddr();
+        std::string time = tmp;
         sendMsgToClient(client.getClinetFd(), RPL_WELCOME(nick, host));
         sendMsgToClient(client.getClinetFd(), RPL_YOURHOST(nick, host));
-        sendMsgToClient(client.getClinetFd(), RPL_CREATED(nick, host));
+        sendMsgToClient(client.getClinetFd(), RPL_CREATED(nick, host, time));
         sendMsgToClient(client.getClinetFd(), RPL_MYINFO(nick, host));
     }
     args.clear();
