@@ -111,6 +111,15 @@ void	Servrr::proccessChannels(int clientfd)
                 sendMsgToClient(clientfd, "473 " + nickname + " " +  it->second.getChannelNameDisplay() + " :Cannot join channel (+i)\r\n");
                 return ;
             }
+            if(it->second.getPass() == true)
+            {
+                std::getline(pass, password, ',');
+                if (it->second.getPassword() != password)
+                {
+                    sendMsgToClient(clientfd, ":irc.idryab!~oldschool@" + host + " PRIVMSG " + nickname + " :This channel protected by password, provide it plz\r\n");
+                    return ;
+                }
+            }
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
             listofnames = getListOfNames(it->second.getUsersMap());
