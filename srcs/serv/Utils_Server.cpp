@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/23 17:50:55 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/23 17:53:36 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void    Servrr::SendToAll(Channel _channel, std::string _message)
 void    Servrr::sendmessage(clientito &client, std::string reciever, std::string _message)
 {
     std::string senderNick = client.getNickName();
-    // std::string senderUsername = client.getNickName();//don't forget to change this
     std::string senderUsername = client.getUserName();
     if(_channels.size() == 0 && reciever[0] == '#')
     {
