@@ -62,7 +62,7 @@
 #define ERR_NOSUCHCHANNEL(buffer, nick, channel)        ":" + buffer + " 403 " + nick + " " + channel + " :No such channel\r\n"
 #define ERR_BADCHANNELKEY(buffer, channel)              "475 " + buffer + " " + channel + " :Cannot join channel (+k)\r\n"
 #define ERR_CHANNELISFULL(buffer, channel)              "471 " + buffer + " " + channel + " :Cannot join channel (+l)"
-#define ERR_CANNOTSENDTOCHAN(buffer, channel)           "404 " + buffer + " " + channel + " :Cannot send to channel"
+#define ERR_CANNOTSENDTOCHAN(buffer, channel)           "404 " + buffer + " " + channel + " :Cannot send to channel\r\n"
 #define ERR_CHANOPRIVSNEEDED(buffer, channel)           ":" + buffer + " 482 " + channel + " :You're not channel operator\r\n"
 
 #define ERR_NOSUCHNICK(buffer, nickname)                "401 " + buffer + " " + nickname + " :No such nick/channel"

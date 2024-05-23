@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/23 17:23:08 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/23 17:50:55 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,25 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
     std::string senderNick = client.getNickName();
     // std::string senderUsername = client.getNickName();//don't forget to change this
     std::string senderUsername = client.getUserName();
+    if(_channels.size() == 0 && reciever[0] == '#')
+    {
+        sendMsgToClient(client.getClinetFd(), ERR_NOSUCHCHANNEL(senderNick, senderNick, reciever));
+        return ;
+    }
     std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(reciever));
     if (it != _channels.end())
     {
         if(!alreadyAmember(client.getClinetFd(), it->second))
         {
-            sendMsgToClient(client.getClinetFd(), ERR_CANNOTSENDTOCHAN(senderNick, it->second.getChannelName()));
+            sendMsgToClient(client.getClinetFd(), ERR_CANNOTSENDTOCHAN(senderNick, it->second.getChannelNameDisplay()));
             return ;
         }
         broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
+    }
+    else if(reciever[0] == '#')
+    {
+        sendMsgToClient(client.getClinetFd(), ERR_NOSUCHCHANNEL(senderNick, senderNick, it->second.getChannelName()));
+        return ;
     }
     else
     {

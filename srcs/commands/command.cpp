@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/22 15:26:45 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/23 17:28:31 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,8 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if(args[0] == "join") {
             trimSpaces(buffer,true);
-            if(args.size() < 2) {
-                // std::cout << "\033[0;31m" << "2 = ##################" << "\033[0m" << std::endl;
+            if(args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
-            }
             else
                 createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
         }
