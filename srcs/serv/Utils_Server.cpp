@@ -6,7 +6,7 @@
 /*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/22 20:17:09 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/23 17:23:08 by idryab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,14 @@ void    Servrr::sendmessage(clientito &client, std::string reciever, std::string
     std::string senderUsername = client.getUserName();
     std::map<std::string, Channel>::iterator it = _channels.find(tolowercases(reciever));
     if (it != _channels.end())
+    {
+        if(!alreadyAmember(client.getClinetFd(), it->second))
+        {
+            sendMsgToClient(client.getClinetFd(), ERR_CANNOTSENDTOCHAN(senderNick, it->second.getChannelName()));
+            return ;
+        }
         broadcastMessage(it->second, ":" + senderNick + "!~" + senderUsername + "@127.0.0.1 PRIVMSG " + reciever + " :" + _message + "\r\n", client.getClinetFd());
+    }
     else
     {
         size_t i = 0;
