@@ -45,6 +45,8 @@ class Channel
         bool            getInvOnly();
         bool            getTopc();
 		size_t			getusersSize();
+        size_t          getlimit();
+        bool	        getUserLimit();
         bool            isInvited(int sockfd);
 
 

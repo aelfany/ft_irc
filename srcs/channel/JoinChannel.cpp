@@ -105,6 +105,14 @@ void	Servrr::proccessChannels(int clientfd)
                 std::cout << "Client " << nickname << " is already a member in this channel" << std::endl;
                 return ;
             }
+            if(it->second.getUserLimit() == true)
+            {
+                if(it->second.getlimit() >= it->second.getusersSize())
+                {
+                    sendMsgToClient(clientfd, "471 " + nickname + " " +  it->second.getChannelNameDisplay() + " :Cannot join channel, it's full (+l)\r\n");
+                    return ;
+                }
+            }
             if (it->second.getInvOnly() == true && it->second.isInvited(clientfd) == false)
             {
                 //<client> <channel> :Cannot join channel (+i)

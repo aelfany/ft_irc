@@ -35,6 +35,12 @@ void	Channel::setUserLimit(bool limit)
 {
     _userlimit = limit;
 }
+
+bool	Channel::getUserLimit()
+{
+    return _userlimit;
+}
+
 std::string&	Channel::getChannelName()
 {
     return _name;
@@ -123,6 +129,11 @@ bool    Channel::getInvOnly()
 size_t  Channel::getusersSize()
 {
     return _usersSize;
+}
+
+size_t  Channel::getlimit()
+{
+    return _limit;
 }
 
 void	Channel::setTopic(std::string topic)
