@@ -116,7 +116,7 @@ void	Servrr::proccessChannels(int clientfd)
                 std::getline(pass, password, ',');
                 if (it->second.getPassword() != password)
                 {
-                    sendMsgToClient(clientfd, ":irc.idryab!~oldschool@" + host + " PRIVMSG " + nickname + " :This channel protected by password, provide it plz\r\n");
+                    sendMsgToClient(clientfd, ERR_BADCHANNELKEY(nickname, channel));
                     return ;
                 }
             }
