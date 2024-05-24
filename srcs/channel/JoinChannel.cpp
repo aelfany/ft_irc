@@ -107,7 +107,7 @@ void	Servrr::proccessChannels(int clientfd)
             }
             if(it->second.getUserLimit() == true)
             {
-                if(it->second.getlimit() >= it->second.getusersSize())
+                if(it->second.getusersSize() >= it->second.getlimit())
                 {
                     sendMsgToClient(clientfd, "471 " + nickname + " " +  it->second.getChannelNameDisplay() + " :Cannot join channel, it's full (+l)\r\n");
                     return ;
