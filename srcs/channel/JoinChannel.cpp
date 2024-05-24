@@ -64,7 +64,7 @@ std::string touppercases(std::string _str1)
 }
 
 
-void	Servrr::proccessChannels(int clientfd)
+void	Servrr::proccessChannels(int clientfd, std::string nick)
 {
 	std::stringstream chan(_result[1]);
 	std::stringstream pass(_result[2]);
@@ -78,19 +78,24 @@ void	Servrr::proccessChannels(int clientfd)
 	{
         if(channel[0] != '#' && channel != "join")
             channel = "#"+channel;
+        // puts("\033[0;31m-------------------------\033[0m");
+        // std::cout << "\033[0;31m[" << channel << "]\033[0m" << std::endl;
         std::string channellower = tolowercases(channel);
         std::map<std::string, Channel>::iterator it = _channels.find(channellower);
         if(it == _channels.end())
         {
             listofnames = "@"+nickname;
 		    Channel newchannel(channellower);
+
             newchannel.pushtomap(true, getClientitoByfd(clientfd));
+
 		    if (std::getline(pass, password, ','))
             {
 		        newchannel.setPassword(password);
                 newchannel.setPass(true);
             }
             newchannel.setChannelNameDisplay(channel);
+            // std::cout << "\033[0;31m ++" << *it << "++\033[0m" << std::endl;
             newchannel.setusersSize(1);
 		    _channels.insert(std::make_pair(channellower, newchannel));
 		    sendMsgToClient(clientfd, RPL_JOIN(nickname, nickname,channel, serverHostname));
@@ -105,28 +110,11 @@ void	Servrr::proccessChannels(int clientfd)
                 std::cout << "Client " << nickname << " is already a member in this channel" << std::endl;
                 return ;
             }
-            if(it->second.getUserLimit() == true)
-            {
-                if(it->second.getusersSize() >= it->second.getlimit())
-                {
-                    sendMsgToClient(clientfd, "471 " + nickname + " " +  it->second.getChannelNameDisplay() + " :Cannot join channel, it's full (+l)\r\n");
-                    return ;
-                }
-            }
             if (it->second.getInvOnly() == true && it->second.isInvited(clientfd) == false)
             {
                 //<client> <channel> :Cannot join channel (+i)
                 sendMsgToClient(clientfd, "473 " + nickname + " " +  it->second.getChannelNameDisplay() + " :Cannot join channel (+i)\r\n");
                 return ;
-            }
-            if(it->second.getPass() == true)
-            {
-                std::getline(pass, password, ',');
-                if (it->second.getPassword() != password)
-                {
-                    sendMsgToClient(clientfd, ERR_BADCHANNELKEY(nickname, channel));
-                    return ;
-                }
             }
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
@@ -143,6 +131,7 @@ void	Servrr::proccessChannels(int clientfd)
             broadcastMessage(it->second, RPL_ENDOFNAMES(serverHostname, nickname, it->second.getChannelNameDisplay()), clientfd);
         }
 	}
+    getClient(nick).pushChannel(channel);
 }
 
 void    Servrr::parseJoinCommand(const std::string& command)
@@ -155,7 +144,8 @@ void    Servrr::parseJoinCommand(const std::string& command)
     _result.push_back("");
 }
 
-void    Servrr::createChannel(std::string command, int clientfd)
+
+void    Servrr::createChannel(std::string command, int clientfd, std::string nick)
 {
     parseJoinCommand(command);
     if (tolowercases(_result[0]) == "join")
@@ -164,7 +154,7 @@ void    Servrr::createChannel(std::string command, int clientfd)
             sendMsgToClient(clientfd, ERR_NEEDMOREPARAMS(getClientitoByfd(clientfd).getNickName(), "join"));
         else
         {
-			proccessChannels(clientfd);
+			proccessChannels(clientfd, nick);
             ShowChannels(_channels);//display channels' users and thier info.
         }
         _result.clear();

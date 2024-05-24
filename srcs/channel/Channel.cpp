@@ -65,36 +65,35 @@ clientito&		Channel::getUserBynickname(std::string _nickname)
 {
     map_users::iterator it = _users.begin();
     for(; it != _users.end(); it++) {
-        if(it->second.getNickName() == _nickname)
+        if(it->second.getNickName() == _nickname) {
+            puts("+++++++++++");
             return it->second;
+        }
     }
-    throw std::runtime_error("User not found");
+    puts("*************");
+    throw "User not found";
 }
 
 bool	Channel::getPrvBynickname(std::string _nickname)
 {
     map_users::iterator it = _users.begin();
 
-    std::cout << _users.size() << std::endl;
     for(; it != _users.end(); it++) {
         if(it->second.getNickName() == _nickname)
-        {
-            // std::cout << it->first << std::endl;
             return it->first.first;
-        }
     }
-    throw std::runtime_error("bool not found");
+    throw "bool not found";
 }
 
-void Channel::setPrvByNickname(std::string _nickname, bool prv, clientito & obj) {
-    (void)obj;
-    std::map<std::pair<bool, std::string>, clientito>::iterator it = _users.begin();
+void Channel::setPrvByNickname(std::string _nickname, bool prv) {
+    
+    std::map<std::pair<bool, int>, clientito>::iterator it = _users.begin();
     bool found = false;
-
     for (; it != _users.end(); ++it) {
-        if (it->first.second == _nickname) {
+        if (it->second.getNickName() == _nickname) {
             clientito tempObj = it->second;
-            std::pair<bool, std::string> newKey(prv, _nickname); 
+            int x = it->second.getClinetFd();
+            std::pair<bool, int> newKey(prv, x);
             _users.insert(std::make_pair(newKey, tempObj));
             _users.erase(it);
             found = true;
@@ -102,11 +101,11 @@ void Channel::setPrvByNickname(std::string _nickname, bool prv, clientito & obj)
         }
     }
     if (!found) {
-        throw std::runtime_error("Nickname not found");
+        throw "Nickname not found";
     }
-    for (std::map<std::pair<bool, std::string>, clientito>::iterator it2 = _users.begin(); it2 != _users.end(); ++it2) {
+    for (std::map<std::pair<bool, int>, clientito>::iterator it2 = _users.begin(); it2 != _users.end(); ++it2) {
         std::cout << "\033[0;31m" << "##################" << "\033[0m" << std::endl;
-        std::cout << it2->first.second << std::endl;
+        std::cout << it2->second.getNickName() << std::endl;
         std::cout << "\033[0;31m" << "##################" << "\033[0m" << std::endl;
     }
 }
@@ -129,6 +128,10 @@ bool    Channel::getInvOnly()
 size_t  Channel::getusersSize()
 {
     return _usersSize;
+}
+
+void    clientito::pushChannel(std::string channel) {
+    channels.push_back(channel);
 }
 
 size_t  Channel::getlimit()
@@ -181,9 +184,6 @@ bool	Channel::isInvited(int sockfd)
 
 void Channel::pushtomap(bool privilege, clientito& obj)
 {
-    // clientito & t = getUserBynickname();
-    std::pair<bool, std::string> p;
-    p.first = privilege;
-    p.second = obj.getNickName(); 
+    std::pair<bool, int> p(privilege, obj.getClinetFd());
 	_users.insert(std::make_pair(p, obj));
 }

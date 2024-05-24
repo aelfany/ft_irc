@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/24 13:39:57 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/25 00:23:48 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,38 +21,89 @@ Channel & Servrr::getChannel(std::string channel) {
     return it->second;
 }
 
+std::vector<std::string> clientito::getChannels() {
+    return channels;
+}
+
+int Servrr::checkNick(clientito& client) {
+    std::string str = "@&#:1234567890";
+    std::string s = "_";
+    for(size_t a = 0; a < _clients.size(); a++) {
+        if(args[1] == _clients[a].getNickName()) {
+            sendMsgToClient(client.getClinetFd(), ERR_NICKNAMEINUSE(args[1]));
+            return 1;
+        }
+    }
+    if(str.find(args[1][0]) != std::string::npos)
+        return 0;
+    if(s.find(args[1][strlen(args[1].c_str()) - 1]) != std::string::npos)
+        return 3;
+    return 2;
+}
+
+
 void Servrr::command(std::string buffer, size_t i) {
     char buf[256];
     if(gethostname(buf,sizeof(buf)))
         return ;
-    host = buf;
     std::string nick = getClientitoByIndex(i-1).getNickName();
-    // std::cout << "\033[0;31m" << "->>> ##################" << "\033[0m" << std::endl;
+    clientito x = getClientitoByIndex(i-1);
     std::cout << host << std::endl;
-    std::string channel;
-    Channel a;
     trimSpaces(buffer,false);
-    // split(args[2]);
+    std::string channel;
+    host = buf;
+    Channel a;
     args[0] = tolowercases(args[0]);
     if(getClientitoByIndex(i-1).isAuthed() == false) {
         auth2(buffer, getClientitoByIndex(i-1));
     }
     else {
-        if(args[0] == "pass") {
-            if(args.size() < 2)
-            {
-                // std::cout << "\033[0;31m" << "1 = ##################" << "\033[0m" << std::endl;
+        if(args[0] == "pass" || args[0] == "user") {
+            if(args[0] == "pass" && args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
-            }
+            else if(args[0] == "user" && args.size() < 5)
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
             else
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_ALREADYREGISTERED(host,nick));
+        }
+        if(args[0] == "nick") {
+            int res = checkNick(getClientitoByIndex(i-1));
+            if(res == 0 || res == 1 || res == 3) {
+                if(res == 0) {
+                    std::cout << "|" << res << "|" << std::endl;
+                    sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ERRONEUSNICKNAME(host, nick));
+                }
+            }
+            else {
+                if(args.size() < 2 || args[1] == ":")
+                    sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NONICKNAMEGIVEN(nick, host));
+                else {
+                    try {
+                        std::string o = getClientitoByIndex(i-1).getNickName();
+                        std::vector<std::string> vec = x.getChannels();
+                        getClientitoByIndex(i-1).setNickName(args[1]);
+                        std::cout <<"|" << vec.size() <<  "|" << std::endl;
+                        std::vector<std::string>::iterator it = vec.begin();
+                        for(; it != vec.end(); it++) {
+                            Channel & chan = getChannel(*it);
+                            std::cout <<"|" << o <<  "|" << std::endl;
+                            chan.updateNickname(args[1],o,chan.getPrvBynickname(o), getClientitoByIndex(i-1));
+                            SendToAll(chan, NICKNAME_RPLY(o,getClientitoByIndex(i-1).getUserName(),host,args[1]));
+                        }
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NICKCHANGE(o,args[1],host));
+                    }
+                    catch(const char *) {
+                        std::cout << "exp ------------- < " << std::endl;
+                    }
+                }
+            }
         }
         else if(args[0] == "join") {
             trimSpaces(buffer,true);
             if(args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
             else
-                createChannel(buffer, getClientitoByIndex(i-1).getClinetFd());
+                createChannel(buffer, getClientitoByIndex(i-1).getClinetFd(), nick);
         }
         else if(args[0] == "topic") {
             Topic(nick,i);
@@ -70,7 +121,9 @@ void Servrr::command(std::string buffer, size_t i) {
                 channel = getClientitoByIndex(i-1).getNickName();
                 std::cout << "channel found secssusfly '*`" << std::endl;
                 if(SET_I) {
-                    if (mode.getPrvBynickname(channel) == false)
+                    if (mode.getInvOnly() == true)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ALLINV(args[1]));
+                    else if (mode.getPrvBynickname(channel) == false)
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
                     else
                     {
@@ -79,7 +132,9 @@ void Servrr::command(std::string buffer, size_t i) {
                     }
                 }
                 else if(REMOVE_I) {
-                    if (mode.getPrvBynickname(channel) == false)
+                    if (mode.getInvOnly() == false)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NOTINV(args[1]));
+                    else if (mode.getPrvBynickname(channel) == false)
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
                     else    
                     {
@@ -106,7 +161,9 @@ void Servrr::command(std::string buffer, size_t i) {
                     }
                 }
                 if(SET_K) {
-                    if(mode.getPass() == true)
+                    if(args.size() < 4)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, "password"));
+                    else if(mode.getPassword() == args[3])
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ALREADYSET(nick));
                     else if (mode.getPrvBynickname(channel) == false) 
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
@@ -119,6 +176,8 @@ void Servrr::command(std::string buffer, size_t i) {
                 else if(REMOVE_K) {
                     if(mode.getPass() == false)
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NOPASSSET(nick));
+                    else if(mode.getPassword() != args[3])
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_PASSNOTC(args[3]));
                     else if (mode.getPrvBynickname(channel) == false) 
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
                     else {
@@ -129,60 +188,70 @@ void Servrr::command(std::string buffer, size_t i) {
                 }
                 //---------------------//
                 if(SET_O) {
-                    
-                    if(args.size() < 4)
-                    {
-                        // std::cout << "\033[0;31m" << "4 = ##################" << "\033[0m" << std::endl;
-                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,channel));
-                    }
-                    else if(mode.getPrvBynickname(channel) == false)
-                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
-                    else {
-                        try {
+                    try {
+                        if(args.size() < 4)
+                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,channel));
+                        else if(mode.getPrvBynickname(channel) == false)
+                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
+                        else if(mode.getPrvBynickname(args[3]) == true)    
+                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ALLOP(args[3]));
+                        else {
                             mode.getUserBynickname(args[3]);
+                            mode.setPrvByNickname(args[3], true);
+                            SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "+o " + args[3]));
                         }
-                        catch(const char *) {
-                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_WASNOSUCHNICK(host,channel));
-                        }
-                        mode.setPrvByNickname(args[3], true, mode.getUserBynickname(channel));
-                        SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "+o " + args[3]));
                     }    
+                    catch(const char *) {
+                            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_WASNOSUCHNICK(host,channel));
+                    }
                 }
                 else if(REMOVE_O) {
-                    /***/
                     if(args.size() < 4)
-                    {
-                        // std::cout << "\033[0;31m" << "5 = ##################" << "\033[0m" << std::endl;
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,channel));
-                    }
                     else if(mode.getPrvBynickname(channel) == false)
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,channel));
+                    else if(mode.getPrvBynickname(args[3]) == false)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NOTOP(args[3]));
                     else {
                         try {
                             mode.getUserBynickname(args[3]);
+                            mode.setPrvByNickname(args[3], false);
+                            SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "-o " + args[3]));
                         }
                         catch(const char *) {
                             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_WASNOSUCHNICK(host,channel));
                         }
-                        mode.setPrvByNickname(args[3], false, mode.getUserBynickname(channel));
-                        SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "-o " + args[3]));
                     }
                 }
                 if(SET_L) {
+                    if(args.size() < 4) {
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,channel));
+                        args.clear();
+                        return ;
+                    }
                     std::stringstream ss(args[3]);
                     size_t limit;
                     ss >> limit;
-                    mode.setLimit(limit);
-                    mode.setUserLimit(true);
-                    SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "+l " + args[3]));
+                    if(mode.getlimit() == limit)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_LIMITSET(args[3]));
+                    else {
+                        mode.setUserLimit(false);
+                        mode.setLimit(limit);
+                        mode.setUserLimit(true);
+                        SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "+l " + args[3]));
+                    }
                 }
                 else if(REMOVE_L) {
-                    mode.setUserLimit(false);
-                    mode.setLimit(-1);
-                    SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "-l"));
+                    if(mode.getUserLimit() == false)
+                        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NOLIMITSET(nick));
+                    else {
+                        mode.setUserLimit(false);
+                        mode.setLimit(-1);
+                        SendToAll(mode, RPL_MODE(mode.getChannelName(), nick, "-l"));
+                    }
                 }
             }
-            catch(...) {
+            catch(const char *) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, args[1]));
             }
         }
@@ -209,7 +278,6 @@ void Servrr::command(std::string buffer, size_t i) {
             size_t indx = 0;
             if(args.size() < 3)
             {
-                // std::cout << "\033[0;31m" << "6 = ##################" << "\033[0m" << std::endl;
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, args[2]));
                 return ;
             }
@@ -242,7 +310,7 @@ void Servrr::command(std::string buffer, size_t i) {
                 if (obj.getusersSize() == 0)
                     eraseChannel(tolowercases(args[1]));
             }
-            catch(...)
+            catch(const char *)
             {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[1]));
                 return ;

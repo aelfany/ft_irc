@@ -4,6 +4,7 @@
 #include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <vector>
 
 class clientito
 {
@@ -19,11 +20,14 @@ class clientito
 	 	std::string _RealName;
 	 	std::string _nickName;
 		std::string _recvLine;
+		std::vector<std::string> channels;
     public:
         clientito();
 		clientito(int sockefd);
 		~clientito();
 	//getters
+	void    	pushChannel(std::string channel);
+	std::vector<std::string> getChannels();
 	std::string getRealName();
 	std::string getUserName();
 	std::string	getNickName();

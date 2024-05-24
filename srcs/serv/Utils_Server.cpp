@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_Server.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/23 17:53:36 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/24 20:16:51 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ void	Servrr::auth2(std::string str, clientito& client)
     (void)str;
     std::string nick = client.getNickName();
     if (args.size() < 2) {
-        sendMsgToClient(client.getClinetFd(), ERR_NEEDMOREPARAMS(nick, "pass"));
+        if(args[0] == "nick")
+            sendMsgToClient(client.getClinetFd(), RPL_NONICKNAMEGIVEN(nick, host));
+        else
+            sendMsgToClient(client.getClinetFd(), ERR_NEEDMOREPARAMS(nick, "pass"));
         args.clear();
         return ;
     }
@@ -62,7 +65,9 @@ void	Servrr::auth2(std::string str, clientito& client)
             client.setnflag(true);
             parsNick(client);
             if(client.getnflag())
-            client.setNickName(args[1]);
+                client.setNickName(args[1]);
+            else
+                sendMsgToClient(client.getClinetFd(), RPL_ERRONEUSNICKNAME(host, nick));
             args.clear();
             return ;
     }

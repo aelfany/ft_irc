@@ -47,6 +47,19 @@ clientito&	Servrr::getClientitoByfd(int clientfd)
     return _clients[0];//don't forget to remove this, and change it with a proper way.
 }
 
+
+clientito&	Servrr::getClient(std::string nick)
+{
+    clientVect::iterator it = _clients.begin();
+    for(; it != _clients.end(); it++) {
+		if (it->getNickName() == nick)
+			return *it;
+    }
+    throw "no user found";
+    // return _clients[0];//don't forget to remove this, and change it with a proper way.
+}
+
+
 void    Servrr::removeClient(int id)
 {
     _clients.erase(_clients.begin() +id);

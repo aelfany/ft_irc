@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 10:10:19 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/20 22:54:19 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:42:23 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,9 @@ void    Channel::setTopicAttr(std::string topic, bool topc, std::string seter, s
 void Servrr::Topic(std::string nick, size_t i) {
     try {
         Channel &mode = getChannel(args[1]);
-        if(mode.checkUserexist(nick) == false) {
-                std::cout << "" << "{" << nick << "}" << std::endl;
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(host,nick));
-        }
+        // if(mode.checkUserexist(nick) == false) {
+        //         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(host,nick));
+        // }
         if(args.size() == 2) {
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICDISPLAY(host, nick,mode.getChannelName(),mode.getTopic()));
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICWHOTIME(host, nick, mode.getChannelName(),mode.gettopictime()));

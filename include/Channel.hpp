@@ -5,7 +5,7 @@
 #include <vector>
 
 // typedef std::map<std::string, clientito> map_users;
-typedef std::map<std::pair<bool, std::string>, clientito> map_users;
+typedef std::map<std::pair<bool, int>, clientito> map_users;
 //                     is_opertator==1  ,obj
 
 class Channel
@@ -26,10 +26,11 @@ class Channel
         std::string		_nameToDisplay;
         std::vector<int> _invited;
     public:
+        void updateNickname(std::string _nickname, std::string oldnick, bool prv, clientito & obj);
         Channel(std::string	_name);
         ~Channel();
         Channel(){};
-
+        void            setPrvByNickname(std::string _nickname, bool prv);
 		//getters
         void            deletClient(std::string nick);
 		std::string&	getChannelName();
@@ -39,7 +40,6 @@ class Channel
         void            setTopicAttr(std::string topic, bool topc, std::string seter, std::string time);
         clientito&		getUserBynickname(std::string _nickname);
         bool	        getPrvBynickname(std::string _nickname);
-        void            setPrvByNickname(std::string _nickname, bool prv, clientito & obj);
         map_users&		getUsersMap();
         bool            getPass();
         bool            getInvOnly();

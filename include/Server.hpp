@@ -46,7 +46,8 @@ class Servrr
         ~Servrr();
         void parsNick(clientito& client);
         // void parsUser(clientito& client);
-
+        void	            proccessChannels(int clientfd, std::string nick);
+        void                createChannel(std::string command, int clientfd, std::string nick);
 		void	            auth2(std::string str, clientito& client);
         void                trimUser(const std::string& str);
         Channel &           getChannel(std::string channel);
@@ -72,9 +73,9 @@ class Servrr
         void	removeFromChannel(int fd);
 
         //channel section
-        void	createChannel(std::string command, int client_fd);
+        int checkNick(clientito& client);
+        clientito&	getClient(std::string nick);
 		void	parseJoinCommand(const std::string& command);
-		void	proccessChannels(int clientfd);
         bool    alreadyAmember(int clientfd, Channel channel);
         std::string tolowercases(std::string _str1);
 
