@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 10:10:19 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/25 18:39:47 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/25 19:41:54 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void    Channel::setTopicAttr(std::string topic, bool topc, std::string seter, s
 void Servrr::Topic(std::string nick, size_t i) {
     try {
         Channel &mode = getChannel(args[1]);
-        mode.setTopicAttr(args[2], true, nick, _time(nick));
         // if(mode.checkUserexist(nick) == false) {
         //         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(host,nick));
         // }
@@ -39,6 +38,7 @@ void Servrr::Topic(std::string nick, size_t i) {
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICWHOTIME(host, mode.getChannelName(), nick,mode.gettopicseter(),getClientitoByIndex(i-1).getUserName(),mode.gettopictime()));
         }
         if(args.size() == 3) {
+                mode.setTopicAttr(args[2], true, nick, _time(nick));
                 if (mode.getPrvBynickname(nick) == false && mode.getTopc() == true && mode.checkUserexist(nick) == true) {
                     sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,nick));      
                 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idryab <idryab@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/25 17:58:07 by idryab           ###   ########.fr       */
+/*   Updated: 2024/05/25 19:33:50 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,6 +346,8 @@ void Servrr::command(std::string buffer, size_t i) {
                         ++it;
                 }
     }
+    if(args[0] == "pong")
+        flag = 1;    
     if(flag == 0)
         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_UNKNOWNCOMMAND(host, args[0]));
     args.clear();
