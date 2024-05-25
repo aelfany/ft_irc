@@ -15,8 +15,6 @@
 #include <sstream>
 #include <map>
 
-#define WELCOMING "--------------------welcome dear client!--------------------\nNote: please Enter PASS, NICK, and USER for authenticating\n\t\tFollow this form: CMD example\n\n";
-#define AUTHED "\n---------------------------------------------------------------\n\tAuthentication success, Welcome again, BIG DOG!\n---------------------------------------------------------------\n";
 
 typedef std::vector<clientito> clientVect;//vector of clients
 typedef std::map<std::string, Channel> channelsMap;//map of channels

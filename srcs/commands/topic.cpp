@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 10:10:19 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/24 22:42:23 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/25 17:47:16 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void Servrr::Topic(std::string nick, size_t i) {
         // }
         if(args.size() == 2) {
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICDISPLAY(host, nick,mode.getChannelName(),mode.getTopic()));
-            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICWHOTIME(host, nick, mode.getChannelName(),mode.gettopictime()));
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(),RPL_TOPICWHOTIME(host, mode.getChannelName(), nick,mode.gettopicseter(),getClientitoByIndex(i-1).getUserName(),mode.gettopictime()));
         }
         if(args.size() == 3) {
                 if (mode.getPrvBynickname(nick) == false && mode.getTopc() == true && mode.checkUserexist(nick) == true) {

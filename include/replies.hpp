@@ -32,17 +32,17 @@
 #define RPL_NICKCHANGE(oldNick, nick, hostname)                             ":" + oldNick + " NICK " + nick + "\r\n"
 #define NICKNAME_RPLY(nickname, username, hostname, newNickName)            ":" + nickname + "!~" + username + "@" + hostname + " NICK :" + newNickName  + "\r\n"
 
-
 #define RPL_MODE(channel, nick, mode)                                      ":" + nick + " MODE " + channel + " " + mode + "\r\n"
 #define RPL_NOTOPIC(hostname, nick, chann)                                  ":" + hostname + " 331 " + nick + " " + chann + " :No topic is set.\r\n"
 #define RPL_TOPIC(hostname, nick, chann, topic)                             ":" + hostname + " 332 " + nick + " " + chann + " :" + topic + "\r\n"
 #define ERR_INVITEONLY(hostname, nick, channelName)                        ":" + hostname + " 473 " + nick + " " + channelName + " :Cannot join channel, you must be invited (+i)\r\n"
-#define RPL_TOPICWHOTIME(client, channel, nick, setat)                      ":" + client + " 333 " + channel + " " + nick + "  " + setat + "\r\n"
+// :*.freenode.net 333 dsa #chan ads!~fd@freenode-obu.d75.6g0qj4.IP :1716654989
+#define RPL_TOPICWHOTIME(client, channel, nick, seter,username, setat)                      ":" + client + " 333 " + nick + " " + channel + " " + seter + "!~@oldschool_irc :" + setat + "\r\n"
+// #define RPL_TOPICWHOTIME(client, channel, nick, setat)                      ":" + client + " 333 " + channel + " " + nick + "  " + setat + "\r\n"
 #define RPL_TOPICDISPLAY(hostname, nick, channel, topic)                    ":" + hostname + " 332 " + nick + " " + channel + " :" + topic + "\r\n"
 #define RPL_INVITING(hostname, inviting, invited, channel)                 ":" + hostname + " 341 " + inviting + " " + invited + " " + channel + " :Inviting " + invited + " to " + channel + "\r\n"
 #define RPL_NEWTOPICSETTED(nick, username, hostname, channel, topic)        ":" + nick + "!~" + username + "@" + hostname + " TOPIC " + channel + " :" + topic + "\r\n"
 #define RPL_INVITE(nick, username ,clienthostname, invited, channel)       ":" + nick + "!" + username + "@" + clienthostname + " INVITE " + invited + " :" + channel + "\r\n"
-
 // ------- new 
 
 #define RPL_MYINFO(nick, hostname)                                          ":" + hostname + " 004 " + nick + " :Host: " + hostname + ", Version: 1.0, User mode: none, Channel modes: o, t, k, i !\r\n"
@@ -74,12 +74,6 @@
 
 
 /* command Responses */
-#define RPL_PING(buffer, token)                                             ":" + buffer + " PONG :" + token
-#define RPL_QUIT(nick, host, message)                                       ":" + nick + "!" + "~" + nick + "@" + host + " QUIT : " + message + "\r\n"
-#define RPL_NOTICE(buffer, target, message)                                 ":" + buffer + " NOTICE " + target + " :" + message
-#define RPL_PART(buffer,host,user, channel)                                 ":" + buffer + "!~" + user + "@" + host + " PART :" + channel + "\r\n" 
-#define RPL_PRIVMSG(buffer, target, message)                                ":" + buffer + " PRIVMSG " + target + " :" + message
-#define RPL_KICK(nick, username, hostname, kicked, channel, reason)         ":" + nick + "!" + "~" + username + "@" + hostname + " KICK " + channel + " " + kicked + " " + reason + "\r\n"
 #define RPL_NOTOP(nickname)                                                 (": 667 " + nickname + ": User not operator\r\n")
 #define RPL_ALLOP(nickname)                                                 (": 666 " + nickname + ": User already operator\r\n")
 #define RPL_ALLINV(nickname)                                                (": 665 " + nickname + ": Channel already set in invite-only mode\r\n")
@@ -87,9 +81,15 @@
 #define RPL_LIMITSET(nickname)                                              (": 662 " + nickname + ": This limit was set\r\n")
 #define RPL_PASSNOTC(nickname)                                              (": 996 " + nickname + ": Password not correct\r\n")
 #define RPL_NOPASSSET(nickname)                                             (": 997 " + nickname + ": No assword set\r\n")
+#define RPL_PING(buffer, token)                                             ":" + buffer + " PONG :" + token
 #define RPL_ALREADYSET(nickname)                                            (": 998 " + nickname + ": this Password already set\r\n")
 #define RPL_NOLIMITSET(nickname)                                            (": 663 " + nickname + ": No limit set\r\n")
 #define RPL_AUTHENTICATED(nickname)                                         (": 999 " + nickname + ": You are now logged in as " + nickname + "\r\n")
+#define RPL_QUIT(nick, host, message)                                       ":" + nick + "!" + "~" + nick + "@" + host + " QUIT : " + message + "\r\n"
+#define RPL_NOTICE(buffer, target, message)                                 ":" + buffer + " NOTICE " + target + " :" + message
+#define RPL_PART(buffer,host,user, channel)                                 ":" + buffer + "!~" + user + "@" + host + " PART :" + channel + "\r\n" 
+#define RPL_PRIVMSG(buffer, target, message)                                ":" + buffer + " PRIVMSG " + target + " :" + message
+#define RPL_KICK(nick, username, hostname, kicked, channel, reason)         ":" + nick + "!" + "~" + username + "@" + hostname + " KICK " + channel + " " + kicked + " " + reason + "\r\n"
 
 
 #endif//
