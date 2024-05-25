@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/25 00:23:48 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/25 17:25:16 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int Servrr::checkNick(clientito& client) {
 
 void Servrr::command(std::string buffer, size_t i) {
     char buf[256];
+    int flag = 0;
     if(gethostname(buf,sizeof(buf)))
         return ;
     std::string nick = getClientitoByIndex(i-1).getNickName();
@@ -55,10 +56,13 @@ void Servrr::command(std::string buffer, size_t i) {
     Channel a;
     args[0] = tolowercases(args[0]);
     if(getClientitoByIndex(i-1).isAuthed() == false) {
+        flag = 1;
         auth2(buffer, getClientitoByIndex(i-1));
+        std::cout << getClientitoByIndex(i-1).isAuthed() << std::endl;
     }
     else {
         if(args[0] == "pass" || args[0] == "user") {
+            flag = 1;
             if(args[0] == "pass" && args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
             else if(args[0] == "user" && args.size() < 5)
@@ -67,10 +71,10 @@ void Servrr::command(std::string buffer, size_t i) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_ALREADYREGISTERED(host,nick));
         }
         if(args[0] == "nick") {
+            flag = 1;
             int res = checkNick(getClientitoByIndex(i-1));
             if(res == 0 || res == 1 || res == 3) {
                 if(res == 0) {
-                    std::cout << "|" << res << "|" << std::endl;
                     sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_ERRONEUSNICKNAME(host, nick));
                 }
             }
@@ -78,27 +82,21 @@ void Servrr::command(std::string buffer, size_t i) {
                 if(args.size() < 2 || args[1] == ":")
                     sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NONICKNAMEGIVEN(nick, host));
                 else {
-                    try {
                         std::string o = getClientitoByIndex(i-1).getNickName();
                         std::vector<std::string> vec = x.getChannels();
                         getClientitoByIndex(i-1).setNickName(args[1]);
-                        std::cout <<"|" << vec.size() <<  "|" << std::endl;
                         std::vector<std::string>::iterator it = vec.begin();
                         for(; it != vec.end(); it++) {
                             Channel & chan = getChannel(*it);
-                            std::cout <<"|" << o <<  "|" << std::endl;
                             chan.updateNickname(args[1],o,chan.getPrvBynickname(o), getClientitoByIndex(i-1));
                             SendToAll(chan, NICKNAME_RPLY(o,getClientitoByIndex(i-1).getUserName(),host,args[1]));
                         }
                         sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_NICKCHANGE(o,args[1],host));
-                    }
-                    catch(const char *) {
-                        std::cout << "exp ------------- < " << std::endl;
-                    }
                 }
             }
         }
         else if(args[0] == "join") {
+            flag = 1;
             trimSpaces(buffer,true);
             if(args.size() < 2)
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,nick));
@@ -106,10 +104,12 @@ void Servrr::command(std::string buffer, size_t i) {
                 createChannel(buffer, getClientitoByIndex(i-1).getClinetFd(), nick);
         }
         else if(args[0] == "topic") {
+            flag = 1;
             Topic(nick,i);
         }
         else if(args[0] == "mode")
         {
+            flag = 1;
             if (args.size() < 2)
             {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, "MODE"));
@@ -256,25 +256,33 @@ void Servrr::command(std::string buffer, size_t i) {
             }
         }
         else if (args[0] == "kick") {
+            flag = 1;
             kick(args[2], i);
         }
         else if (args[0] == "privmsg")
         {
+            flag = 1;
             std::string _message;
             for(size_t i = 0; i < args.size(); i++)
             {
                 if(i > 1)
                 {
-                    if (args[i][0] == ':')
-                        _message = args[i].substr(1) + " ";
-                    else
+                    if (args[2][0] == ':')
                         _message += args[i] + " ";
+                    else
+                    {
+                        _message = args[2];
+                        break;
+                    }
                 }
             }
+            if(_message[0] == ':')
+                _message = _message.substr(1);
             sendmessage(getClientitoByIndex(i-1), args[1], _message);
         }
         else if (args[0] == "invite")
         {
+            flag = 1;
             size_t indx = 0;
             if(args.size() < 3)
             {
@@ -301,6 +309,7 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if (args[0] == "part")
         {
+            flag = 1;
             try
             {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), RPL_QUIT(nick,host, "good bye"));
@@ -310,15 +319,14 @@ void Servrr::command(std::string buffer, size_t i) {
                 if (obj.getusersSize() == 0)
                     eraseChannel(tolowercases(args[1]));
             }
-            catch(const char *)
-            {
-                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(nick, args[1]));
-                return ;
+            catch(const char *) {
+                sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOSUCHCHANNEL(host, nick, args[1]));
             }
             
         }
         else if (args[0] == "quit")
         {
+            flag = 1;
             int client_sock_fd =  getClientitoByIndex(i-1).getClinetFd();
                 std::cout << "Client "<< client_sock_fd << " disconnected" << std::endl;
                 close(client_sock_fd);
@@ -335,6 +343,8 @@ void Servrr::command(std::string buffer, size_t i) {
                         ++it;
                 }
     }
+    if(flag == 0)
+        sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_UNKNOWNCOMMAND(host, args[0]));
     args.clear();
 }
 }

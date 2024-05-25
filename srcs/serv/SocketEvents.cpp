@@ -59,7 +59,7 @@ void Servrr::eventOnClientSock()
     ssize_t recvData = recv(client_sock_fd, buffer, sizeof(buffer), 0);
     buffer[recvData] = '\0';
     if (recvData == -1)
-        perror("recvvv");
+        perror("recv");
     else if (recvData == 0)
     {
             // If client disconnected print this==> && close its socket && erase its data in our vector
@@ -73,11 +73,6 @@ void Servrr::eventOnClientSock()
             channelsMap::iterator it = _channels.begin();
             while (it != _channels.end())
             {
-                //the following 3 lines are just temporary
-                // std::string tobeOperator = getClientitoByIndex(_index).getNickName();
-                // if(it->second.getPrvBynickname(tobeOperator) == false)
-                //     it->second.setPrvByNickname(tobeOperator, true, getClientitoByIndex(_index));
-
                 if (it->second.getusersSize() == 0)
                     it = _channels.erase(it);
                 else

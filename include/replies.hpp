@@ -55,10 +55,10 @@
 
 #define ERR_NOTREGISTERED(buffer)                                           "451 " + buffer + " :You have not registered"
 #define ERR_NICKNAMEINUSE(buffer)                                           "433 " + buffer + " " + buffer  + " :Nickname is already in use\r\n"
-#define ERR_UNKNOWNcmd(buffer, cmd)             		                    "421 " + buffer + " " + cmd + " :Unknown cmd"
 #define ERR_WASNOSUCHNICK(buffer,cmd)                                       ":" + buffer + " 406 " + cmd + " :There was no such nickname\r\n"
 #define ERR_PASSWDMISMATCH(buffer, cmd)					                    (":" + cmd + " 464 " + buffer + " :Password is incorrect\r\n")
 #define ERR_NEEDMOREPARAMS(client, cmd)             	                    ":" + client + " 461 " + cmd + " :Not enough parameters\r\n"
+#define ERR_UNKNOWNCOMMAND(client, cmd)             	                    ":" + client + " 421 " + cmd + " :Unknown command\r\n"
 #define ERR_NOTONCHANNEL(client, channel)                                   "442 " + client + " " + channel + " :You're not on that channel\r\n"
 #define ERR_BADCHANNELKEY(buffer, channel)                                  "475 " + buffer + " " + channel + " :Cannot join channel (+k)\r\n"
 #define ERR_CHANNELISFULL(buffer, channel)                                  "471 " + buffer + " " + channel + " :Cannot join channel (+l)"

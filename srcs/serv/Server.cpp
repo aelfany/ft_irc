@@ -56,7 +56,6 @@ clientito&	Servrr::getClient(std::string nick)
 			return *it;
     }
     throw "no user found";
-    // return _clients[0];//don't forget to remove this, and change it with a proper way.
 }
 
 
@@ -173,7 +172,7 @@ void sendMsgToClient(int clientfd, std::string msg)
 {
     if (!msg.empty())
     {
-        ssize_t bytes = send(clientfd, msg.c_str(), msg.length(), 0);
+        ssize_t bytes = send(clientfd, msg.c_str(), msg.size(), 0);
         if (bytes == -1)
             perror("send: ");
     }

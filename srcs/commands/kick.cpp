@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 02:24:03 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/24 22:42:07 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/25 15:35:39 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 void Channel::deletClient(std::string nick) {
     map_users::iterator it = _users.begin();
-    std::cout << "\033[0;31m { " << _users.size() << " }\033[0m" << std::endl;
     while (it != _users.end()) {
         if (it->second.getNickName() == nick) {
             _users.erase(it++);
@@ -24,25 +23,33 @@ void Channel::deletClient(std::string nick) {
         else
             ++it;
     }
-    // std::cout << "\033[0;31m { " << _users.size() << " }\033[0m" << std::endl;
 }
 
 void Servrr::split(std::string buffer, size_t i) {
     std::stringstream users(buffer);
     std::string user;
+    std::string res;
     std::string nick = getClientitoByIndex(i-1).getNickName();
     while (std::getline(users,user, ',')) {
     try {
         Channel &mode = getChannel(args[1]);
-        if(mode.checkUserexist(nick) == false)
+        if(args.size() > 4) {
+            for(size_t a = 3; a < args.size(); a++) {
+                res += args[a];
+                res += " ";
+            }
+        }
+        if(args.size() < 4)
+            sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,"kick"));
+        else if(mode.checkUserexist(nick) == false)
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(host,nick));
         else if(mode.getPrvBynickname(nick) == false)
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_CHANOPRIVSNEEDED(host,args[1]));
         else if(mode.checkUserexist(user) == false)
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_WASNOSUCHNICK(host,args[1]));
         else {
-            std::cout << "\033[0;31m { " << user << " }\033[0m" << std::endl;
-            SendToAll(mode, RPL_KICK(nick,getClientitoByIndex(i-1).getUserName(),host,user,args[1], "fuck"));
+            std::cout << res << std::endl;
+            SendToAll(mode, RPL_KICK(nick,getClientitoByIndex(i-1).getUserName(),host,user,args[1], res));
             mode.deletClient(user);
         }
     }

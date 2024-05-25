@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/24 20:16:51 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/25 17:20:29 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	Servrr::auth2(std::string str, clientito& client)
         }
     }
     else if (!client.getuflag()) {
-        args.clear();
+        args.clear(); 
         return ;
     }
     if(client.isAuthed())
