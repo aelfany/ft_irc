@@ -128,10 +128,12 @@ void    parseData(const std::string& command, std::vector<std::string> &botCmd)
 void parceWeather(std::string weather_data, int sockfd, std::string receiver)
 {
     std::string _message;
+
     std::string str = weather_data;
 
     std::string search[6] = {"\"temp\":", "\"temp_min\":", "\"temp_max\":", "\"humidity\":", "\"speed\":", "\"country\":"};
-    std::string dt[6] = {"Temperature: ", "Minimum Temperature: ", "Maximum Temperature: ", "Humidity: ", "Wind Speed: ", "Country: "};
+    std::string dt[6] = {":Temperature: ", ":Minimum Temperature: ", ":Maximum Temperature: ", ":Humidity: ", ":Wind Speed: ", ":Country: "};
+
     std::vector<std::pair<std::string, std::string> > data;
     std::string res;
     int index = 0;
@@ -188,6 +190,8 @@ int receivedata(int sockfd)
 
 bool check_port(std::string port)
 {
+    if (atoi(port.c_str()) < 1025)
+        return false;
     if (port[0] == '+' || port[0] == '-')
         return false;
     for(size_t i = 0; i < port.length(); ++i)
@@ -229,7 +233,7 @@ int main(int ac, char **av)
                 sockfd = connectToServer(av[1], port);
                 sendMsgToClient(sockfd, "pass " + password + "\r\n");
                 sendMsgToClient(sockfd, "nick fBot\r\n");
-                sendMsgToClient(sockfd, "user fBot\r\n");
+                sendMsgToClient(sockfd, "user fBot * 0 Bot\r\n");
                 authed = true;
             }
             authed = receivedata(sockfd);

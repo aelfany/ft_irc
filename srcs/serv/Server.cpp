@@ -127,6 +127,8 @@ void Servrr::runServer()
 
 bool check_port(std::string port)
 {
+    if (atoi(port.c_str()) < 1025)
+        return false;
     if (port[0] == '+' || port[0] == '-')
         return false;
     for(size_t i = 0; i < port.length(); ++i)
