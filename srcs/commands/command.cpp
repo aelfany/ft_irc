@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/30 23:25:30 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/31 00:02:20 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,10 +152,12 @@ void Servrr::command(std::string buffer, size_t i) {
                 Channel &mode = getChannel(args[1]);
                 channel = getClientitoByIndex(i-1).getNickName();
                 chanName = mode.getChannelNameDisplay();
-                if(modeSplit(args[2], i) == 1) {
-                    mod.clear();
-                    args.clear();
-                    return ;
+                if (args.size() > 2) {
+                    if(modeSplit(args[2], i) == 1) {
+                        mod.clear();
+                        args.clear();
+                        return ;
+                    }
                 }
                 std::cout << "channel found secssusfly '*`" << std::endl;
                 for(size_t ind = 0; ind < mod.size(); ind++) {

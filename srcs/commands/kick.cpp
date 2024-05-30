@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 02:24:03 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/25 15:35:39 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/31 00:07:03 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void Servrr::split(std::string buffer, size_t i) {
             std::cout << res << std::endl;
             SendToAll(mode, RPL_KICK(nick,getClientitoByIndex(i-1).getUserName(),host,user,args[1], res));
             mode.deletClient(user);
+            mode.setusersSize(-1);
         }
     }
     catch(const char *) {
