@@ -36,6 +36,7 @@ class Servrr
         channelsMap					_channels;
         JoinVect					_result;
         JoinVect                    args;
+        std::vector<std::pair<std::string,std::string> > mod;
         Servrr();
     public:
         size_t	_index;
@@ -43,6 +44,7 @@ class Servrr
         Servrr(int portNumber, std::string passw);
         ~Servrr();
         void parsNick(clientito& client);
+        int modeSplit(std::string arg, size_t i);
         // void parsUser(clientito& client);
         void	            proccessChannels(int clientfd, std::string nick);
         void                createChannel(std::string command, int clientfd, std::string nick);

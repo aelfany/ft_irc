@@ -14,16 +14,16 @@
 #define HEADER_HPP
 
 //MODE 
-#define SET_I       args[2] == "+i"
-#define REMOVE_I    args[2] == "-i"
-#define SET_T       args[2] == "+t"
-#define REMOVE_T    args[2] == "-t"
-#define SET_K       args[2] == "+k"
-#define REMOVE_K    args[2] == "-k"
-#define SET_O       args[2] == "+o"
-#define REMOVE_O    args[2] == "-o"
-#define SET_L       args[2] == "+l"
-#define REMOVE_L    args[2] == "-l"
+#define SET_I       mod[ind].first == "+i"
+#define REMOVE_I    mod[ind].first == "-i"
+#define SET_T       mod[ind].first == "+t"
+#define REMOVE_T    mod[ind].first == "-t"
+#define SET_K       mod[ind].first == "+k"
+#define REMOVE_K    mod[ind].first == "-k"
+#define SET_O       mod[ind].first == "+o"
+#define REMOVE_O    mod[ind].first == "-o"
+#define SET_L       mod[ind].first == "+l"
+#define REMOVE_L    mod[ind].first == "-l"
 
 // nimeric
 
@@ -70,6 +70,8 @@
 
 #define ERR_NOSUCHNICK(buffer, nickname)                                    "401 " + buffer + " " + nickname + " :No such nick/channel"
 #define ERR_USERNOTINCHANNEL(buffer, nickname, channel)                     "441 " + buffer + " " + nickname + " " + channel + " :They aren't on that channel"
+#define ERR_UNKNOWNMODE(host, nick, modechar)                                ":" + host + " 472 " + nick + " " + modechar + " :is unknown mode char to me\r\n"
+// :*.freenode.net 472 fas V :is not a recognised channel mode.
 
 
 
@@ -90,6 +92,7 @@
 #define RPL_PART(buffer,host,user, channel)                                 ":" + buffer + "!~" + user + "@" + host + " PART :" + channel + "\r\n" 
 #define RPL_PRIVMSG(buffer, target, message)                                ":" + buffer + " PRIVMSG " + target + " :" + message
 #define RPL_KICK(nick, username, hostname, kicked, channel, reason)         ":" + nick + "!" + "~" + username + "@" + hostname + " KICK " + channel + " " + kicked + " " + reason + "\r\n"
+#define RPL_NOKEY(nickname,channel, mode)                                   ": 661 " + nickname + " :" + channel + " " + mode + " * You must specify a parameter for the key mode. Syntax: <key>.\r\n"
 
 
 #endif//

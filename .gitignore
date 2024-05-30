@@ -1,8 +1,0 @@
-*.o
-*.gitignore
-*.vscode
-*.txt
-*.out
-*file.hpp
-*.DS_Store
-ircserv
