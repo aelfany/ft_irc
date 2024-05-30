@@ -65,7 +65,8 @@ class Channel
         std::string     getTopic();
         std::string     gettopictime();
 
-		void pushtomap(bool privilege, clientito& obj);
+		void 	pushtomap(bool privilege, clientito& obj);
+       	void	removeInvitedClient(int fd);
 };
 
 void ShowChannels(std::map<std::string, Channel> ChannelsMap);

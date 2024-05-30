@@ -176,10 +176,17 @@ bool	Channel::isInvited(int sockfd)
 	std::vector<int>::iterator it = std::find(_invited.begin(), _invited.end(), sockfd);
     if(it != _invited.end())
     {
-        _invited.erase(it);
+        // _invited.erase(it);
         return true;
     }
     return false;
+}
+
+void	Channel::removeInvitedClient(int sockfd)
+{
+    std::vector<int>::iterator it = std::find(_invited.begin(), _invited.end(), sockfd);
+    if(it != _invited.end())
+        _invited.erase(it);
 }
 
 void Channel::pushtomap(bool privilege, clientito& obj)

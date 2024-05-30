@@ -129,6 +129,7 @@ void	Servrr::proccessChannels(int clientfd, std::string nick)
             }
             it->second.pushtomap(false, getClientitoByfd(clientfd));
             it->second.setusersSize(1);
+            it->second.removeInvitedClient(clientfd);
             listofnames = getListOfNames(it->second.getUsersMap());
 
             sendMsgToClient(clientfd, RPL_JOIN(nickname, nickname, it->second.getChannelNameDisplay(), serverHostname));
