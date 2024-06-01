@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/25 17:20:29 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:20:32 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,18 @@ void Servrr::trimSpaces(const std::string& str, bool x)
     }
 }
 
-void Servrr::parsNick(clientito& client) {
+int Servrr::parsNick(clientito& client) {
     std::string str = "@&#:1234567890";
     for(size_t a = 0; a < _clients.size(); a++) {
         if(args[1] == _clients[a].getNickName()) {
             client.setnflag(false);
             sendMsgToClient(client.getClinetFd(), ERR_NICKNAMEINUSE(args[1]));
+            return 0;
         }
     }
     if(str.find(args[1][0]) != std::string::npos)
         client.setnflag(false);
+    return 1;
 }
 
 void	Servrr::auth2(std::string str, clientito& client)
@@ -63,10 +65,10 @@ void	Servrr::auth2(std::string str, clientito& client)
     }
     if(args[0] == "nick" && client.getpflag() && !client.getnflag()) {
             client.setnflag(true);
-            parsNick(client);
+            int x = parsNick(client);
             if(client.getnflag())
                 client.setNickName(args[1]);
-            else
+            else if(x)
                 sendMsgToClient(client.getClinetFd(), RPL_ERRONEUSNICKNAME(host, nick));
             args.clear();
             return ;

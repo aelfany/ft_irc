@@ -43,7 +43,8 @@ class Servrr
         void command(std::string buffer, size_t i);
         Servrr(int portNumber, std::string passw);
         ~Servrr();
-        void parsNick(clientito& client);
+        int parsNick(clientito& client);
+        
         int modeSplit(std::string arg, size_t i);
         // void parsUser(clientito& client);
         void	            proccessChannels(int clientfd, std::string nick);
