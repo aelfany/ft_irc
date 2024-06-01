@@ -96,12 +96,13 @@ void Servrr::runServer()
     if(_sock_fd == -1)
     {
         std::cerr <<"Error:  failed to create a socket\n";
-            exit(1);
+        exit(1);
     }
     //Set server socket to non-blocking mode
     if (fcntl(_sock_fd, F_SETFL, O_NONBLOCK) < 0)
     {
         perror("fcntl");
+        close(_sock_fd);
         exit(EXIT_FAILURE);
     }
     int valueOfOpt = 1;
@@ -109,16 +110,19 @@ void Servrr::runServer()
     if (setsockopt(_sock_fd, SOL_SOCKET, SO_REUSEADDR, &valueOfOpt, sizeof(valueOfOpt)) == -1)
     {
         std::cerr <<"Error: setsockopt() failed\n";
+        close(_sock_fd);
         exit(1);
     }
     if (bind(_sock_fd, (struct sockaddr *)&_addr, sizeof(_addr)) == -1)
     {
         std::cerr <<"Error: bind() failed\n";
+        close(_sock_fd);
         exit(1);
     }
     if (listen(_sock_fd, 10) == -1)
     {
         std::cerr <<"Error: listen() failed\n";
+        close(_sock_fd);
         exit(1);
     }
     interFace(*this);
