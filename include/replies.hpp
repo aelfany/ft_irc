@@ -41,7 +41,8 @@
 // #define RPL_TOPICWHOTIME(client, channel, nick, setat)                      ":" + client + " 333 " + channel + " " + nick + "  " + setat + "\r\n"
 #define RPL_TOPICDISPLAY(hostname, nick, channel, topic)                    ":" + hostname + " 332 " + nick + " " + channel + " :" + topic + "\r\n"
 #define RPL_INVITING(hostname, inviting, invited, channel)                 ":" + hostname + " 341 " + inviting + " " + invited + " " + channel + " :Inviting " + invited + " to " + channel + "\r\n"
-#define RPL_NEWTOPICSETTED(nick, username, hostname, channel, topic)        ":" + nick + "!~" + username + "@" + hostname + " TOPIC " + channel + " :" + topic + "\r\n"
+#define RPL_NEWTOPICSETTED(nick, username, hostname, channel, topic)        ":" + nick + "!~" + username + "@" + hostname + " TOPIC " + channel + " " + topic + "\r\n"
+// :das!~dsf@freenode-obu.d75.6g0qj4.IP TOPIC #CHAN :HELLO WORLD
 #define RPL_INVITE(nick, username ,clienthostname, invited, channel)       ":" + nick + "!" + username + "@" + clienthostname + " INVITE " + invited + " :" + channel + "\r\n"
 // ------- new 
 
@@ -82,7 +83,7 @@
 #define RPL_NOTINV(nickname)                                                (": 664 " + nickname + ": Channel not in invite-only mode\r\n")
 #define RPL_LIMITSET(nickname)                                              (": 662 " + nickname + ": This limit was set\r\n")
 #define RPL_PASSNOTC(nickname)                                              (": 996 " + nickname + ": Password not correct\r\n")
-#define RPL_NOPASSSET(nickname)                                             (": 997 " + nickname + ": No assword set\r\n")
+#define RPL_NOPASSSET(nickname)                                             (": 997 " + nickname + ": No Password set\r\n")
 #define RPL_PING(buffer, token)                                             ":" + buffer + " PONG :" + token
 #define RPL_ALREADYSET(nickname)                                            (": 998 " + nickname + ": this Password already set\r\n")
 #define RPL_NOLIMITSET(nickname)                                            (": 663 " + nickname + ": No limit set\r\n")

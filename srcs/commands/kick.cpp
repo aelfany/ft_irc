@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 02:24:03 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/31 00:07:03 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/06/01 14:19:16 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void Servrr::split(std::string buffer, size_t i) {
                 res += " ";
             }
         }
-        if(args.size() < 4)
+        if(args.size() < 3)
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(host,"kick"));
         else if(mode.checkUserexist(nick) == false)
             sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NOTONCHANNEL(host,nick));

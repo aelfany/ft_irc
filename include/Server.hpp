@@ -90,7 +90,7 @@ class Servrr
         void    SendToAll(Channel _channel, std::string _message);
 };
 void	sendMsgToClient(int clientfd, std::string msg);
-bool	check_port(std::string port);
-void	programRequirement(int ac, char *port);
+int     check_port(std::string port, std::string pass);
+void    programRequirement(int ac, char *port, char *pass);
 void	SocketAddrInfo(struct sockaddr_in& addr, int port_n);
 void	interFace(Servrr obj);

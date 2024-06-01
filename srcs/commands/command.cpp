@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 01:32:54 by abelfany          #+#    #+#             */
-/*   Updated: 2024/05/31 00:02:20 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/05/31 00:42:44 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,10 +138,9 @@ void Servrr::command(std::string buffer, size_t i) {
         }
         else if(args[0] == "mode")
         {
-            puts("----------");
-            for(size_t a = 0; a < mod.size(); a++) {
-                std::cout << "mode ->> " << mod[a].first << "|" << mod[a].second << std::endl; 
-            }
+            // for(size_t a = 0; a < mod.size(); a++) {
+            //     std::cout << "mode ->> " << mod[a].first << "|" << mod[a].second << std::endl; 
+            // }
             flag = 1;
             if (args.size() < 2) {
                 sendMsgToClient(getClientitoByIndex(i-1).getClinetFd(), ERR_NEEDMOREPARAMS(nick, "MODE"));

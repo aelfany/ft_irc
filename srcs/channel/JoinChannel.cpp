@@ -141,6 +141,8 @@ void	Servrr::proccessChannels(int clientfd, std::string nick)
             sendMsgToClient(clientfd, RPL_ENDOFNAMES(serverHostname, nickname, it->second.getChannelNameDisplay()));
             
             broadcastMessage(it->second, RPL_ENDOFNAMES(serverHostname, nickname, it->second.getChannelNameDisplay()), clientfd);
+            sendMsgToClient(clientfd,RPL_TOPICDISPLAY(host, nick,it->second.getChannelNameDisplay(),it->second.getTopic()));
+            sendMsgToClient(clientfd,RPL_TOPICWHOTIME(host, it->second.getChannelNameDisplay(), nick,it->second.gettopicseter(),getClientitoByIndex(i-1).getUserName(),it->second.gettopictime()));
         }
 	}
     getClient(nick).pushChannel(channel);

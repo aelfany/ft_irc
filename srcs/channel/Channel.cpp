@@ -66,11 +66,9 @@ clientito&		Channel::getUserBynickname(std::string _nickname)
     map_users::iterator it = _users.begin();
     for(; it != _users.end(); it++) {
         if(it->second.getNickName() == _nickname) {
-            puts("+++++++++++");
             return it->second;
         }
     }
-    puts("*************");
     throw "User not found";
 }
 

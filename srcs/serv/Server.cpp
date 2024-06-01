@@ -125,30 +125,38 @@ void Servrr::runServer()
 
 }
 
-bool check_port(std::string port)
+int check_port(std::string port, std::string pass)
 {
-    if (atoi(port.c_str()) < 1025)
-        return false;
+    std::stringstream  s(port);
+    int p;
+    s >> p;
+    if (p < 1024 || p > 65535 || port.empty())
+        return 1;
+    if(pass.empty())
+        return 2;
     if (port[0] == '+' || port[0] == '-')
-        return false;
+        return 1;
     for(size_t i = 0; i < port.length(); ++i)
     {
         if (!isdigit(port[i]))
-            return false;
+            return 1;
     }
-    return true;
+    return 0;
 }
 
-void programRequirement(int ac, char *port)
+void programRequirement(int ac, char *port, char *pass)
 {
     if(ac != 3)
     {
         std::cerr << "ERROR: <.ircserv> <port> <password>\n";
         exit(EXIT_FAILURE);
     }
-    if (!check_port(port))
+    if (check_port(port, pass) != 0)
     {
-        std::cerr << "ERROR: '" << port << "' : check port number then try again...\n";
+        if (check_port(port, pass) == 2)
+            std::cerr << "ERROR: '" << pass << "' : check pass then try again...\n";
+        else
+            std::cerr << "ERROR: '" << port << "' : check port number then try again...\n";
         exit(EXIT_FAILURE);
     }
 }
