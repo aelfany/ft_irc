@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 02:17:42 by abelfany          #+#    #+#             */
-/*   Updated: 2024/06/01 15:20:32 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:35:46 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	Servrr::auth2(std::string str, clientito& client)
 {
     (void)str;
     std::string nick = client.getNickName();
+    // std::cout << "\033[0;32m" << << "\033[0m" << std::endl;
     if (args.size() < 2) {
         if(args[0] == "nick")
             sendMsgToClient(client.getClinetFd(), RPL_NONICKNAMEGIVEN(nick, host));

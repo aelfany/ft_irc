@@ -6,7 +6,7 @@
 /*   By: abelfany <abelfany@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 02:24:03 by abelfany          #+#    #+#             */
-/*   Updated: 2024/06/01 14:19:16 by abelfany         ###   ########.fr       */
+/*   Updated: 2024/06/03 10:21:42 by abelfany         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,13 @@ void Servrr::split(std::string buffer, size_t i) {
     while (std::getline(users,user, ',')) {
     try {
         Channel &mode = getChannel(args[1]);
-        if(args.size() > 4) {
+        if(args.size() == 3 || (args.size() == 4 && args[3] == ":"))
+            res = ":Break the Rules";
+        else {
             for(size_t a = 3; a < args.size(); a++) {
                 res += args[a];
-                res += " ";
+                if(a < args.size()) 
+                    res += " ";
             }
         }
         if(args.size() < 3)
